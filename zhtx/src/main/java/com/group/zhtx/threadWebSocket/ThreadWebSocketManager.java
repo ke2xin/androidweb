@@ -1,10 +1,10 @@
 package com.group.zhtx.threadWebSocket;
 
 
-import com.example.jpa.demo.thread.AsyncThreadManager;
-import com.example.jpa.demo.thread.ThreadHandle;
-import com.example.jpa.demo.webSocket.WebSocket;
-import com.example.jpa.demo.webSocket.WebSocketManager;
+import com.group.zhtx.thread.AsyncThreadManager;
+import com.group.zhtx.thread.ThreadHandle;
+import com.group.zhtx.webSocket.WebSocket;
+import com.group.zhtx.webSocket.WebSocketManager;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;

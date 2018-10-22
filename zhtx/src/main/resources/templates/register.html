@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+</body>
+
+<script type="text/javascript">
+    var wesocket = new WebSocket("ws://localhost:8080/ws");
+
+    wesocket.onopen = function (ev) {
+        wesocket.send(
+            "qwe"
+        );
+    };
+
+    wesocket.onmessage = function (ev) {
+
+    };
+
+
+</script>
+</html>
