@@ -1,10 +1,12 @@
 package com.group.zhtx.threadWebSocket;
 
 
-import com.example.jpa.demo.thread.AsyncThreadManager;
-import com.example.jpa.demo.thread.ThreadHandle;
-import com.example.jpa.demo.webSocket.WebSocket;
-import com.example.jpa.demo.webSocket.WebSocketManager;
+
+
+import com.group.zhtx.thread.AsyncThreadManager;
+import com.group.zhtx.thread.ThreadHandle;
+import com.group.zhtx.webSocket.WebSocket;
+import com.group.zhtx.webSocket.WebSocketManager;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -20,6 +22,17 @@ public class ThreadWebSocketManager {
      */
     public static Map<Integer,int[]> operateDispatchDegree = new HashMap<>();
 
+
+    /*
+        添加操作分发消息等级
+     */
+    public static boolean addOperateDispatchDegree(int operateId,int[] degree){
+        if(operateDispatchDegree.containsKey(operateId)){
+            return false;
+        }
+        operateDispatchDegree.put(operateId,degree);
+        return true;
+    }
 
     public static boolean dispatchWebSocket(WebSocket webSocket){
 

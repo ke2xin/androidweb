@@ -1,34 +1,56 @@
 package com.group.zhtx.webSocket;
 
+import com.group.zhtx.message.Message;
+
+import javax.websocket.Session;
+
 public class WebSocket {
     /*
         WebSocket数据包，用于客户端消息的封装
      */
     private Integer operateId;
-    private String data;
-    private Object otherData;
+    private Message message;
+    private Session session;
 
-    public WebSocket(Integer operateId, String data, Object otherData) {
+    public WebSocket(Integer operateId, Message message, Session session) {
         this.operateId = operateId;
-        this.data = data;
-        this.otherData = otherData;
+        this.message = message;
+        this.session = session;
     }
+
+    public WebSocket(Integer operateId, Message message) {
+        this.operateId = operateId;
+        this.message = message;
+    }
+
 
     public Integer getOperateId() {
         return operateId;
     }
 
-    public String getData() {
-        return data;
+    public void setOperateId(Integer operateId) {
+        this.operateId = operateId;
     }
 
-    public Object getOtherData() {
-        return otherData;
+    public Message getMessage() {
+        return message;
+    }
+
+    public void setMessage(Message message) {
+        this.message = message;
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
     }
 
     public void clear(){
         this.operateId = null;
-        this.data = null;
-        this.otherData = null;
+        this.message = null;
+        this.session = null;
     }
 }

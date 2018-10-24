@@ -28,16 +28,16 @@ public class ThreadHandle implements IAsyncHandle{
 
     @Override
     public Object getPacket() {
-        return null;
+        return this.packet;
     }
 
     @Override
     public Method getMethod() {
-        return null;
+        return this.method;
     }
 
     @Override
     public Object getInstance() {
-        return null;
+        return this.instance;
     }
 }

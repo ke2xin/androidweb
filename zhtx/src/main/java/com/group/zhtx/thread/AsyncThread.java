@@ -1,5 +1,7 @@
 package com.group.zhtx.thread;
 
+import com.group.zhtx.webSocket.WebSocket;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -49,12 +51,17 @@ public class AsyncThread extends Thread {
                     IAsyncHandle handle = handles.get(l);
 
                     Method method = handle.getMethod();
+                    WebSocket webSocket = (WebSocket) handle.getPacket();
                     try {
-                        method.invoke(handle.getInstance(),handle.getPacket());
+                        method.invoke(handle.getInstance(),webSocket);
+                        webSocket.clear();
                     } catch (Exception e) {
                         System.out.println(l + "Method产生异常");
+                        e.printStackTrace();
                     }
                 }
+
+
 
                 //将Cycle添加循环队列
                 ArrayList<IAsyncCycle> addCycles = handleData.getAddCycles();

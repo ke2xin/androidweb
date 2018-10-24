@@ -23,6 +23,7 @@ public class WebSocketManager {
 
         Object[] keys = maps.keySet().toArray();
 
+
         for(int i = 0; i < keys.length; ++i){
             Integer operateId = (Integer) keys[i];
 
@@ -32,7 +33,9 @@ public class WebSocketManager {
                 continue;
             }
 
-            Method method = webSocketListener.getClass().getMethod(maps.get(i), WebSocket.class);
+
+
+            Method method = webSocketListener.getClass().getMethod(maps.get(operateId), WebSocket.class);
             wsMethodsMap.put(operateId, method);
 
             //每个处理方法只对应一个实体
