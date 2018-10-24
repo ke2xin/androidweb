@@ -5,6 +5,7 @@ import com.group.zhtx.thread.IAsyncCycle;
 
 import javax.websocket.Session;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -137,9 +138,25 @@ public class OnlineUser implements IAsyncCycle{
         return sendMessages;
     }
 
-    public Map<String,List<Message>> handleSendMessage(){
+    public Map<String,List<Message>> handleSendMessage(ArrayList<Message> messages){
+        Map<String , List<Message>> messageMap = new HashMap<>();
 
-        
+         for(int i = 0; i < messages.size(); ++i){
+             Message message = messages.get(i);
+             String groupUuid = message.getGroup().getUuid();
+
+             if(!messageMap.containsKey(groupUuid)){
+                 List<Message> messageList = new ArrayList<>();
+                 messageMap.put(groupUuid,messageList);
+
+                 messageList.add(message);
+                 continue;
+             }
+
+             List<Message> messageList = messageMap.get(groupUuid);
+             messageList.add(message);
+         }
+
 
         return null;
     }
