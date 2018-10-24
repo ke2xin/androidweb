@@ -1,6 +1,6 @@
 package com.group.zhtx.webSocket;
 
-import com.group.zhtx.message.Message;
+import com.group.zhtx.message.IMessage;
 
 import javax.websocket.Session;
 
@@ -9,18 +9,18 @@ public class WebSocket {
         WebSocket数据包，用于客户端消息的封装
      */
     private Integer operateId;
-    private Message message;
+    private IMessage IMessage;
     private Session session;
 
-    public WebSocket(Integer operateId, Message message, Session session) {
+    public WebSocket(Integer operateId, IMessage IMessage, Session session) {
         this.operateId = operateId;
-        this.message = message;
+        this.IMessage = IMessage;
         this.session = session;
     }
 
-    public WebSocket(Integer operateId, Message message) {
+    public WebSocket(Integer operateId, IMessage IMessage) {
         this.operateId = operateId;
-        this.message = message;
+        this.IMessage = IMessage;
     }
 
 
@@ -32,12 +32,12 @@ public class WebSocket {
         this.operateId = operateId;
     }
 
-    public Message getMessage() {
-        return message;
+    public IMessage getIMessage() {
+        return IMessage;
     }
 
-    public void setMessage(Message message) {
-        this.message = message;
+    public void setIMessage(IMessage IMessage) {
+        this.IMessage = IMessage;
     }
 
     public Session getSession() {
@@ -50,7 +50,7 @@ public class WebSocket {
 
     public void clear(){
         this.operateId = null;
-        this.message = null;
+        this.IMessage = null;
         this.session = null;
     }
 }

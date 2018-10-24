@@ -47,7 +47,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
 
     public void registerUser(WebSocket webSocket){
         logger.info("webSocketOerateId:" + webSocket.getOperateId());
-        RegisterC registerC = (RegisterC) webSocket.getMessage();
+        RegisterC registerC = (RegisterC) webSocket.getIMessage();
         logger.info("webSocketMessage:" + registerC.getUuid());
         logger.info("webSocketMessage:" + registerC.getUserPhone());
         logger.info("webSocketMessage:" + registerC.getPassword());

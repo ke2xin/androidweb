@@ -8,7 +8,7 @@ public class MessageFactory {
 
     private static Gson gson = new Gson();
 
-    public static Message newMessageByOperateCode(int opercode,String data){
+    public static IMessage newMessageByOperateCode(int opercode, String data){
 
         switch (opercode){
             case WebSocketOperateUtil.User_Login_C:

@@ -1,10 +1,10 @@
 package com.group.zhtx.message.client;
 
-import com.group.zhtx.message.Message;
+import com.group.zhtx.message.IMessage;
 
 import java.io.Serializable;
 
-public class RegisterC implements Serializable,Message{
+public class RegisterC implements Serializable,IMessage {
 
     private int operateCode;
     private String uuid;
