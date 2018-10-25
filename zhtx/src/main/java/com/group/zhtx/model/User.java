@@ -39,7 +39,7 @@ public class User implements Serializable{
     //用户的状态
     // 0表示被禁，1表示没有被禁用
     @Column(name = "user_status")
-    private short status;
+    private short status = 1;
 
     //用户签名
     @Column(name = "user_sign",length = 50)

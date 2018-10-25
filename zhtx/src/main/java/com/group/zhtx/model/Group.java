@@ -16,6 +16,9 @@ public class Group implements Serializable {
     @Column(name = "group_name",nullable = false,length = 30)
     private String name;
 
+    @Column(name = "group_hobby",length = 200)
+    private String hobby;
+
     @Column(name = "group_anoun",length = 400)
     private String anoun;
 
@@ -24,7 +27,7 @@ public class Group implements Serializable {
     private User creater;
 
     @Column(name = "group_status")
-    private short status;
+    private short status = 1;
 
     @Column(name = "group_portarit",length = 100)
     private String portarit;
@@ -47,6 +50,14 @@ public class Group implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getHobby() {
+        return hobby;
+    }
+
+    public void setHobby(String hobby) {
+        this.hobby = hobby;
     }
 
     public String getAnoun() {

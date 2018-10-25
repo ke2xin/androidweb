@@ -1,32 +1,30 @@
-package com.group.zhtx.message.client;
+package com.group.zhtx.message.websocket.client;
 
 import com.group.zhtx.message.IMessage;
 
 import java.io.Serializable;
 
-public class RegisterC implements Serializable,IMessage {
+public class UserLoginC implements Serializable,IMessage {
 
-    private int operateCode;
+    private int operateId;
     private String uuid;
     private String password;
-    private String userPhone;
 
 
-    public RegisterC(){}
+    public UserLoginC(){}
 
-    public RegisterC(int operateCode, String uuid, String password, String userPhone) {
-        this.operateCode = operateCode;
+    public UserLoginC(int operateId, String uuid, String password, String userPhone) {
+        this.operateId = operateId;
         this.uuid = uuid;
         this.password = password;
-        this.userPhone = userPhone;
     }
 
     public int getOperateCode() {
-        return operateCode;
+        return operateId;
     }
 
     public void setOperateCode(int operateCode) {
-        this.operateCode = operateCode;
+        this.operateId = operateCode;
     }
 
     public String getUuid() {
@@ -45,11 +43,4 @@ public class RegisterC implements Serializable,IMessage {
         this.password = password;
     }
 
-    public String getUserPhone() {
-        return userPhone;
-    }
-
-    public void setUserPhone(String userPhone) {
-        this.userPhone = userPhone;
-    }
 }

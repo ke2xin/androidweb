@@ -1,9 +1,14 @@
 package com.group.zhtx.onlineUser;
 
+import com.group.zhtx.message.websocket.service.groupMessage.GroupMessage;
+import com.group.zhtx.message.websocket.service.groupMessage.GroupMessageS;
 import com.group.zhtx.model.Message;
 import com.group.zhtx.thread.IAsyncCycle;
+import com.group.zhtx.webSocket.WebSocket;
 
+import javax.websocket.EncodeException;
 import javax.websocket.Session;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -138,7 +143,56 @@ public class OnlineUser implements IAsyncCycle{
         return sendMessages;
     }
 
-    public Map<String,List<Message>> handleSendMessage(ArrayList<Message> messages){
+
+
+    public void sendGroupMessage(Map<String,List<Message>> groupMessageMap){
+
+        Object[] keys = groupMessageMap.keySet().toArray();
+        GroupMessageS groupMessageS = new GroupMessageS();
+        //设置发送组消息的操作码为23
+        groupMessageS.setOperateId(23);
+
+
+        for (int i = 0; i < keys.length ;i++){
+            int groupId = (int) keys[i];
+            List<Message> groupMessage = groupMessageMap.get(groupId);
+            sendGroupMessage(groupMessageS,groupId,groupMessage);
+        }
+
+        WebSocket webSocket = new WebSocket(23,groupMessageS,null);
+
+        sendMessage(webSocket);
+    }
+
+    public void sendMessage(WebSocket webSocket){
+
+        try {
+            session.getBasicRemote().sendObject(webSocket);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (EncodeException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+        发送组消息
+     */
+    public void sendGroupMessage(GroupMessageS groupMessageS,int groupId,List<Message> messagesList){
+
+        GroupMessage groupMessage = new GroupMessage();
+        groupMessage.setGroupUuid(groupId);
+        groupMessage.setData(messagesList);
+        groupMessageS.addMessage(groupMessage);
+
+    }
+
+    /*
+        分类发给群组的消息集合
+        key:GroupId
+        value:群组消息集合
+     */
+    public Map<String,List<Message>> getSendGroupMessageMap(ArrayList<Message> messages){
         Map<String , List<Message>> messageMap = new HashMap<>();
 
          for(int i = 0; i < messages.size(); ++i){
@@ -156,9 +210,9 @@ public class OnlineUser implements IAsyncCycle{
              List<Message> messageList = messageMap.get(groupUuid);
              messageList.add(message);
          }
-
-
-        return null;
+        return messageMap;
     }
+
+
 }
 
