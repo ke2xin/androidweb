@@ -55,6 +55,8 @@ public class User implements Serializable{
     @Temporal(TemporalType.DATE)
     private Date modifyTime;
 
+
+
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }

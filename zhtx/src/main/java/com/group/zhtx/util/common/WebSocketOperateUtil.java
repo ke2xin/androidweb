@@ -15,4 +15,12 @@ public class WebSocketOperateUtil {
     private final static int User_Quit_Group_C = 6;
 
     public final static int User_Save_GroupData_C = 7;
+
+    public final static int User_Get_GroupUserLocation_C = 8;
+
+    public final static int User_Get_CallGroupUserPhone_C = 9;
+
+
+    public final static int User_Send_GroupMessage_C = 24;
+
 }

@@ -1,5 +1,8 @@
 package com.group.zhtx.onlineUser;
 
+import com.group.zhtx.model.Message;
+import com.group.zhtx.repository.MessageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -28,12 +31,14 @@ public class OnlineUserManager {
     }
 
 
+
+
     public void addOnlineUser(OnlineUser onlineUser){
 
         if (onlineUser == null)return;
 
         //根据在线用户UUID，添加在线用户
-        String uuid = onlineUser.getUuid();
+        String uuid = onlineUser.getData().getUuid();
         onlineUserMap.put(uuid,onlineUser);
 
         String sessionId = onlineUser.getSession().getId();

@@ -1,10 +1,8 @@
 package com.group.zhtx.message;
 
 import com.google.gson.Gson;
-import com.group.zhtx.message.websocket.client.UserCreateGroupC;
-import com.group.zhtx.message.websocket.client.UserGetGroupDataC;
-import com.group.zhtx.message.websocket.client.UserLoginC;
-import com.group.zhtx.message.websocket.client.UserSaveGroupDataC;
+import com.group.zhtx.message.websocket.client.*;
+import com.group.zhtx.message.websocket.service.getCallGroupUserByPhone.UserCallGroupUserByPhoneS;
 import com.group.zhtx.util.common.WebSocketOperateUtil;
 
 public class MessageFactory {
@@ -22,6 +20,10 @@ public class MessageFactory {
                  return gson.fromJson(data, UserGetGroupDataC.class);
             case WebSocketOperateUtil.User_Save_GroupData_C:
                 return gson.fromJson(data, UserSaveGroupDataC.class);
+            case WebSocketOperateUtil.User_Get_CallGroupUserPhone_C:
+                return gson.fromJson(data, UserCallGroupUserByPhoneC.class);
+            case WebSocketOperateUtil.User_Send_GroupMessage_C:
+                return gson.fromJson(data,SendGroupMessageC.class);
             default:
                 return null;
         }

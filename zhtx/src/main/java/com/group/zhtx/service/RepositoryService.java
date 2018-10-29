@@ -2,11 +2,8 @@ package com.group.zhtx.service;
 
 
 
-import com.group.zhtx.message.websocket.client.UserCreateGroupC;
-import com.group.zhtx.message.websocket.client.UserGetGroupDataC;
-import com.group.zhtx.message.websocket.client.UserLoginC;
+import com.group.zhtx.message.websocket.client.*;
 import com.group.zhtx.message.controller.register.RegisterC;
-import com.group.zhtx.message.websocket.client.UserSaveGroupDataC;
 import com.group.zhtx.message.websocket.service.createGroupMessage.UserCreateGroupS;
 import com.group.zhtx.message.websocket.service.getGroupData.UserGetGroupDataS;
 import com.group.zhtx.message.websocket.service.getGroupData.UserGetGroupDataMember;
@@ -15,10 +12,14 @@ import com.group.zhtx.message.websocket.service.loginMessage.UserLoginDataGroup;
 import com.group.zhtx.message.websocket.service.loginMessage.UserLoginDataSingal;
 import com.group.zhtx.message.websocket.service.loginMessage.UserLoginS;
 import com.group.zhtx.message.websocket.service.saveGroupData.UserSaveGroupDataS;
+import com.group.zhtx.message.websocket.service.sendGroupMessage.SendGroupMessageS;
 import com.group.zhtx.model.Group;
 import com.group.zhtx.model.GroupUser;
 import com.group.zhtx.model.Message;
 import com.group.zhtx.model.User;
+import com.group.zhtx.onlineUser.OnlineUser;
+import com.group.zhtx.onlineUser.OnlineUserData;
+import com.group.zhtx.onlineUser.OnlineUserManager;
 import com.group.zhtx.repository.*;
 import com.group.zhtx.util.common.WebSocketOperateUtil;
 import com.group.zhtx.util.group.GroupUtil;
@@ -32,6 +33,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
 import java.io.IOException;
@@ -72,7 +74,8 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
     @Qualifier("userGpsRepository")
     private UserGpsRepository userGpsRepository;
 
-
+    @Resource
+    private OnlineUserManager onlineUserManager;
 
     @PostConstruct
     public void initMethod() throws Exception {
@@ -112,6 +115,28 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             return false;
         }
         return true;
+    }
+
+    /*
+        发送消息
+     */
+    private void sendMessageWithWebSocket(Session session,WebSocket webSocket){
+        try {
+            session.getBasicRemote().sendObject(webSocket);
+        } catch (Exception e) {
+            e.printStackTrace();
+            webSocket.clear();
+        }
+        //销毁消息包
+        webSocket.clear();
+    }
+
+    private void sendMessageWithText(Session session,String text){
+        try {
+            session.getBasicRemote().sendText(text);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -200,12 +225,10 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             loginGroup.setLastestGroupMessage(message.getContent());
             loginGroup.setGroupMessageCount(messageCount);
             loginGroup.setGroupRole(groupRole);
-
             data.addDataGroup(loginGroup);
         }
 
         int operateId = webSocket.getOperateId();
-
         userLoginS.setOperateId(operateId);
         userLoginS.setStatus("成功");
         userLoginS.setData(data);
@@ -220,6 +243,14 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             webSocket.clear();
         }
 
+        //创建在线用户数据
+        OnlineUserData onlineUserData = new OnlineUserData(user.getUuid(),user.getPhone(),user.getName(),user.getPortrait());
+        //创建在线用户
+        OnlineUser onlineUser = new OnlineUser(onlineUserData,session,groupUserRepository,messageRepository);
+        //设置用户在线状态
+        onlineUser.setOnline(true);
+        //之后操作的唯一管理识别类
+        onlineUserManager.addOnlineUser(onlineUser);
     }
 
     /*
@@ -240,12 +271,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             userCreateGroupS.setStatus("fail");
             userCreateGroupS.setInformation("创建群的用户不存在");
             webSocket = new WebSocket(operateId, userCreateGroupS,null);
-            try {
-                session.getBasicRemote().sendObject(webSocket);
-            } catch (Exception e) {
-                e.printStackTrace();
-                webSocket.clear();
-            }
+            sendMessageWithWebSocket(session,webSocket);
             return;
         }
 
@@ -270,7 +296,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         GroupUser groupUser = new GroupUser();
         groupUser.setGroup(group);
         groupUser.setJoinTime(new Date());
-        groupUser.setReceiveTime(new Date());
+        groupUser.setReceiveTime(System.currentTimeMillis());
         groupUser.setRole((short) 1);
         groupUser.setStatus((short) 1);
         groupUser.setUser(user);
@@ -283,12 +309,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         userCreateGroupS.setStatus("success");
         userCreateGroupS.setInformation("创建群成功");
         webSocket = new WebSocket(operateId, userCreateGroupS,null);
-        try {
-            session.getBasicRemote().sendObject(webSocket);
-        } catch (Exception e) {
-            e.printStackTrace();
-            webSocket.clear();
-        }
+        sendMessageWithWebSocket(session,webSocket);
     }
 
     /*
@@ -337,13 +358,8 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             data.addMember(member);
         }
 
-
-        try {
-            session.getBasicRemote().sendObject(webSocket);
-            WebSocket webSocket1 = new WebSocket(operateId,data,null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        webSocket = new WebSocket(operateId,data,null);
+        sendMessageWithWebSocket(session,webSocket);
 
     }
 
@@ -393,4 +409,84 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             webSocket.clear();
         }
     }
+
+
+    public void getUserLocations(WebSocket webSocket){
+
+        //根据当前请求用户是否登陆，获取该用户Uuid，辨别这个用户是否再这个群上面
+
+        //获取这个群的群成员
+
+        //获取这个群成员的成员位置信息
+    }
+
+    /*
+        电话联系群成员
+     */
+    public void getGroupUserPhone(WebSocket webSocket){
+        UserCallGroupUserByPhoneC userCallGroupUserByPhoneC = (UserCallGroupUserByPhoneC) webSocket.getIMessage();
+        int operateId = webSocket.getOperateId();
+        Session session = webSocket.getSession();
+
+        String groupId = userCallGroupUserByPhoneC.getGroupId();
+
+        //查找是否有这个群
+        Group group = groupRepository.findById(groupId).orElse(null);
+
+        //根据当前请求用户是否登陆，获取该用户Uuid，辨别这个用户是否再这个群上面
+
+        //查找这个群的用户，获取信息
+    }
+
+    /*
+        群里发送消息
+     */
+    public void getSendGroupMessage(WebSocket webSocket){
+        SendGroupMessageC sendGroupMessageC = (SendGroupMessageC) webSocket.getIMessage();
+        int operateId = webSocket.getOperateId();
+        Session session = webSocket.getSession();
+
+        OnlineUser onlineUser = onlineUserManager.getOnlineUserByUuid(sendGroupMessageC.getUserUuid());
+        if(onlineUser == null){
+            onlineUser = onlineUserManager.getOnlineUserBySessionId(session.getId());
+            if (onlineUser == null)return;
+        }
+
+        String groupId = sendGroupMessageC.getGroupUuid();
+        String userId = sendGroupMessageC.getUserUuid();
+
+        Group group = groupRepository.findById(groupId).orElse(null);
+        User user = userRepository.findById(userId).orElse(null);
+
+        if(group == null || user == null){
+            return;
+        }
+
+        //获取内容
+        String content = sendGroupMessageC.getContent();
+
+
+
+        Message message = new Message();
+        message.setContent(content);
+        message.setGroup(group);
+        message.setUser(user);
+        message.setSendTime(new Date());
+
+        //设置消息未读
+        message.setStatus((short) 0);
+        onlineUser.addWaitToSendMessage(message);
+
+        SendGroupMessageS sendGroupMessageS = new SendGroupMessageS();
+        sendGroupMessageS.setContent(content);
+        sendGroupMessageS.setInformation("接收成功");
+        sendGroupMessageS.setOperateId(operateId);
+        sendGroupMessageS.setStatus("success");
+
+        webSocket = new WebSocket(operateId,sendGroupMessageS,null);
+        sendMessageWithWebSocket(session,webSocket);
+    }
+
+
+
 }

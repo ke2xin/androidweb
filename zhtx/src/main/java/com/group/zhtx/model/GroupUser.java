@@ -31,9 +31,9 @@ public class GroupUser implements Serializable{
     @Column(name = "groupUser_joinTime")
     private Date joinTime;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "groupUser_recTime")
-    private Date receiveTime;
+    private Long receiveTime;
 
     public Long getId() {
         return id;
@@ -83,11 +83,11 @@ public class GroupUser implements Serializable{
         this.joinTime = joinTime;
     }
 
-    public Date getReceiveTime() {
+    public Long getReceiveTime() {
         return receiveTime;
     }
 
-    public void setReceiveTime(Date receiveTime) {
+    public void setReceiveTime(Long receiveTime) {
         this.receiveTime = receiveTime;
     }
 }

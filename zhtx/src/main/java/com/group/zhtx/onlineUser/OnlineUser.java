@@ -1,40 +1,29 @@
 package com.group.zhtx.onlineUser;
 
-import com.group.zhtx.message.websocket.service.groupMessage.GroupMessage;
+import com.group.zhtx.message.websocket.service.groupMessage.GroupMessageData;
 import com.group.zhtx.message.websocket.service.groupMessage.GroupMessageS;
+import com.group.zhtx.model.Group;
+
 import com.group.zhtx.model.Message;
+import com.group.zhtx.repository.GroupUserRepository;
+import com.group.zhtx.repository.MessageRepository;
 import com.group.zhtx.thread.IAsyncCycle;
 import com.group.zhtx.webSocket.WebSocket;
 
-import javax.websocket.EncodeException;
 import javax.websocket.Session;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 
 public class OnlineUser implements IAsyncCycle{
 
 
     /*
-        用户登录账户
+        在线用户基本信息
      */
-    private String uuid;
+    private OnlineUserData userData;
 
     /*
-        用户名
-     */
-    private String userName;
-
-    /*
-        用户账户
-     */
-    private String userPortrait;
-
-    /*
-        用户头像
+        是否在线
      */
     private boolean isOnline;
 
@@ -43,56 +32,84 @@ public class OnlineUser implements IAsyncCycle{
      */
     private Session session;
 
+    private MessageRepository messageRepository;
+
+    private GroupUserRepository groupUserRepository;
+
     /*
         在线用户所在的线程和优先级
      */
     private int[] threadAndPrority;
 
-    public LinkedBlockingDeque<Message> waitToSendMessage = new LinkedBlockingDeque<>();
+    private LinkedBlockingDeque<Message> waitToSendMessage = new LinkedBlockingDeque<>();
 
-    private ArrayList<Message> sendMessages = new ArrayList<>();
+    private ArrayList<Message> currentsendMessages = new ArrayList<>();
 
-    public OnlineUser(String uuid, String userName, String userPortrait, Session session){
-        this.uuid = uuid;
-        this.userName = userName;
-        this.userPortrait = userPortrait;
+    public OnlineUser(OnlineUserData userData, Session session, GroupUserRepository groupUserRepository, MessageRepository messageRepository){
+        this.userData = userData;
         this.session = session;
+        this.messageRepository = messageRepository;
+        this.groupUserRepository = groupUserRepository;
     }
 
     @Override
     public void onAdd() throws Exception {
+        //当用户添加时，给用户发送离线未接受到数据
+        String userUuid = userData.getUuid();
+        //获取用户所拥有的群组
+        List<Group> groups = groupUserRepository.getGroupsByUserUuid(userUuid);
+        Map<String,List<Message>> groupsMessage = new HashMap<>();
 
+        for (Group group : groups){
+            String groupUuid = group.getUuid();
+            //获取当前群内成员最后接收到消息的时间
+            Date groupUserReceiveTime = groupUserRepository.getGroupLastestTime(userUuid,groupUuid);
+
+            //获取用户离开后未读取的消息
+            List<Message> messages = messageRepository.getUnReadMessageByGroupUuidAndTime(groupUuid,groupUserReceiveTime);
+
+            groupsMessage.put(groupUuid,messages);
+        }
+
+        //发送组消息
+        sendGroupMessage(groupsMessage);
     }
 
     @Override
     public void onCycle() throws Exception {
 
+        if(!isOnline)return;
+        ArrayList<Message> messages = getCurrentSendMessages();
+
+        if(messages.size() != 0){
+            //分类各群消息
+            Map<String,List<Message>> groupMessages = getSendGroupMessageMap(messages);
+            //发送群消息
+            sendGroupMessage(groupMessages);
+        }
     }
 
     @Override
     public void onRemove() throws Exception {
-
+        isOnline = false;
     }
 
-    public String getUuid() {
-        return uuid;
+    public void Clear(){
+        userData = null;
+        session = null;
+        messageRepository = null;
+        groupUserRepository = null;
+        threadAndPrority = null;
+        waitToSendMessage = null;
+        currentsendMessages = null;
     }
 
-
-    public String getUserName() {
-        return userName;
+    public OnlineUserData getData() {
+        return userData;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserPortrait() {
-        return userPortrait;
-    }
-
-    public void setUserPortrait(String userPortrait) {
-        this.userPortrait = userPortrait;
+    public void setData(OnlineUserData userData) {
+        this.userData = userData;
     }
 
     public boolean isOnline() {
@@ -119,6 +136,7 @@ public class OnlineUser implements IAsyncCycle{
         this.threadAndPrority = threadAndPrority;
     }
 
+
     /*
         添加等待发送的消息
      */
@@ -136,13 +154,12 @@ public class OnlineUser implements IAsyncCycle{
     /*
         获取需要发送的消息
      */
-    public ArrayList<Message> getSendMessages(){
-        sendMessages.clear();
-        waitToSendMessage.drainTo(sendMessages);
+    public ArrayList<Message> getCurrentSendMessages(){
+        currentsendMessages.clear();
+        waitToSendMessage.drainTo(currentsendMessages);
 
-        return sendMessages;
+        return currentsendMessages;
     }
-
 
 
     public void sendGroupMessage(Map<String,List<Message>> groupMessageMap){
@@ -153,10 +170,10 @@ public class OnlineUser implements IAsyncCycle{
         groupMessageS.setOperateId(23);
 
 
-        for (int i = 0; i < keys.length ;i++){
-            int groupId = (int) keys[i];
+        for (Object key : keys) {
+            int groupId = (int) key;
             List<Message> groupMessage = groupMessageMap.get(groupId);
-            sendGroupMessage(groupMessageS,groupId,groupMessage);
+            sendGroupMessage(groupMessageS, groupId, groupMessage);
         }
 
         WebSocket webSocket = new WebSocket(23,groupMessageS,null);
@@ -168,9 +185,7 @@ public class OnlineUser implements IAsyncCycle{
 
         try {
             session.getBasicRemote().sendObject(webSocket);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (EncodeException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -178,12 +193,12 @@ public class OnlineUser implements IAsyncCycle{
     /*
         发送组消息
      */
-    public void sendGroupMessage(GroupMessageS groupMessageS,int groupId,List<Message> messagesList){
+    public void sendGroupMessage(GroupMessageS groupMessageS, int groupId, List<Message> messagesList){
 
-        GroupMessage groupMessage = new GroupMessage();
-        groupMessage.setGroupUuid(groupId);
-        groupMessage.setData(messagesList);
-        groupMessageS.addMessage(groupMessage);
+        GroupMessageData groupMessageData = new GroupMessageData();
+        groupMessageData.setGroupUuid(groupId);
+        groupMessageData.setMessages(messagesList);
+        groupMessageS.addMessage(groupMessageData);
 
     }
 
@@ -195,24 +210,22 @@ public class OnlineUser implements IAsyncCycle{
     public Map<String,List<Message>> getSendGroupMessageMap(ArrayList<Message> messages){
         Map<String , List<Message>> messageMap = new HashMap<>();
 
-         for(int i = 0; i < messages.size(); ++i){
-             Message message = messages.get(i);
-             String groupUuid = message.getGroup().getUuid();
+        for (Message message : messages) {
+            String groupUuid = message.getGroup().getUuid();
 
-             if(!messageMap.containsKey(groupUuid)){
-                 List<Message> messageList = new ArrayList<>();
-                 messageMap.put(groupUuid,messageList);
+            if (!messageMap.containsKey(groupUuid)) {
+                List<Message> messageList = new ArrayList<>();
+                messageMap.put(groupUuid, messageList);
 
-                 messageList.add(message);
-                 continue;
-             }
+                messageList.add(message);
+                continue;
+            }
 
-             List<Message> messageList = messageMap.get(groupUuid);
-             messageList.add(message);
-         }
+            List<Message> messageList = messageMap.get(groupUuid);
+            messageList.add(message);
+        }
         return messageMap;
     }
-
 
 }
 

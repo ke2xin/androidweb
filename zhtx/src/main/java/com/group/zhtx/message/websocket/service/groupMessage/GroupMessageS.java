@@ -3,6 +3,7 @@ package com.group.zhtx.message.websocket.service.groupMessage;
 import com.group.zhtx.message.IMessage;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GroupMessageS implements IMessage {
 
@@ -14,7 +15,7 @@ public class GroupMessageS implements IMessage {
     /*
         返回的组消息
      */
-    private ArrayList<GroupMessage> data;
+    private List<GroupMessageData> data;
 
     /*
         返回消息的描述
@@ -29,15 +30,15 @@ public class GroupMessageS implements IMessage {
         this.operateId = operateId;
     }
 
-    public ArrayList<GroupMessage> getData() {
+    public List<GroupMessageData> getData() {
         return data;
     }
 
-    public void setData(ArrayList<GroupMessage> data) {
+    public void setData(List<GroupMessageData> data) {
         this.data = data;
     }
 
-    public void addMessage(GroupMessage message) {
+    public void addMessage(GroupMessageData message) {
         data.add(message);
     }
 

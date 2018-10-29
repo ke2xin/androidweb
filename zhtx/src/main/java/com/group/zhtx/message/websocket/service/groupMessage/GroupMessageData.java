@@ -3,12 +3,12 @@ package com.group.zhtx.message.websocket.service.groupMessage;
 import com.group.zhtx.model.Message;
 import java.util.List;
 
-public class GroupMessage {
+public class GroupMessageData {
 
 
     private int groupUuid;
 
-    private List<Message> data;
+    private List<Message> messages;
 
 
     public int getGroupUuid() {
@@ -19,16 +19,16 @@ public class GroupMessage {
         this.groupUuid = groupUuid;
     }
 
-    public List<Message> getData() {
-        return data;
+    public List<Message> getMessages() {
+        return messages;
     }
 
-    public void setData(List<Message> data) {
-        this.data = data;
+    public void setMessages(List<Message> data) {
+        this.messages = data;
     }
 
     public void addMessage(Message message){
-        data.add(message);
+        messages.add(message);
     }
 }
 

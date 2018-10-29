@@ -4,17 +4,16 @@ package com.group.zhtx.controller;
 import com.group.zhtx.message.controller.register.RegisterC;
 import com.group.zhtx.message.controller.register.RegisterS;
 import com.group.zhtx.service.RepositoryService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-
 @RestController
 public class UserController {
 
     @Resource
     private RepositoryService service;
+
+
 
 
     @PostMapping(value = "/register/post")
