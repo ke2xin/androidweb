@@ -48,6 +48,8 @@ public class MessageFactory {
                 return gson.fromJson(data,UserGroupNumberInfoC.class);
             case WebSocketOperateUtil.User_Save_Personal_Info:
                 return gson.fromJson(data,UserPersonalInfoC.class);
+            case WebSocketOperateUtil.User_Exit:
+                return gson.fromJson(data,UserExitC.class);
             default:
                 return null;
         }

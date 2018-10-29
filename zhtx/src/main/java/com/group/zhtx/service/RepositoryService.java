@@ -115,6 +115,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         map.put(WebSocketOperateUtil.User_For_Me_C,"SearchForMe");
         map.put(WebSocketOperateUtil.User_Data_Info,"searchGroupNumberInfo");
         map.put(WebSocketOperateUtil.User_Save_Personal_Info,"savePersonalInfo");
+        map.put(WebSocketOperateUtil.User_Exit,"UserExit");
         return map;
     }
 
@@ -383,6 +384,12 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
     }
 
     /*
+        进入群聊
+     */
+    public void enterGroup(WebSocket webSocket){
+        System.out.println("进入群聊");
+    }
+    /*
         获取群资料
      */
     public void getGroupData(WebSocket webSocket){
@@ -432,7 +439,12 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         sendMessageWithWebSocket(session,webSocket);
 
     }
-
+    /*
+        退出群聊
+     */
+    public void exitGroup(WebSocket webSocket){
+        System.out.println("退出群聊");
+    }
 
     /*
         保存群资料
@@ -478,34 +490,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             //销毁消息包
             webSocket.clear();
         }
-    }
-
-
-    public void getUserLocations(WebSocket webSocket){
-
-        //根据当前请求用户是否登陆，获取该用户Uuid，辨别这个用户是否再这个群上面
-
-        //获取这个群的群成员
-
-        //获取这个群成员的成员位置信息
-    }
-
-    /*
-        电话联系群成员
-     */
-    public void getGroupUserPhone(WebSocket webSocket){
-        UserCallGroupUserByPhoneC userCallGroupUserByPhoneC = (UserCallGroupUserByPhoneC) webSocket.getIMessage();
-        int operateId = webSocket.getOperateId();
-        Session session = webSocket.getSession();
-
-        String groupId = userCallGroupUserByPhoneC.getGroupId();
-
-        //查找是否有这个群
-        Group group = groupRepository.findById(groupId).orElse(null);
-
-        //根据当前请求用户是否登陆，获取该用户Uuid，辨别这个用户是否再这个群上面
-
-        //查找这个群的用户，获取信息
     }
 
     /*
@@ -1128,5 +1112,33 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         }
         webSocket.clear();
     }
+    /*
+        用户注销
+     */
+    public void UserExit(WebSocket webSocket){
+        System.out.println("用户注销");
+        UserExitC userExitC=(UserExitC) webSocket.getIMessage();
+        Session session=webSocket.getSession();
+        int operateId=userExitC.getOperateId();
+        OnlineUser onlineUser = onlineUserManager.getOnlineUserBySessionId(session.getId());
 
+        if (onlineUser == null){
+            onlineUser = onlineUserManager.getOnlineUserByUuid(userExitC.getUuid());
+            if (onlineUser == null){
+                return;
+            }
+        }
+        onlineUserManager.removeOnlineUser(onlineUser);
+
+        //更新群成员接受时间
+        //返回相关信息
+
+    }
+
+    /*
+        解散群
+     */
+    public void dissolutionGroup(){
+        System.out.println("解散群");
+    }
 }

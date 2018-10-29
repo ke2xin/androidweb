@@ -38,6 +38,8 @@ public class WebSocketOperateUtil {
 
     public final static int User_Save_Personal_Info = 17;
 
+    public final static int User_Exit = 18;
+
     public final static int User_Get_GroupUserLocation_C = 8;
 
     public final static int User_Get_CallGroupUserPhone_C = 9;
