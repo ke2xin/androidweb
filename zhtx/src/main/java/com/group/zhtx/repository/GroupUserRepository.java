@@ -18,10 +18,16 @@ public interface GroupUserRepository extends JpaRepository<GroupUser,Long> {
     @Query("select gu.role from GroupUser gu where gu.user.uuid=?1 and gu.group.uuid=?2")
     public int getGroupUserRole(String userUuid,String groupUuid);
 
+<<<<<<< HEAD
     /*
         根据用户的uuid查找用户所拥有的群组
      */
     @Query("select gu.group from GroupUser gu where gu.group.uuid =?1")
     public List<Group> getGroupsByUserUuid(String userUuid);
+=======
+    public List<GroupUser>findByGroup(Group group);
+
+    public GroupUser findByUserAndGroup(User user,Group group);
+>>>>>>> dc82a2c3cdccc2b8059c293479bd8d344d27afca
 
 }

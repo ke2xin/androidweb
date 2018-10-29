@@ -26,7 +26,7 @@ public class WebSocketService {
     @OnMessage
     public void onMessage(Session session,WebSocket webSocket){
         webSocket.setSession(session);
-
+        System.out.println("session中id:"+session.getId());
         ThreadWebSocketManager.dispatchWebSocket(webSocket);
     }
 

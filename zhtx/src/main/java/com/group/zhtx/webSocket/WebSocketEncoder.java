@@ -9,7 +9,7 @@ public class WebSocketEncoder implements Encoder.Text<WebSocket> {
 
     @Override
     public String encode(WebSocket webSocket) throws EncodeException {
-
+        System.out.println("我在编码");
         return WebSocketUtil.encodeJson(webSocket);
     }
 

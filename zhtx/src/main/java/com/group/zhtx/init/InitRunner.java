@@ -1,18 +1,17 @@
 package com.group.zhtx.init;
 
 
-import com.group.zhtx.service.RepositoryService;
+
 import com.group.zhtx.thread.AsyncThreadManager;
-import com.group.zhtx.webSocket.WebSocketManager;
-import com.group.zhtx.webSocket.WebSocketService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
+
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+
 
 
 /*
@@ -32,6 +31,6 @@ public class InitRunner implements CommandLineRunner {
             设置创建5个线程，5个优先级，默认循环时间为100毫秒
          */
         AsyncThreadManager.init(5,5,100);
-
+        System.out.println("启动线程");
     }
 }

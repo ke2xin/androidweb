@@ -15,6 +15,7 @@ public class WebSocketManager {
 
 
     public static boolean addWebSocketListener(IWebSocketListener webSocketListener) throws Exception{
+        System.out.println("这是WebSocketManager的方法：addWebSocketListener");
         Map<Integer,String> maps = webSocketListener.getWebSocketService();
 
         if(maps == null)return false;
@@ -22,7 +23,7 @@ public class WebSocketManager {
         if(maps.size() == 0)return false;
 
         Object[] keys = maps.keySet().toArray();
-
+        System.out.println("这是key"+maps.keySet());
 
         for(int i = 0; i < keys.length; ++i){
             Integer operateId = (Integer) keys[i];
@@ -36,8 +37,9 @@ public class WebSocketManager {
 
 
             Method method = webSocketListener.getClass().getMethod(maps.get(operateId), WebSocket.class);
+            System.out.println("这是websocketmanager的方法"+method.getName()+"   "+maps.get(operateId));
             wsMethodsMap.put(operateId, method);
-
+            System.out.println(method.getName());
             //每个处理方法只对应一个实体
             if(wsInstanceMap.containsKey(method)){
                 System.out.println(webSocketListener.getClass().toString() +"getWebSocketService()" +"第" + i + "个已经存在了实体");
@@ -53,6 +55,7 @@ public class WebSocketManager {
     public static Method getMethodByOperateId(Integer operateId){
 
         if (wsMethodsMap.containsKey(operateId)){
+            System.out.println("根据id来获取方法");
             return wsMethodsMap.get(operateId);
         }
         return null;
