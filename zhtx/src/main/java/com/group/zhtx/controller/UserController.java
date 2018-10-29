@@ -29,11 +29,18 @@ public class UserController {
             registerS.setInformation("用户名已经存在");
             return registerS;
         }
+        //校验电话是否被注册
+        boolean isRegisteredByPhone=service.isPhoneRegister(registerC.getUserPhone());
+        if(isRegisteredByPhone){
+            registerS.setStatus("fail");
+            registerS.setInformation("电话已被注册");
+            return registerS;
+        }
 
         //注册用户
         service.saveUser(registerC);
-        registerS.setStatus("注册成功");
-        registerS.setInformation("");
+        registerS.setStatus("success");
+        registerS.setInformation("注册成功");
         return registerS;
     }
 

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.Date;
+import java.util.List;
 
 public interface GroupUserRepository extends JpaRepository<GroupUser,Long> {
 
@@ -17,4 +18,9 @@ public interface GroupUserRepository extends JpaRepository<GroupUser,Long> {
 
     @Query("select gu.role from GroupUser gu where gu.user.uuid=?1 and gu.group.uuid=?2")
     public int getGroupUserRole(String userUuid,String groupUuid);
+
+    public List<GroupUser>findByGroup(Group group);
+
+    public GroupUser findByUserAndGroup(User user,Group group);
+
 }

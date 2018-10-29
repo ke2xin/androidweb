@@ -35,14 +35,17 @@ public class WebSocketUtil {
 
         JSONObject jsonObject = JSONObject.fromObject(stringResult);
         int operateId = jsonObject.getInt("operateId");
-
+        System.out.println("我在这里"+jsonObject+"\t"+stringResult+"operateId="+operateId);
         IMessage IMessage = MessageFactory.newMessageByOperateCode(operateId,stringResult);
+        System.out.println("IMessage="+IMessage);
         WebSocket webSocket = new WebSocket(operateId, IMessage);
 
         return webSocket;
     }
 
     public static String encodeJson(WebSocket webSocket){
-        return new Gson().toJson(webSocket.getIMessage());
+        String s=new Gson().toJson(webSocket.getIMessage());
+        System.out.println(s);
+        return s;
     }
 }

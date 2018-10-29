@@ -36,17 +36,22 @@ public class ThreadWebSocketManager {
 
 
        Integer operateId = webSocket.getOperateId();
+       System.out.println("操作码："+operateId);
        int[] threadDegree;
        if(operateDispatchDegree.containsKey(operateId)){
+           System.out.println("存在优先级等级");
            threadDegree = operateDispatchDegree.get(operateId);
 
            if(threadDegree.length < 2){
                threadDegree = AsyncThreadManager.getRandomThreadAndPriority();
            }
        }else {
+           System.out.println("不存在优先级等级");
             threadDegree = AsyncThreadManager.getRandomThreadAndPriority();
        }
         Method method = WebSocketManager.getMethodByOperateId(operateId);
+       System.out.println(method.getName());
+
        if(method == null){
            return false;
        }

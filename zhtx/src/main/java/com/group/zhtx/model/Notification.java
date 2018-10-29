@@ -30,6 +30,11 @@ public class Notification implements Serializable {
     @Column(name = "notification_content", length = 200)
     public String content;
 
+    @Column(name = "notification_status")
+    public int status;
+
+    @Column(name = "notification_result")
+    public int result;
 
     @Column(name = "notification_createTime")
     @Temporal(TemporalType.DATE)
@@ -81,5 +86,21 @@ public class Notification implements Serializable {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public int getResult() {
+        return result;
+    }
+
+    public void setResult(int result) {
+        this.result = result;
     }
 }

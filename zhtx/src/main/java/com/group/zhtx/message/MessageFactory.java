@@ -1,10 +1,7 @@
 package com.group.zhtx.message;
 
 import com.google.gson.Gson;
-import com.group.zhtx.message.websocket.client.UserCreateGroupC;
-import com.group.zhtx.message.websocket.client.UserGetGroupDataC;
-import com.group.zhtx.message.websocket.client.UserLoginC;
-import com.group.zhtx.message.websocket.client.UserSaveGroupDataC;
+import com.group.zhtx.message.websocket.client.*;
 import com.group.zhtx.util.common.WebSocketOperateUtil;
 
 public class MessageFactory {
@@ -22,12 +19,35 @@ public class MessageFactory {
                  return gson.fromJson(data, UserGetGroupDataC.class);
             case WebSocketOperateUtil.User_Save_GroupData_C:
                 return gson.fromJson(data, UserSaveGroupDataC.class);
+            case WebSocketOperateUtil.User_Group_Number_Location_C:
+                System.out.println("客户端发送的消息包"+data);
+                return gson.fromJson(data, UserLocationInfoC.class);
+            case WebSocketOperateUtil.User_Phone_Relative_C:
+                System.out.println("电话联系成员");
+                return gson.fromJson(data, UserRelativNumberC.class);
+            case WebSocketOperateUtil.User_Application_Enter_Group_C:
+                System.out.println("申请加入群聊"+opercode+"fff||\t"+WebSocketOperateUtil.User_Enter_Group_C);
+                return gson.fromJson(data, UserApplicationEnterGroupC.class);
+            case WebSocketOperateUtil.User_Accept_Enter_Group_C:
+                return gson.fromJson(data, UserAcceptAndRefuseEnterGroupC.class);
+            case WebSocketOperateUtil.User_Refuse_Enter_Group_C:
+                return gson.fromJson(data, UserAcceptAndRefuseEnterGroupC.class);
+            case WebSocketOperateUtil.User_Delete_Group_Number_C:
+                return gson.fromJson(data, UserDeleteGroupNumberC.class);
+            case WebSocketOperateUtil.User_Search_Group_C:
+                return gson.fromJson(data,UserSearchGroupC.class);
+            case WebSocketOperateUtil.User_Search_Group_Number_Info_C:
+                return gson.fromJson(data,UserGroupNumberInfoC.class);
+            case WebSocketOperateUtil.User_For_Me_C:
+                return gson.fromJson(data,UserForMeC.class);
+            case WebSocketOperateUtil.User_Data_Info:
+                return gson.fromJson(data,UserGroupNumberInfoC.class);
+            case WebSocketOperateUtil.User_Save_Personal_Info:
+                return gson.fromJson(data,UserPersonalInfoC.class);
             default:
                 return null;
         }
 
     }
-
-
 
 }

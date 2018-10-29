@@ -7,4 +7,5 @@ public class GroupUtil {
 
         return (int)(Math.random() * 100000000);
     }
+
 }

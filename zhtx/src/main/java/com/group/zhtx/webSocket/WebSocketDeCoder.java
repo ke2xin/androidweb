@@ -10,6 +10,7 @@ public class WebSocketDeCoder implements Decoder.Binary<WebSocket> {
 
     @Override
     public WebSocket decode(ByteBuffer byteBuffer) throws DecodeException {
+        System.out.println("我在解码");
         return WebSocketUtil.decodeJosn(byteBuffer);
     }
 
