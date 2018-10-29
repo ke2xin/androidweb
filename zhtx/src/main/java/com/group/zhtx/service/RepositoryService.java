@@ -179,7 +179,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
     }
 
     /*
-<<<<<<< HEAD
         发送消息
      */
     private void sendMessageWithWebSocket(Session session,WebSocket webSocket){
@@ -219,7 +218,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         String uuid = registerC.getUuid();
         String password = registerC.getPassword();
         User user = userRepository.findById(uuid).orElse(null);
-        System.out.println("你去死吧");
+
         if(user == null){
             try {
                 session.getBasicRemote().sendText("" +

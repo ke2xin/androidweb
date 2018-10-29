@@ -12,7 +12,7 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint(value = "/ws",decoders = {WebSocketDeCoder.class},encoders = {WebSocketEncoder.class})
+@ServerEndpoint(value = "/ws",decoders = {WebSocketDeCoder.class,WebSocketTDecoder.class},encoders = {WebSocketEncoder.class})
 @Component
 public class WebSocketService {
 
@@ -25,6 +25,12 @@ public class WebSocketService {
 
     @OnMessage
     public void onMessage(Session session,WebSocket webSocket){
+
+        if (webSocket.getIMessage() == null){
+            logger.error("WebSocket消息包中Message为null");
+            return;
+        }
+
         webSocket.setSession(session);
         System.out.println("session中id:"+session.getId());
         ThreadWebSocketManager.dispatchWebSocket(webSocket);
