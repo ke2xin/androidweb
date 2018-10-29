@@ -2,17 +2,12 @@ package com.group.zhtx.service;
 
 
 
-<<<<<<< HEAD
-import com.group.zhtx.message.websocket.client.*;
-import com.group.zhtx.message.controller.register.RegisterC;
-=======
-import com.group.zhtx.message.controller.register.PasswordC;
 
 import com.group.zhtx.message.websocket.client.*;
 import com.group.zhtx.message.controller.register.RegisterC;
+import com.group.zhtx.message.controller.register.PasswordC;
 import com.group.zhtx.message.websocket.service.AcceptAndRefuseEnterGroup.AcceptAndRefuseInfo;
 import com.group.zhtx.message.websocket.service.AcceptAndRefuseEnterGroup.AcceptAndRefuseDataS;
->>>>>>> dc82a2c3cdccc2b8059c293479bd8d344d27afca
 import com.group.zhtx.message.websocket.service.createGroupMessage.UserCreateGroupS;
 import com.group.zhtx.message.websocket.service.deleteGroupData.DeleteDataS;
 import com.group.zhtx.message.websocket.service.deleteGroupData.DeleteInfo;
@@ -31,7 +26,6 @@ import com.group.zhtx.message.websocket.service.myData.MyDataS;
 import com.group.zhtx.message.websocket.service.savaPersonalData.SavePersonalDataS;
 import com.group.zhtx.message.websocket.service.savaPersonalData.SavePersonalInfo;
 import com.group.zhtx.message.websocket.service.saveGroupData.UserSaveGroupDataS;
-<<<<<<< HEAD
 import com.group.zhtx.message.websocket.service.sendGroupMessage.SendGroupMessageS;
 import com.group.zhtx.model.Group;
 import com.group.zhtx.model.GroupUser;
@@ -40,13 +34,11 @@ import com.group.zhtx.model.User;
 import com.group.zhtx.onlineUser.OnlineUser;
 import com.group.zhtx.onlineUser.OnlineUserData;
 import com.group.zhtx.onlineUser.OnlineUserManager;
-=======
 import com.group.zhtx.message.websocket.service.searchData.SearchDataInfo;
 import com.group.zhtx.message.websocket.service.searchData.SearchDataS;
 import com.group.zhtx.message.websocket.service.telephoneBook.RelativeBookS;
 import com.group.zhtx.message.websocket.service.telephoneBook.RelativeInfo;
 import com.group.zhtx.model.*;
->>>>>>> dc82a2c3cdccc2b8059c293479bd8d344d27afca
 import com.group.zhtx.repository.*;
 import com.group.zhtx.util.common.WebSocketOperateUtil;
 import com.group.zhtx.util.group.GroupUtil;
@@ -60,11 +52,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-<<<<<<< HEAD
 import javax.annotation.Resource;
-=======
 import javax.transaction.Transactional;
->>>>>>> dc82a2c3cdccc2b8059c293479bd8d344d27afca
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
 import java.io.IOException;
@@ -108,12 +97,10 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
     @PostConstruct
     public void initMethod() throws Exception {
         WebSocketManager.addWebSocketListener(this);
-        System.out.println("this="+this);
     }
 
     @Override
     public Map<Integer, String> getWebSocketService() throws Exception {
-        System.out.println("我正在添加操作码,才可以映射方法");
         Map<Integer,String> map = new HashMap<>();
         map.put(WebSocketOperateUtil.User_Login_C,"userLogin");
         map.put(WebSocketOperateUtil.User_CreateGroup_C,"createGroup");
@@ -213,7 +200,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         }
     }
 
-=======
+    /*
         根据绑定的电话更新用户的密码
         @Transactional注解用于声明方法的事物特性
      */
@@ -221,7 +208,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
     public void updateNewPassword(User user, PasswordC passwordC){
         user.setPassword(passwordC.getNew_password());
     }
->>>>>>> dc82a2c3cdccc2b8059c293479bd8d344d27afca
+
     /*
         用户登陆
      */
@@ -379,7 +366,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         GroupUser groupUser = new GroupUser();
         groupUser.setGroup(group);
         groupUser.setJoinTime(new Date());
-        groupUser.setReceiveTime(System.currentTimeMillis());
+        groupUser.setReceiveTime(new Date());
         groupUser.setRole((short) 1);
         groupUser.setStatus((short) 1);
         groupUser.setUser(user);
@@ -492,7 +479,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             webSocket.clear();
         }
     }
-<<<<<<< HEAD
 
 
     public void getUserLocations(WebSocket webSocket){
@@ -573,7 +559,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
 
 
 
-=======
     /*
         查看群成员位置信息
      */
@@ -635,6 +620,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             e.printStackTrace();
         }
     }
+
     /*
         电话联系群成员
      */
@@ -690,6 +676,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             webSocket.clear();
         }
     }
+
     /*
     申请加入群聊
      */
@@ -954,9 +941,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             webSocket=new WebSocket(operateId,deleteDataS,null);
             try {
                 session.getBasicRemote().sendObject(webSocket);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (EncodeException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             webSocket.clear();
@@ -1143,5 +1128,5 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         }
         webSocket.clear();
     }
->>>>>>> dc82a2c3cdccc2b8059c293479bd8d344d27afca
+
 }

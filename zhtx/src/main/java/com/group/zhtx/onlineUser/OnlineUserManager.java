@@ -2,6 +2,7 @@ package com.group.zhtx.onlineUser;
 
 import com.group.zhtx.model.Message;
 import com.group.zhtx.repository.MessageRepository;
+import com.group.zhtx.thread.AsyncThreadManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,9 @@ public class OnlineUserManager {
 
         String sessionId = onlineUser.getSession().getId();
         sessionMap.put(sessionId,uuid);
+
+        //添加进线程进行循环处理
+        AsyncThreadManager.addCycle(onlineUser,1,1);
     }
 
 
@@ -73,6 +77,8 @@ public class OnlineUserManager {
 
     public boolean removeOnlineUser(OnlineUser onlineUser){
         if (onlineUser == null)return false;
+
+        AsyncThreadManager.removeCycle(onlineUser,1,1);
 
         onlineUserMap.remove(onlineUser);
         return true;

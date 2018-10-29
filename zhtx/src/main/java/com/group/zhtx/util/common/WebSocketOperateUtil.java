@@ -38,9 +38,6 @@ public class WebSocketOperateUtil {
 
     public final static int User_Save_Personal_Info = 17;
 
-<<<<<<< HEAD
-    public final static int User_Save_GroupData_C = 7;
-
     public final static int User_Get_GroupUserLocation_C = 8;
 
     public final static int User_Get_CallGroupUserPhone_C = 9;
@@ -48,6 +45,4 @@ public class WebSocketOperateUtil {
 
     public final static int User_Send_GroupMessage_C = 24;
 
-=======
->>>>>>> dc82a2c3cdccc2b8059c293479bd8d344d27afca
 }
