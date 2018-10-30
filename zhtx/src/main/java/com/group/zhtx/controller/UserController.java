@@ -29,7 +29,7 @@ public class UserController {
             return registerS;
         }
         //校验电话是否被注册
-        boolean isRegisteredByPhone=service.isPhoneRegister(registerC.getUserPhone());
+        boolean isRegisteredByPhone=service.isPhoneRegistered(registerC.getUserPhone());
         if(isRegisteredByPhone){
             registerS.setStatus("fail");
             registerS.setInformation("电话已被注册");

@@ -13,10 +13,14 @@ public class MessageFactory {
         switch (opercode){
             case WebSocketOperateUtil.User_Login_C:
                 return gson.fromJson(data, UserLoginC.class);
-             case WebSocketOperateUtil.User_CreateGroup_C:
+            case WebSocketOperateUtil.User_CreateGroup_C:
                  return gson.fromJson(data, UserCreateGroupC.class);
-             case WebSocketOperateUtil.User_Get_Group_Data_C:
+            case WebSocketOperateUtil.User_Enter_Group_C:
+                 return gson.fromJson(data,UserEnterGroupC.class);
+            case WebSocketOperateUtil.User_Get_Group_Data_C:
                  return gson.fromJson(data, UserGetGroupDataC.class);
+            case WebSocketOperateUtil.User_Quit_Group_C:
+                return gson.fromJson(data,UserQuitGroupC.class);
             case WebSocketOperateUtil.User_Save_GroupData_C:
                 return gson.fromJson(data, UserSaveGroupDataC.class);
             case WebSocketOperateUtil.User_Get_CallGroupUserPhone_C:
@@ -29,7 +33,7 @@ public class MessageFactory {
                 return gson.fromJson(data, UserRelativNumberC.class);
                 /*
             case WebSocketOperateUtil.User_Application_Enter_Group_C:
-                System.out.println("申请加入群聊"+opercode+"fff||\t"+WebSocketOperateUtil.User_Enter_Group_C);
+                System.out.println("申请加入群聊"+opercode+"||"+WebSocketOperateUtil.User_Enter_Group_C);
                 return gson.fromJson(data, UserApplicationEnterGroupC.class);
                 */
             case WebSocketOperateUtil.User_Accept_Enter_Group_C:
@@ -50,6 +54,8 @@ public class MessageFactory {
                 return gson.fromJson(data,UserPersonalInfoC.class);
             case WebSocketOperateUtil.User_Exit:
                 return gson.fromJson(data,UserExitC.class);
+            case WebSocketOperateUtil.User_Dissolution_Group:
+                return gson.fromJson(data,UserDissolutionGroupC.class);
             default:
                 return null;
         }

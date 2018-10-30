@@ -21,7 +21,7 @@ public interface UserRepository extends JpaRepository<User,String>, JpaSpecifica
     //根据用户uuid和电话查找指定的用户
     public List<User>findByUuidAndPhone(String uuid,String phone);
 
-    //根据电话查找指定的用户
+    //根据指定的电话查找是否已注册了该用户
     User findByPhone(String phone);
 
     //根据用户账号查找用户

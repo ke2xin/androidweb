@@ -21,4 +21,8 @@ public interface GroupRepository extends JpaRepository<Group,String>,JpaSpecific
 
     //根据用户给的群号模糊查找
     public List<Group>findByUuidLike(String groupId);
+
+    //根据用户传入的群号和用户账号查找该群
+    @Query("select g from  Group g where g.uuid=?1 and g.creater.uuid=?2")
+    public Group getGroupByUuidAndCreater(String groupId,String uuid);
 }

@@ -81,6 +81,8 @@ public class OnlineUserManager {
         AsyncThreadManager.removeCycle(onlineUser,1,1);
 
         onlineUserMap.remove(onlineUser);
+
+        sessionMap.remove(onlineUser.getSession().getId());
         return true;
     }
 }

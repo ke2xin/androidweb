@@ -12,7 +12,7 @@ public class WebSocketOperateUtil {
 
     public final static int User_Get_Group_Data_C = 4;
 
-    private final static int User_Quit_Group_C = 5;
+    public final static int User_Quit_Group_C = 5;
 
     public final static int User_Save_GroupData_C = 6;
 
@@ -39,6 +39,8 @@ public class WebSocketOperateUtil {
     public final static int User_Save_Personal_Info = 17;
 
     public final static int User_Exit = 18;
+
+    public final static int User_Dissolution_Group = 19;
 
     public final static int User_Get_GroupUserLocation_C = 8;
 

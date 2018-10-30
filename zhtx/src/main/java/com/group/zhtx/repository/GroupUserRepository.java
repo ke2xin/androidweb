@@ -5,6 +5,7 @@ import com.group.zhtx.model.GroupUser;
 import com.group.zhtx.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
 import java.util.List;
@@ -30,5 +31,12 @@ public interface GroupUserRepository extends JpaRepository<GroupUser,Long> {
 
     public GroupUser findByUserAndGroup(User user, Group group);
 
+    //查找所有群成员
+    @Query("select g from GroupUser g where g.group.uuid=?1")
+    public List<GroupUser>getAllGroupUserForGroupId(String groupId);
+
+    //根据用户传入的uuid和group_id查找该群成员
+    @Query("select g from GroupUser g where g.user.uuid=:uuid and g.group.uuid=:groupId")
+    public GroupUser getGroupUserByGroupAndUuid(@Param("uuid") String uuid, @Param("groupId") String groupId);
 
 }

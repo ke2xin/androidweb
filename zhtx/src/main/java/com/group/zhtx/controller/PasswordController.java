@@ -23,7 +23,7 @@ public class PasswordController {
         /*
         检测该电话是否被注册
          */
-        boolean isRegistered=service.isPhoneRegister(passwordC.getTelephone());
+        boolean isRegistered=service.isPhoneRegistered(passwordC.getTelephone());
         if(isRegistered){
             User users=service.getUserByPhone(passwordC.getTelephone());
             if(users!=null){
