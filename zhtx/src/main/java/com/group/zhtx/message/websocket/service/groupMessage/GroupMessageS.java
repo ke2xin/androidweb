@@ -15,7 +15,7 @@ public class GroupMessageS implements IMessage {
     /*
         返回的组消息
      */
-    private List<GroupMessageData> data;
+    private List<GroupMessageData> data = new ArrayList<>();
 
     /*
         返回消息的描述

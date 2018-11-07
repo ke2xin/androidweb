@@ -2,6 +2,7 @@ package com.group.zhtx.message.websocket.service.getGroupData;
 
 import com.group.zhtx.message.IMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserGetGroupDataS implements IMessage {
@@ -10,7 +11,8 @@ public class UserGetGroupDataS implements IMessage {
     private String groupName;
     private String groupPortrait;
     private String groupNumber;
-    private List<UserGetGroupDataMember> members;
+    private String groupAnoun;
+    private List<UserGetGroupDataMember> members = new ArrayList<>();
 
     public int getOperateId() {
         return operateId;
@@ -42,6 +44,14 @@ public class UserGetGroupDataS implements IMessage {
 
     public void setGroupNumber(String groupNumber) {
         this.groupNumber = groupNumber;
+    }
+
+    public String getGroupAnoun() {
+        return groupAnoun;
+    }
+
+    public void setGroupAnoun(String groupAnoun) {
+        this.groupAnoun = groupAnoun;
     }
 
     public List<UserGetGroupDataMember> getMembers() {

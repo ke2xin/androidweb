@@ -71,7 +71,6 @@ public class OnlineUserManager {
     public OnlineUser getOnlineUserByUuid(String uuid){
 
         if (uuid == null || uuid.equals(""))return null;
-
         return onlineUserMap.get(uuid);
     }
 

@@ -1,12 +1,15 @@
 package com.group.zhtx.webSocket;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.group.zhtx.message.IMessage;
 import com.group.zhtx.message.MessageFactory;
+import com.group.zhtx.model.Message;
 import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -66,7 +69,21 @@ public class WebSocketUtil {
     }
 
     public static String encodeJson(WebSocket webSocket){
-        String s=new Gson().toJson(webSocket.getIMessage());
+        Gson gson=new GsonBuilder().registerTypeAdapter(Message.class, new JsonSerializer<Message>() {
+            @Override
+            public JsonElement serialize(Message src, Type typeOfSrc,
+                                         JsonSerializationContext context) {
+                JsonObject o=new JsonObject();
+                o.addProperty("messageGroupId",  src.getGroup().getUuid());
+                o.addProperty("userPortrait",src.getUser().getPortrait());
+                o.addProperty("messageUserName",src.getUser().getName());
+                o.addProperty("messageUserId",src.getUser().getUuid());
+                o.addProperty("messagecontent",src.getContent());
+                o.addProperty("messageTime",src.getSendTime().getTime());
+                return o;
+            }
+        }).create();
+        String s=gson.toJson(webSocket.getIMessage());
         System.out.println(s);
         return s;
     }

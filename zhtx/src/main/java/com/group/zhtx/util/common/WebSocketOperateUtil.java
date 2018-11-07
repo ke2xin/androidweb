@@ -9,7 +9,7 @@ public class WebSocketOperateUtil {
     public final static int User_CreateGroup_C = 2;
 
     public final static int User_Enter_Group_C = 3;
-
+    //获取群资料
     public final static int User_Get_Group_Data_C = 4;
 
     public final static int User_Quit_Group_C = 5;

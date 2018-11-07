@@ -9,10 +9,12 @@ import com.group.zhtx.repository.GroupUserRepository;
 import com.group.zhtx.repository.MessageRepository;
 import com.group.zhtx.thread.IAsyncCycle;
 import com.group.zhtx.webSocket.WebSocket;
+import org.springframework.context.annotation.Bean;
 
 import javax.websocket.Session;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
+
 
 public class OnlineUser implements IAsyncCycle{
 
@@ -45,11 +47,14 @@ public class OnlineUser implements IAsyncCycle{
 
     private ArrayList<Message> currentsendMessages = new ArrayList<>();
 
-    public OnlineUser(OnlineUserData userData, Session session, GroupUserRepository groupUserRepository, MessageRepository messageRepository){
+    private OnlineUserManager onlineUserManager;
+
+    public OnlineUser(OnlineUserData userData, Session session, GroupUserRepository groupUserRepository, MessageRepository messageRepository,OnlineUserManager manager){
         this.userData = userData;
         this.session = session;
         this.messageRepository = messageRepository;
         this.groupUserRepository = groupUserRepository;
+        this.onlineUserManager = manager;
     }
 
     @Override
@@ -104,39 +109,6 @@ public class OnlineUser implements IAsyncCycle{
         currentsendMessages = null;
     }
 
-    public OnlineUserData getData() {
-        return userData;
-    }
-
-    public void setData(OnlineUserData userData) {
-        this.userData = userData;
-    }
-
-    public boolean isOnline() {
-        return isOnline;
-    }
-
-    public void setOnline(boolean online) {
-        isOnline = online;
-    }
-
-    public Session getSession() {
-        return session;
-    }
-
-    public void setSession(Session session) {
-        this.session = session;
-    }
-
-    public int[] getThreadAndPrority() {
-        return threadAndPrority;
-    }
-
-    public void setThreadAndPrority(int[] threadAndPrority) {
-        this.threadAndPrority = threadAndPrority;
-    }
-
-
     /*
         添加等待发送的消息
      */
@@ -171,23 +143,15 @@ public class OnlineUser implements IAsyncCycle{
 
 
         for (Object key : keys) {
-            int groupId = (int) key;
-            List<Message> groupMessage = groupMessageMap.get(groupId);
+            String groupIds = (String) key;
+            int groupId = Integer.valueOf(groupIds);
+            List<Message> groupMessage = groupMessageMap.get(groupIds);
             sendGroupMessage(groupMessageS, groupId, groupMessage);
         }
 
-        WebSocket webSocket = new WebSocket(23,groupMessageS,null);
+        WebSocket webSocket = new WebSocket(24,groupMessageS,null);
 
         sendMessage(webSocket);
-    }
-
-    public void sendMessage(WebSocket webSocket){
-
-        try {
-            session.getBasicRemote().sendObject(webSocket);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /*
@@ -199,15 +163,25 @@ public class OnlineUser implements IAsyncCycle{
         groupMessageData.setGroupUuid(groupId);
         groupMessageData.setMessages(messagesList);
         groupMessageS.addMessage(groupMessageData);
-
     }
+
+    public void sendMessage(WebSocket webSocket){
+
+        try {
+            session.getBasicRemote().sendObject(webSocket);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     /*
         分类发给群组的消息集合
         key:GroupId
         value:群组消息集合
      */
-    public Map<String,List<Message>> getSendGroupMessageMap(ArrayList<Message> messages){
+    public Map<String,List<Message>> getSendGroupMessageMap(List<Message> messages){
         Map<String , List<Message>> messageMap = new HashMap<>();
 
         for (Message message : messages) {
@@ -227,5 +201,37 @@ public class OnlineUser implements IAsyncCycle{
         return messageMap;
     }
 
+
+    public OnlineUserData getData() {
+        return userData;
+    }
+
+    public void setData(OnlineUserData userData) {
+        this.userData = userData;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    public int[] getThreadAndPrority() {
+        return threadAndPrority;
+    }
+
+    public void setThreadAndPrority(int[] threadAndPrority) {
+        this.threadAndPrority = threadAndPrority;
+    }
 }
 

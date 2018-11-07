@@ -8,8 +8,9 @@ public class UserLoginS implements IMessage{
 
     private String status;
 
-    UserLoginData data;
+    private UserLoginData data;
 
+    private String information;
 
     public int getOperateId() {
         return operateId;
@@ -33,5 +34,13 @@ public class UserLoginS implements IMessage{
 
     public void setData(UserLoginData data) {
         this.data = data;
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public void setInformation(String information) {
+        this.information = information;
     }
 }

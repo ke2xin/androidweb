@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message,Long> {
 
-    @Query("select m from Message m where m.group =?1 order by m.sendTime Desc ")
+    @Query("select m from Message m where m.group.uuid =?1 order by m.sendTime Desc ")
     public List<Message> getLastestMessageByGroupUuid(String groupUuid);
 
 

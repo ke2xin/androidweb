@@ -114,6 +114,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         map.put(WebSocketOperateUtil.User_Login_C,"userLogin");
         map.put(WebSocketOperateUtil.User_CreateGroup_C,"createGroup");
         map.put(WebSocketOperateUtil.User_Enter_Group_C,"enterGroup");
+        map.put(WebSocketOperateUtil.User_Get_Group_Data_C,"getGroupData");
         map.put(WebSocketOperateUtil.User_Quit_Group_C,"quitGroup");
         map.put(WebSocketOperateUtil.User_Group_Number_Location_C,"searchGroupNumberLocation");
         map.put(WebSocketOperateUtil.User_Phone_Relative_C,"relativeNumberByPhone");
@@ -128,6 +129,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         map.put(WebSocketOperateUtil.User_Save_Personal_Info,"savePersonalInfo");
         map.put(WebSocketOperateUtil.User_Exit,"UserExit");
         map.put(WebSocketOperateUtil.User_Dissolution_Group,"dissolutionGroup");
+        map.put(WebSocketOperateUtil.User_Send_GroupMessage_C,"getSendGroupMessage");
         return map;
     }
 
@@ -252,16 +254,16 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         String password = registerC.getPassword();
         User user = userRepository.findById(uuid).orElse(null);
 
+        UserLoginS userLoginS = new UserLoginS();
+
         if(user == null){
             try {
-                session.getBasicRemote().sendText("" +
-                        "{\n" +
-                        "operateId : 1,\n" +
-                        "status : fail,\n" +
-                        "information : “不存在这个用户或者用户名错误”,\n" +
-                        "data:[]\n" +
-                        "}");
-            } catch (IOException e) {
+                userLoginS.setOperateId(registerC.getOperateCode());
+                userLoginS.setStatus("fail");
+                userLoginS.setInformation("不存在这个用户或者用户名错误");
+                webSocket = new WebSocket(registerC.getOperateCode(),userLoginS,null);
+                session.getBasicRemote().sendObject(webSocket);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             //销毁消息包
@@ -271,14 +273,12 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
 
         if(!password.equals(user.getPassword())){
             try {
-                session.getBasicRemote().sendText("" +
-                        "{\n" +
-                        "operateId : 1,\n" +
-                        "status : fail,\n" +
-                        "information : “用户密码错误”,\n" +
-                        "data:[]\n" +
-                        "}");
-            } catch (IOException e) {
+                userLoginS.setOperateId(registerC.getOperateCode());
+                userLoginS.setStatus("fail");
+                userLoginS.setInformation("用户密码错误");
+                webSocket = new WebSocket(registerC.getOperateCode(),userLoginS,null);
+                session.getBasicRemote().sendObject(webSocket);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             //销毁消息包
@@ -287,7 +287,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         }
 
 
-        UserLoginS userLoginS = new UserLoginS();
+
         UserLoginData data = new UserLoginData();
         UserLoginDataSingal singal = new UserLoginDataSingal();
 
@@ -349,7 +349,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         //创建在线用户数据
         OnlineUserData onlineUserData = new OnlineUserData(user.getUuid(),user.getPhone(),user.getName(),user.getPortrait());
         //创建在线用户
-        OnlineUser onlineUser = new OnlineUser(onlineUserData,session,groupUserRepository,messageRepository);
+        OnlineUser onlineUser = new OnlineUser(onlineUserData,session,groupUserRepository,messageRepository,onlineUserManager);
         //设置用户在线状态
         onlineUser.setOnline(true);
         //之后操作的唯一管理识别类
@@ -522,7 +522,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         data.setGroupName(group.getName());
         data.setGroupNumber(group.getUuid());
         data.setGroupPortrait(group.getPortarit());
-
+        data.setGroupAnoun(group.getAnoun());
         List<User> users = userRepository.getUserByGroupUuid(groupUuid);
 
         for (User u : users){
@@ -675,17 +675,23 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         //获取内容
         String content = sendGroupMessageC.getContent();
 
-
-
         Message message = new Message();
         message.setContent(content);
         message.setGroup(group);
         message.setUser(user);
         message.setSendTime(new Date());
-
         //设置消息未读
         message.setStatus((short) 0);
-        onlineUser.addWaitToSendMessage(message);
+
+        //查找所有的群成员
+        List<GroupUser> groupUsers = groupUserRepository.findByGroup(group);
+        for (GroupUser gu : groupUsers){
+            String currentgroupUuid = gu.getUser().getUuid();
+            OnlineUser currentOnlineUser = onlineUserManager.getOnlineUserByUuid(currentgroupUuid);
+            //如果在线用户没有这个Id，无视
+            if(currentOnlineUser == null)continue;
+            currentOnlineUser.addWaitToSendMessage(message);
+        }
 
         SendGroupMessageS sendGroupMessageS = new SendGroupMessageS();
         sendGroupMessageS.setContent(content);

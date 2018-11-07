@@ -1,6 +1,8 @@
 package com.group.zhtx.message.websocket.service.groupMessage;
 
 import com.group.zhtx.model.Message;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class GroupMessageData {
@@ -23,8 +25,8 @@ public class GroupMessageData {
         return messages;
     }
 
-    public void setMessages(List<Message> data) {
-        this.messages = data;
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
     }
 
     public void addMessage(Message message){
