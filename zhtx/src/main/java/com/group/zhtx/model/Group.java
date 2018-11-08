@@ -30,7 +30,7 @@ public class Group implements Serializable {
     private short status = 1;
 
     @Column(name = "group_portarit",length = 100)
-    private String portarit;
+    private String portarit ="-1";
 
     @Temporal(TemporalType.DATE)
     @Column(name = "group_createTime")

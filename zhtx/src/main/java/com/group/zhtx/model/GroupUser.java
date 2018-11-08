@@ -27,11 +27,11 @@ public class GroupUser implements Serializable{
     @Column(name = "groupUser_role")
     private short role = 1;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "groupUser_joinTime")
     private Date joinTime;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "groupUser_recTime")
     private Date receiveTime;
 

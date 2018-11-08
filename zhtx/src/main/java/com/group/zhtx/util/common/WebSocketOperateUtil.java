@@ -6,9 +6,10 @@ public class WebSocketOperateUtil {
 
     public final static int User_Login_C = 1;
 
-    public final static int User_CreateGroup_C = 2;
+    //创建群
+    public final static int User_CreateGroup_C = 3;
 
-    public final static int User_Enter_Group_C = 3;
+    public final static int User_Enter_Group_C = 999;
     //获取群资料
     public final static int User_Get_Group_Data_C = 4;
 
