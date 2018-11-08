@@ -1,0 +1,88 @@
+package com.group.zhtx.message.websocket.service.createGroupMessage;
+
+public class UserCreateGroup {
+
+    private String groupName;
+    private String groupId;
+    private String groupPortrait;
+    private String lastestGroupUser;
+    private String lastGroupNumberName;
+    private long lastGroupSendTime;
+    private long lastestGroupMessage;
+    private int groupMessageCount;
+
+    private int groupRole;
+
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getGroupPortrait() {
+        return groupPortrait;
+    }
+
+    public void setGroupPortrait(String groupPortrait) {
+        this.groupPortrait = groupPortrait;
+    }
+
+    public String getLastestGroupUser() {
+        return lastestGroupUser;
+    }
+
+    public void setLastestGroupUser(String lastestGroupUser) {
+        this.lastestGroupUser = lastestGroupUser;
+    }
+
+    public String getLastGroupNumberName() {
+        return lastGroupNumberName;
+    }
+
+    public void setLastGroupNumberName(String lastGroupNumberName) {
+        this.lastGroupNumberName = lastGroupNumberName;
+    }
+
+    public long getLastGroupSendTime() {
+        return lastGroupSendTime;
+    }
+
+    public void setLastGroupSendTime(long lastGroupSendTime) {
+        this.lastGroupSendTime = lastGroupSendTime;
+    }
+
+    public long getLastestGroupMessage() {
+        return lastestGroupMessage;
+    }
+
+    public void setLastestGroupMessage(long lastestGroupMessage) {
+        this.lastestGroupMessage = lastestGroupMessage;
+    }
+
+    public int getGroupMessageCount() {
+        return groupMessageCount;
+    }
+
+    public void setGroupMessageCount(int groupMessageCount) {
+        this.groupMessageCount = groupMessageCount;
+    }
+
+    public int getGroupRole() {
+        return groupRole;
+    }
+
+    public void setGroupRole(int groupRole) {
+        this.groupRole = groupRole;
+    }
+}

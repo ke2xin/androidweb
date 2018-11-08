@@ -8,6 +8,7 @@ import com.group.zhtx.message.controller.register.RegisterC;
 import com.group.zhtx.message.controller.register.PasswordC;
 import com.group.zhtx.message.websocket.service.AcceptAndRefuseEnterGroup.AcceptAndRefuseInfo;
 import com.group.zhtx.message.websocket.service.AcceptAndRefuseEnterGroup.AcceptAndRefuseDataS;
+import com.group.zhtx.message.websocket.service.createGroupMessage.UserCreateGroup;
 import com.group.zhtx.message.websocket.service.createGroupMessage.UserCreateGroupS;
 import com.group.zhtx.message.websocket.service.deleteGroupData.DeleteDataS;
 import com.group.zhtx.message.websocket.service.deleteGroupData.DeleteInfo;
@@ -317,6 +318,17 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
 
             //填写用户组信息
             UserLoginDataGroup loginGroup = new UserLoginDataGroup();
+
+            if(messages.size() >0){
+                Message message = messages.get(0);
+                loginGroup.setLastestGroupUser(userRepository.getUserName(message.getUser().getUuid()));
+                loginGroup.setLastGroupSendTime(message.getSendTime());
+                loginGroup.setLastestGroupMessage(message.getContent());
+            }else {
+                loginGroup.setLastestGroupUser("");
+                loginGroup.setLastGroupSendTime(new Date());
+                loginGroup.setLastestGroupMessage("");
+            }
             //设置群名称
             loginGroup.setGroupName(group.getName());
             //设置群号
@@ -411,17 +423,27 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         groupUser.setGroup(group);
         groupUser.setJoinTime(new Date());
         groupUser.setReceiveTime(new Date());
-        groupUser.setRole((short) 1);
+        //设置群主角色
+        groupUser.setRole((short) 0);
         groupUser.setStatus((short) 1);
         groupUser.setUser(user);
 
         //创建组管理员用户添加进组成员表中
         groupUserRepository.save(groupUser);
 
+        UserCreateGroup createGroup = new UserCreateGroup();
+        createGroup.setGroupId(group.getUuid());
+        createGroup.setGroupName(group.getName());
+        createGroup.setGroupPortrait(group.getPortarit());
+        createGroup.setLastestGroupUser("null");
+        createGroup.setLastGroupNumberName("null");
+        createGroup.setGroupRole(0);
 
         //返回数据
         userCreateGroupS.setStatus("success");
         userCreateGroupS.setInformation("创建群成功");
+        userCreateGroupS.addUserCreateGroup(createGroup);
+
         webSocket = new WebSocket(operateId, userCreateGroupS,null);
         sendMessageWithWebSocket(session,webSocket);
     }
