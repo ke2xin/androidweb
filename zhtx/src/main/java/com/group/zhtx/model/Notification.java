@@ -37,7 +37,7 @@ public class Notification implements Serializable {
     public int result;
 
     @Column(name = "notification_createTime")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
 
     public int getId() {

@@ -32,7 +32,7 @@ public class Group implements Serializable {
     @Column(name = "group_portarit",length = 100)
     private String portarit;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "group_createTime")
     private Date createTime;
 

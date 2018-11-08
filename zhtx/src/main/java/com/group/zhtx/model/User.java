@@ -47,12 +47,12 @@ public class User implements Serializable{
 
     //用户创建的时间
     @Column(name = "user_createTime")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
 
     //用户最新修改资料的时间
     @Column(name = "user_lastestModify")
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date modifyTime;
 
 

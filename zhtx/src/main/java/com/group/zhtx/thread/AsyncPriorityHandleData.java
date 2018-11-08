@@ -70,12 +70,14 @@ public class AsyncPriorityHandleData {
 
     public void addCycle(IAsyncCycle cycle) throws Exception{
         if(cycle == null) throw new Exception("添加Cycle失败");
+        cycle.onAdd();
         currentCycles.add(cycle);
 
     }
 
     public void removeCycle(IAsyncCycle cycle) throws Exception{
         if(cycle == null) throw new Exception("移除Cycle失败");
+        cycle.onRemove();
         currentCycles.remove(cycle);
 
     }

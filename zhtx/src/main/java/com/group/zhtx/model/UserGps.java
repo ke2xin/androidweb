@@ -26,7 +26,7 @@ public class UserGps implements Serializable {
     @Column(name = "locate_corner",length = 100)
     private String directionAndAngle;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "locate_time")
     private Date locationDate;
 

@@ -304,7 +304,8 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
 
             //查找用户当前群组的最新消息
             List<Message> messages = messageRepository.getLastestMessageByGroupUuid(groupUuid);
-            Message message = messages.get(0);
+
+
             //获取用户最后接受消息时间
             Date receiveTime = groupUserRepository.getGroupLastestTime(user.getUuid(),groupUuid);
 
@@ -321,11 +322,17 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             //设置群号
             loginGroup.setGroupNumber(group.getUuid());
 
+            if(messages.size() > 0){
+
+                Message message = messages.get(0);
+                loginGroup.setLastestGroupUser(userRepository.getUserName(message.getUser().getUuid()));
+                loginGroup.setLastGroupSendTime(message.getSendTime());
+                loginGroup.setLastestGroupMessage(message.getContent());
+            }
+
             //设置用户头像
             loginGroup.setGroupPortrait(group.getPortarit());
-            loginGroup.setLastestGroupUser(userRepository.getUserName(message.getUser().getUuid()));
-            loginGroup.setLastGroupSendTime(message.getSendTime());
-            loginGroup.setLastestGroupMessage(message.getContent());
+
             loginGroup.setGroupMessageCount(messageCount);
             loginGroup.setGroupRole(groupRole);
             data.addDataGroup(loginGroup);
