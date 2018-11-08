@@ -30,7 +30,7 @@ public class Message implements Serializable{
     private String content;
 
     @Column(name = "message_status")
-    public short status;
+    private short status;
 
     public long getId() {
         return id;

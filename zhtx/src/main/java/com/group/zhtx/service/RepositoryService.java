@@ -690,6 +690,9 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         //设置消息未读
         message.setStatus((short) 0);
 
+        //服务器记录聊天
+        messageRepository.save(message);
+
         //查找所有的群成员
         List<GroupUser> groupUsers = groupUserRepository.findByGroup(group);
         for (GroupUser gu : groupUsers){
