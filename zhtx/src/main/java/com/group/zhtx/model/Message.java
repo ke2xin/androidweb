@@ -14,15 +14,15 @@ public class Message implements Serializable{
     private long id;
 
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Group.class)
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Group.class)
     @JoinColumn(name = "message_gid", referencedColumnName = "group_uuid", foreignKey = @ForeignKey(name = "FK_MESSAGE_GROUP"))
     private Group group;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = User.class)
     @JoinColumn(name = "message_uid", referencedColumnName = "user_uuid", foreignKey = @ForeignKey(name = "FK_MESSAGE_USER"))
     private User user;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "message_time")
     private Date sendTime;
 

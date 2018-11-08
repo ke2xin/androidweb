@@ -9,6 +9,9 @@ import com.group.zhtx.repository.GroupUserRepository;
 import com.group.zhtx.repository.MessageRepository;
 import com.group.zhtx.thread.IAsyncCycle;
 import com.group.zhtx.webSocket.WebSocket;
+import jdk.nashorn.internal.runtime.logging.DebugLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 
 import javax.websocket.Session;
@@ -18,7 +21,7 @@ import java.util.concurrent.LinkedBlockingDeque;
 
 public class OnlineUser implements IAsyncCycle{
 
-
+    private static Logger logger = LoggerFactory.getLogger(OnlineUser.class);
     /*
         在线用户基本信息
      */
@@ -72,8 +75,9 @@ public class OnlineUser implements IAsyncCycle{
 
             //获取用户离开后未读取的消息
             List<Message> messages = messageRepository.getUnReadMessageByGroupUuidAndTime(groupUuid,groupUserReceiveTime);
-
+            if(messages.size() == 0)continue;
             groupsMessage.put(groupUuid,messages);
+
         }
 
         //发送组消息
@@ -149,7 +153,7 @@ public class OnlineUser implements IAsyncCycle{
             sendGroupMessage(groupMessageS, groupId, groupMessage);
         }
 
-        WebSocket webSocket = new WebSocket(24,groupMessageS,null);
+        WebSocket webSocket = new WebSocket(23,groupMessageS,null);
 
         sendMessage(webSocket);
     }

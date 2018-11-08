@@ -334,6 +334,14 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             //设置群号
             loginGroup.setGroupNumber(group.getUuid());
 
+            if(messages.size() > 0){
+
+                Message message = messages.get(0);
+                loginGroup.setLastestGroupUser(userRepository.getUserName(message.getUser().getUuid()));
+                loginGroup.setLastGroupSendTime(message.getSendTime());
+                loginGroup.setLastestGroupMessage(message.getContent());
+            }
+
             //设置用户头像
             loginGroup.setGroupPortrait(group.getPortarit());
 
