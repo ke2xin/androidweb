@@ -11,6 +11,7 @@ public class UserCreateGroupS implements IMessage {
     private int operateId;
     private String status;
     private String information;
+
     private List<UserCreateGroup> groups = new ArrayList<>();
 
     public int getOperateId() {

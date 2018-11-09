@@ -14,7 +14,6 @@ public class MessageFactory {
             case WebSocketOperateUtil.User_Login_C:
                 return gson.fromJson(data, UserLoginC.class);
             case WebSocketOperateUtil.User_CreateGroup_C:
-
                  return gson.fromJson(data, UserCreateGroupC.class);
             case WebSocketOperateUtil.User_Enter_Group_C:
                  return gson.fromJson(data,UserEnterGroupC.class);

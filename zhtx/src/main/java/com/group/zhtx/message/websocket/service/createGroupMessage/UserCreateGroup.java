@@ -8,7 +8,7 @@ public class UserCreateGroup {
     private String lastestGroupUser;
     private String lastGroupNumberName;
     private long lastGroupSendTime;
-    private long lastestGroupMessage;
+    private String lastestGroupMessage;
     private int groupMessageCount;
 
     private int groupRole;
@@ -62,11 +62,11 @@ public class UserCreateGroup {
         this.lastGroupSendTime = lastGroupSendTime;
     }
 
-    public long getLastestGroupMessage() {
+    public String getLastestGroupMessage() {
         return lastestGroupMessage;
     }
 
-    public void setLastestGroupMessage(long lastestGroupMessage) {
+    public void setLastestGroupMessage(String lastestGroupMessage) {
         this.lastestGroupMessage = lastestGroupMessage;
     }
 
