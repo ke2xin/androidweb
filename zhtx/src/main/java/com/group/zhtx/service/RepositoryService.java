@@ -37,6 +37,7 @@ import com.group.zhtx.message.websocket.service.savaPersonalData.SavePersonalDat
 import com.group.zhtx.message.websocket.service.savaPersonalData.SavePersonalInfo;
 import com.group.zhtx.message.websocket.service.saveGroupData.UserSaveGroupDataS;
 import com.group.zhtx.message.websocket.service.sendGroupMessage.SendGroupMessageS;
+import com.group.zhtx.message.websocket.service.userSendTimeStamp.UserSendTimeStampS;
 import com.group.zhtx.model.Group;
 import com.group.zhtx.model.GroupUser;
 import com.group.zhtx.model.Message;
@@ -131,6 +132,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         map.put(WebSocketOperateUtil.User_Exit,"UserExit");
         map.put(WebSocketOperateUtil.User_Dissolution_Group,"dissolutionGroup");
         map.put(WebSocketOperateUtil.User_Send_GroupMessage_C,"getSendGroupMessage");
+        map.put(WebSocketOperateUtil.User_Send_TimeStamp,"getReceiveTimeStamp");
         return map;
     }
 
@@ -763,7 +765,57 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         sendMessageWithWebSocket(session,webSocket);
     }
 
+    /*
+        更新用户接收时间
+     */
+    public void getReceiveTimeStamp(WebSocket webSocket){
+        UserSendTimeStampC userSendTimeStampC = (UserSendTimeStampC) webSocket.getIMessage();
+        String userUuid = userSendTimeStampC.getUserUuid();
+        String groupUuid = userSendTimeStampC.getGroupUuid();
+        int operateId = webSocket.getOperateId();
+        Session session = webSocket.getSession();
 
+        User user = userRepository.findById(userUuid).orElse(null);
+
+        UserSendTimeStampS userSendTimeStampS = new UserSendTimeStampS();
+        userSendTimeStampS.setOperateId(webSocket.getOperateId());
+
+        if(user == null){
+            userSendTimeStampS.setInformation("用户不存在啊");
+            userSendTimeStampS.setStatus("fail");
+            webSocket = new WebSocket(operateId, userSendTimeStampS, null);
+            sendMessageWithWebSocket(session, webSocket);
+        }
+
+        Group group = groupRepository.findById(groupUuid).orElse(null);
+
+        if(group == null){
+            userSendTimeStampS.setInformation("该群不存在");
+            userSendTimeStampS.setStatus("fail");
+            webSocket = new WebSocket(operateId, userSendTimeStampS, null);
+            sendMessageWithWebSocket(session, webSocket);
+        }
+
+        GroupUser groupUser = groupUserRepository.getGroupUserByGroupAndUser(user, group);
+
+        if(groupUser == null){
+            userSendTimeStampS.setInformation("不是该群的成员或者该群不存在");
+            userSendTimeStampS.setStatus("fail");
+            webSocket = new WebSocket(operateId, userSendTimeStampS, null);
+            sendMessageWithWebSocket(session, webSocket);
+        }
+
+        Date date = new Date(userSendTimeStampC.getTimeStamp());
+
+        groupUser.setReceiveTime(date);
+        groupUserRepository.saveAndFlush(groupUser);
+
+        userSendTimeStampS.setTimeStamp(userSendTimeStampC.getTimeStamp());
+        userSendTimeStampS.setInformation("更新时间成功");
+        userSendTimeStampS.setGroupId(userSendTimeStampC.getGroupUuid());
+        webSocket = new WebSocket(operateId, userSendTimeStampS, null);
+        sendMessageWithWebSocket(session,webSocket);
+    }
 
     /*
         查看群成员位置信息

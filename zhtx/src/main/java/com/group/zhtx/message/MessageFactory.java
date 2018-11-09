@@ -56,6 +56,8 @@ public class MessageFactory {
                 return gson.fromJson(data,UserExitC.class);
             case WebSocketOperateUtil.User_Dissolution_Group:
                 return gson.fromJson(data,UserDissolutionGroupC.class);
+            case WebSocketOperateUtil.User_Send_TimeStamp:
+                return gson.fromJson(data,UserSendTimeStampC.class);
             default:
                 return null;
         }
