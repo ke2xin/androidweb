@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<link rel="stylesheet" href="css/index.css" />
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mv5BTA8aclwokTIN8DzPX2l1CP8vl7yn"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+	</head>
+
+	<body>
+		<div class="main">
+			<div class="container">
+				<div class="head">
+					<img id="IPortrait" src="img/IPortrait.jpg" />
+					<h5 class="nickName">帅过吴彦祖</h5>
+					<p class="sign">不服，你就来战!!!!</p>
+				</div>
+				<div id="left">
+					<div id="top">
+						<span id="title">群聊</span>
+						<span id="functionButton">＋</span>
+						<div id="subMune">
+							<ul class="createAndSearch">
+								<li name="createGroup">创建群</li>
+								<li id="divisionLine"></li>
+								<li name="searchGroup">搜索群</li>
+							</ul>
+						</div>
+					</div>
+					<div id="middle">
+						<div id="middleGroupChat">
+							<ul id="groupChat">
+								<li>
+									<img src="img/group1.png" class="groupPortrait" />
+									<span class="groupName">。点滴之间</span>
+									<span class="groupLastMessage">
+										小智&nbsp;:&nbsp;哈哈哈哈哈啊哈哈！
+									</span>
+								</li>
+								<li>
+									<img src="img/group6.png" class="groupPortrait" />
+									<span class="groupName">评审小组</span>
+									<span class="groupLastMessage">小猴&nbsp;:&nbsp;所有人，我要生气啦</span>
+								</li>
+								<li>
+									<img src="img/group8.png" class="groupPortrait" />
+									<span class="groupName">六大神兽</span>
+									<span class="groupLastMessage">大亮&nbsp;:&nbsp;这个手刹不灵</span>
+								</li>
+								<li>
+									<img src="img/group4.png" class="groupPortrait" />
+									<span class="groupName">代代亲</span>
+									<span class="groupLastMessage">姐姐&nbsp;:&nbsp;最近怎了啦</span>
+								</li>
+								<li>
+									<img src="img/group3.png" class="groupPortrait" />
+									<span class="groupName">怀集集中营</span>
+									<span class="groupLastMessage">三木&nbsp;:&nbsp;今天要搞事情了，都出来冒个泡吧</span>
+								</li>
+								<li>
+									<img src="img/group2.png" class="groupPortrait" />
+									<span class="groupName">软件162</span>
+						 			<span class="groupLastMessage">老师&nbsp;:&nbsp;要开始找工作了，你们要小心啊</span>
+								</li>
+								<li>
+									<img src="img/group7.png" class="groupPortrait" />
+									<span class="groupName">猪大肠炒豆芽</span>
+									<span class="groupLastMessage">老板&nbsp;:&nbsp;客官你的菜来了！</span>
+								</li>
+							</ul>
+						</div>
+						<div id="middleNotificationMessage">
+							<ul id="notificationMessage">
+								<li>
+									<img  src="img/p1.jpg"/>
+									<span class="applicationMessage">小熊请求加入西游四人and马祖群聊</span>
+									<input type="button" value="同意" class="agree"/>
+									<input type="button" value="拒绝" class="refuse"/>
+								</li>
+								<li>
+									<img  src="img/p2.jpg"/>
+									<span class="applicationMessage">神马都是浮云请求加入六大神兽群聊</span>
+									<input type="button" value="同意" class="agree"/>
+									<input type="button" value="拒绝" class="refuse"/>
+								</li>
+								<li>
+									<img  src="img/p3.jpg"/>
+									<span class="applicationMessage">天方夜谭请求加入代代亲群聊</span>
+									<input type="button" value="同意" class="agree"/>
+									<input type="button" value="拒绝" class="refuse"/>
+								</li>
+								<li>
+									<img  src="img/p4.jpg"/>
+									<span class="applicationMessage">百里挑一请求加入怀集集中营</span>
+									<input type="button" value="同意" class="agree"/>
+									<input type="button" value="拒绝" class="refuse"/>
+								</li>
+								<li>
+									<img  src="img/p5.jpg"/>
+									<span class="applicationMessage">法海不懂爱请求加入点滴之间</span>
+									<input type="button" value="同意" class="agree"/>
+									<input type="button" value="拒绝" class="refuse"/>
+								</li>
+							</ul>
+						</div>
+						<div id="middleI">
+							<ul id="I">
+								<li>
+									<img src="img/IPortrait.jpg" />
+									<span class="nickName">帅过吴彦祖</span>
+									<span class="sign">不服，你就来战!!!!</span>
+								</li>
+								<li>
+									<img src="img/myData.png" />
+									<span class="myData">我的资料</span>
+								</li>
+								<li>
+									<img src="img/myPhoto.png" />
+									<span class="myData">我的相册</span>
+								</li>
+								<li>
+									<img src="img/myAbout.png" />
+									<span class="myData">关于我们</span>
+								</li>
+								<li class="exit">
+									<span>退出登录</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div id="bottom">
+						<ul class="bottomMenu">
+							<li name="groupChat">
+								<img src="img/group_chat2.png" id="groupChatImg"/>
+								<span id="groupChatSpan">群聊</span>
+							</li>
+							<li name="notificaitonMessage">
+								<img src="img/message_notification1.png" id="notificationImg"/>
+								<span id="notificationSpan">消息</span>
+							</li>
+							<li name="IData">
+								<img src="img/i_data1.png" id="IDataImg"/>
+								<span id="IDataSpan">我</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div id="right">
+					<div id="createGroup" name="createGroup">
+						<h4 class="tisCreateGroup">创建群</h4>
+						<form class="formCreateGroup">
+							<table>
+								<tr>
+									<td>群名称：</td>
+									<td><input type="text" value="千年等一回"/></td>
+								</tr>
+								<tr>
+									<td>群爱好：</td>
+									<td><input type="text" value="有胆你就来"/></td>
+								</tr>
+								<tr>
+									<td>群描述：</td>
+									<td><input type="text" value="进群者备注姓名"/></td>
+								</tr>
+								<tr>
+									<td colspan="2"><input type="submit" value="确认创建" id="submitCreate"/></td>
+								</tr>
+							</table>
+						</form>
+					</div>
+					<div id="chatWindow">
+						<div id="chatWindowInfo">
+							<div id="chatWindowTitle">
+								<input type="image" src="img/chatListButton.png" id="chatLIistButton"/>
+								<div id="chatGroupInfo">
+									<h4 class="chatGroupName">极恋之光</h4>
+									<span>公告：</span>
+									<span class="chatGroupNotification">你我的倾城时光，快点啊，知否知否，应是环肥燕瘦，哈哈哈哈哈哈</span>
+								</div>
+								<input type="button" value="关闭" id="chatClose"/>
+								<div id="chatGroupListFunc">
+									<ul class="groupListFunc">
+										<li>公告</li>
+										<li>群管理</li>
+										<li>清空消息</li>
+										<li class="exitGroup">退出群</li>
+									</ul>
+									<div id="chatWindowManager">
+										
+									</div>
+								</div>
+							</div>
+							<div id="chatGroupMessage">
+								<ul id="groupMessage">
+									<li class="left">
+										<div class="chat-sender">
+											<div class="nickeNamePortrait"><img src="img/p2.jpg" /></div>
+											<div class="nickName" >阿笨</div>
+											<div class="chatBackgroung">
+												<div class="chat-left_triangle"></div>
+												<span>苹果增</span>
+											</div>
+										</div>
+									</li>
+									<li class="left">
+										<div class="chat-sender">
+											<div class="nickeNamePortrait"><img src="img/p2.jpg" /></div>
+											<div class="nickName" >阿笨</div>
+											<div class="chatBackgroung">
+												<div class="chat-left_triangle"></div>
+												<span>苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费</span>
+											</div>
+										</div>
+									</li>
+									<li class="left">
+										<div class="chat-sender">
+											<div class="nickeNamePortrait"><img src="img/p2.jpg" /></div>
+											<div class="nickName" >阿笨</div>
+											<div class="chatBackgroung">
+												<div class="chat-left_triangle"></div>
+												<span>苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费苹果增加三色选哈哈费苹果增加三款配件的颜色选哈哈费苹果增加三苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费</span>
+											</div>
+										</div>
+									</li>
+									<li class="left">
+										<div class="chat-sender">
+											<div class="nickeNamePortrait"><img src="img/p2.jpg" /></div>
+											<div class="nickName" >阿笨</div>
+											<div class="chatBackgroung">
+												<div class="chat-left_triangle"></div>
+												<span>苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费</span>
+											</div>
+										</div>
+									</li>
+									<li class="right">
+										<div class="chat-sender">
+											<div class="nickeNamePortrait"><img src="img/p4.jpg" /></div>
+											<div class="nickName" >阿嗨反反复复放到</div>
+												<div class="chatBackgroung">
+													<div class="chatMessageDatile">
+														<div class="chat-left_triangle"></div>
+														<span>
+															苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色苹果增加三款
+															配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费苹果增加三款配件的
+															颜色选哈哈费苹果增加三款配件的颜色选哈哈费苹
+															果增加三款配件的颜色选哈哈费选哈哈费苹果增加三款配件的颜色选哈哈费
+														</span>
+													</div>
+												</div>
+										</div>
+									</li>
+									<li>
+										<div class="chat-notice">
+											<span class="notice">2018年11月15日23:53:23</span>
+										</div>
+									</li>
+									<li class="right">
+										<div class="chat-sender">
+											<div class="nickeNamePortrait"><img src="img/p4.jpg" /></div>
+											<div class="nickName" >帅过冯绍峰</div>
+												<div class="chatBackgroung">
+													<div class="chatMessageDatile">
+														<div class="chat-left_triangle"></div>
+														<span>
+															qw
+															ertyuiop
+															dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dddd苹dd苹
+															dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹苹dd苹dd苹dd苹dd苹dd苹ddd
+															苹ddd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dddd苹dd苹
+															dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹
+															tyuiop
+															dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dddd苹dd苹
+															dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹苹dd苹dd苹dd苹dd苹dd苹ddd
+															苹ddd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dddd苹dd苹
+															dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹
+														</span>
+													</div>
+												</div>
+										</div>
+									</li>
+									<li>
+										<div class="chat-notice">
+											<span class="notice">你已被群主移除</span>
+										</div>
+									</li>
+									<li class="right">
+										<div class="chat-sender">
+											<div class="nickeNamePortrait"><img src="img/p4.jpg" /></div>
+											<div class="nickName" >帅过冯绍峰</div>
+												<div class="chatBackgroung">
+													<div class="chatMessageDatile">
+														<div class="chat-left_triangle"></div>
+														<span>
+															qw
+														</span>
+													</div>
+												</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+							<div id="chatBox">
+								<div id="chatBoxTop">
+									<span id="chatBoxTopPlus">+</span>
+									<input type="text" id="chatBoxContent"/>
+									<input type="button" value="发送" id="chatBoxTopSend"/>
+								</div>
+								<div id="chatBoxListFuncMune">
+									<ul class="boxListFuncMenu">
+										<li>
+											<img src="img/mapLocation.png" id="chatBoxLocation"/>
+											<span>位置</span>
+										</li>
+										<li>
+											<img src="img/relative.png" />
+											<span>联系</span>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div id="chatWindowMap">
+							<div id="mapLocation">
+								<img src="img/black.png" class="black" id="black"/>
+								<span class="location">位置</span>
+								<span class="locationGroupName">西游四人and马祖</span>
+							</div>
+							<div id="mapNumbers">
+								<ul class="mapNumbersInfo">
+									<li>
+										<img src="img/p4.jpg" />
+									</li>
+									<li>
+										<img src="img/p3.jpg" />
+									</li>
+									<li>
+										<img src="img/p4.jpg" />
+									</li>
+									<li>
+										<img src="img/p1.jpg" />
+									</li>
+									<li>
+										<img src="img/p4.jpg" />
+									</li>
+									<li>
+										<img src="img/p1.jpg" />
+									</li>
+									<li>
+										<img src="img/p4.jpg" />
+									</li>
+									<li>
+										<img src="img/p2.jpg" />
+									</li>
+									<li>
+										<img src="img/p1.jpg" />
+									</li>
+									<li>
+										<img src="img/p4.jpg" />
+									</li>
+									<li>
+										<img src="img/p1.jpg" />
+									</li>
+									<li>
+										<img src="img/p4.jpg" />
+									</li>
+									<li>
+										<img src="img/p2.jpg" />
+									</li>
+								</ul>
+							</div>
+							<div id="mapInfo">
+								<div id="map">
+									
+								</div>
+								<div id="mapInfoLocation">
+									<img src="img/locationDatile.png" />
+									<span>广东轻工职业技术学院第三实训楼b410</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="searchGroup" name="searchGroup">
+						<h4 class="tissearchGroup">搜索群</h4>
+						<div class="searchBox">
+							<input type="text" placeholder="请输入群名称" id="searchBoxInput"/>
+						</div>
+						<div id="searchResult">
+							<h5 class="searchCount">共<strong>1</strong>条结果</h5>
+							<ul class="searchCountInfo">
+								<li>
+									<img src="img/group5.png" />
+									<span class="searchGroupName">哈哈哈哈开心游</span>
+									<input type="button" value="申请加入群聊" class="searchApplication"/>
+								</li>
+								<li>
+									<img src="img/group6.png" />
+									<span class="searchGroupName">最强王者</span>
+									<input type="button" value="申请加入群聊" class="searchApplication"/>
+								</li>
+								<li>
+									<img src="img/group7.png" />
+									<span class="searchGroupName">毕业旅游团</span>
+									<input type="button" value="申请加入群聊" class="searchApplication"/>
+								</li>
+								<li>
+									<img src="img/group8.png" />
+									<span class="searchGroupName">天下至尊</span>
+									<input type="button" value="申请加入群聊" class="searchApplication"/>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div id="dataI">
+						<h4 class="dataIInfo">我的资料</h4>
+						<form>
+							<table>
+								<tr>
+									<td>点击更换头像</td>
+									<td><img src="img/IPortrait.jpg"/></td>
+								</tr>
+								<tr>
+									<td>昵称</td>
+									<td><input type="text" class="dataInfoDatile"/></td>
+								</tr>
+								<tr>
+									<td>个性签名</td>
+									<td><input type="text" class="dataInfoDatile"/></td>
+								</tr>
+								<tr>
+									<td>手机号码</td>
+									<td><input type="text" class="dataInfoDatile"/></td>
+								</tr>
+								<tr>
+									<td>邮箱</td>
+									<td><input type="text" class="dataInfoDatile"/></td>
+								</tr>
+								<tr>
+									<td colspan="2"><input type="submit" value="保存修改" id="dataISave"/></td>
+								</tr>
+							</table>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+
+</html>
