@@ -174,6 +174,17 @@ function addListener(){
 			console.log(this);
 		}
 	}
+	//点击群在右边显示
+	var groupLis=groupChat.getElementsByTagName('li');
+	for(var i=0;i<groupLis.length;i++){
+		groupLis[i].onclick=function(){
+			console.log(this);
+			createGroup.style.display='none';
+			chatWindow.style.display='block';
+			searchGroup.style.display='none';
+			dataI.style.display='none';
+		}
+	}
 }
 
 function addGlobalVeriable(){	//全局变量
@@ -182,6 +193,7 @@ function addGlobalVeriable(){	//全局变量
 	var searchGroup=document.getElementById('searchGroup');
 	var dataI=document.getElementById('dataI');
 	console.log(createGroup);
+	var groupChat=document.getElementById('groupChat');//群面板
 }
 
 function addLoadEvent(func){ 
