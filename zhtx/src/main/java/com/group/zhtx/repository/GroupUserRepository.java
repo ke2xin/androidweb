@@ -42,4 +42,7 @@ public interface GroupUserRepository extends JpaRepository<GroupUser,Long> {
     @Query("select g from GroupUser g where g.user.uuid=:uuid and g.group.uuid=:groupId")
     public GroupUser getGroupUserByGroupAndUuid(@Param("uuid") String uuid, @Param("groupId") String groupId);
 
+    @Query("select g from GroupUser g where g.user =?1 and g.group=?2")
+    public GroupUser getGroupUserByGroupAndUser(User user,Group group);
+
 }

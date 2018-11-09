@@ -49,5 +49,7 @@ public class WebSocketOperateUtil {
 
 
     public final static int User_Send_GroupMessage_C = 24;
+    //用户发送时间截
+    public final static int User_Send_TimeStamp = 99;
 
 }
