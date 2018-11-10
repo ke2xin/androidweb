@@ -429,10 +429,12 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         //返回数据和所有群
         userCreateGroupS.setStatus("success");
         userCreateGroupS.setInformation("创建群成功");
-        List<Group> groupLists=groupUserRepository.getGroupsByUserUuid(userCreateGroupC.getUuid());
+        List<Group> groupLists=groupUserRepository.getAllGroupByUuidAndPX(userCreateGroupC.getUuid());
+
         System.out.println("你拥有的群度："+groupLists.size());
         for(int i=0;i<groupLists.size();i++){
             Group group1=groupLists.get(i);
+            System.out.println("群名称："+group1.getCreateTime());
             if(groupNumber.equals(group1.getUuid())){//用户刚刚创建的群
                     UserCreateGroup createGroup = new UserCreateGroup();
                     createGroup.setGroupId(group.getUuid());
@@ -462,8 +464,8 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 }else {
                     Message message = messageLists.get(0);
                     User lastUser = userRepository.findByUuid(message.getUser().getUuid());
-                    createGroup.setLastestGroupUser(lastUser.getUuid());
-                    createGroup.setLastGroupNumberName(lastUser.getName());
+                    createGroup.setLastestGroupUser(lastUser.getName());
+                    createGroup.setLastGroupNumberName(lastUser.getUuid());
                     createGroup.setLastGroupSendTime(message.getSendTime().getTime());
                     createGroup.setLastestGroupMessage(message.getContent());
                     //获取用户最后接受消息时间
@@ -1214,6 +1216,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         int operateId=webSocket.getOperateId();
         Session session=webSocket.getSession();
         List<Group> groups=groupRepository.findByUuidLike("%"+userSearchGroupC.getGroup_id()+"%");
+        System.out.println("群号："+userSearchGroupC.getGroup_id()+groups.size());
         System.out.println(groups.size());
         SearchDataS searchDataS=new SearchDataS();
         List<SearchDataInfo>searchDataInfoList=new ArrayList<>();

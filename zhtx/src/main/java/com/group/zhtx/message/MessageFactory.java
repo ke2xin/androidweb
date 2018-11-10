@@ -31,11 +31,9 @@ public class MessageFactory {
                 return gson.fromJson(data, UserLocationInfoC.class);
             case WebSocketOperateUtil.User_Phone_Relative_C:
                 return gson.fromJson(data, UserRelativNumberC.class);
-                /*
             case WebSocketOperateUtil.User_Application_Enter_Group_C:
                 System.out.println("申请加入群聊"+opercode+"||"+WebSocketOperateUtil.User_Enter_Group_C);
                 return gson.fromJson(data, UserApplicationEnterGroupC.class);
-                */
             case WebSocketOperateUtil.User_Accept_Enter_Group_C:
                 return gson.fromJson(data, UserAcceptAndRefuseEnterGroupC.class);
             case WebSocketOperateUtil.User_Refuse_Enter_Group_C:

@@ -220,7 +220,7 @@ body{
 }
 .main .container #left #middle #middleI #I{
 	width: 100%;
-	height: 490px;
+	height: 540px;
 	list-style: none;
 }
 .main .container #left #middle #middleI #I li{
@@ -469,6 +469,23 @@ body{
 	padding-top: 5px;
 	padding-bottom: 5px;
 	border: 1px solid darkgrey;
+	color: white;
+	display: block;
+}
+.main .container #right #chatWindow #chatWindowTitle input#chatBlack{
+	width: 60px;
+	height: 30px;
+	position: absolute;
+	left: 30px;
+	top: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border: 1px solid darkgrey;
+	color: white;
+	display: none;
+	
 }
 .main .container #right #chatWindow #chatWindowTitle #chatGroupInfo{
 	width: 350px;
@@ -500,23 +517,255 @@ body{
 	color: white;
 }
 .main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc{
-	width: 350px;
-	height: 70px;
+	width: 660px;
+	height: 570px;
 	position: absolute;
 	left: 30px;
 	top: 55px;
 	z-index: 3;
-	display: block;
+	display: none;
 }
 .main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager{
 	width: 100%;
+	height: 500px;
+	position: relative;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupAnoun{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	z-index: 1;
+	display: none;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupAnoun form{
+	width: 450px;
+	height: 500px;
+	margin: auto;
+	text-align: center;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupAnoun form textarea.anoun{
+	width: 300px;
+	height: 300px;
+	display: block;
+	margin: auto;
+	margin-top: 20px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupAnoun form input#publicAnoun{
+	width: 60px;
+	height: 30px;
+	border-radius: 10px;
+	border: none;
+	background: #FFA500;
+	margin-top: 20px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	display: none;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupTile{
+	width: 600px;
+	height: 100px;
+	margin: auto;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupTile img{
+	width: 80px;
+	height: 80px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupTile span.groupManagerGroupName{
+	position: relative;
+	left: 20px;
+	top: -50px;
+	color: white;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupTile span.groupManagerGroupId{
+	position: relative;
+	left: -50px;
+	top: -10px;
+	color: white;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupDataNumber{
+	width: 100%;
+	height: 200px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupDataNumber ul.groupNumberInfo{
+	width: 100%;
+	height: 200px;
+	list-style: none;
+	overflow: auto;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupDataNumber ul.groupNumberInfo li.groupApplication{
+	width: 80px;
+	height: 90px;
+	float: left;
+	text-align: center;
+	line-height: 90px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupDataNumber ul.groupNumberInfo li.groupApplication img{
+	width: 50px;
 	height: 50px;
-	
+	margin-top: 10px;
+	cursor: pointer;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupDataNumber ul.groupNumberInfo li.groupNumberList{	
+	width: 80px;
+	height: 90px;
+	float: left;
+	text-align: center;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupDataNumber ul.groupNumberInfo li.groupNumberList img{
+	width: 60px;
+	height: 60px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupDataNumber ul.groupNumberInfo li.groupNumberList span{
+	position: relative;
+	left: 0px;
+	top: 0px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupMangerFunc{
+	width: 450px;
+	height: 200px;
+	margin: auto;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupMangerFunc ul.groupMangerFuncList{
+	list-style: none;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupManager #groupMangerFunc ul.groupMangerFuncList li{
+	width: 100%;
+	height: 45px;
+	line-height: 50px;
+	text-align: center;
+	background-color: rgba(152,251,152,0.4);
+	margin-top: 5px;
+	border-radius: 15px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupAnounPanel{
+	width: 660px;
+	height: 500px;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	display: none;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupAnounPanel #gapClose{
+	width: 60px;
+	height: 30px;
+	background: #CCCCCC;
+	text-align: center;
+	line-height: 30px;
+	border-radius:5px ;
+	display: block;
+	position: relative;
+	left: 600px;
+	top: 0px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupAnounPanel #anounList{
+	width: 660px;
+	height: 450px;	
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupAnounPanel #anounList ul.AnounNotice{
+	width: 660px;
+	height: 450px;	
+	list-style: none;
+	overflow-y: auto;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupAnounPanel #anounList ul.AnounNotice li{
+	width: 640px;
+	background: white;
+	margin-top: 20px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupAnounPanel #anounList ul.AnounNotice li h4{
+	padding-left: 15px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupAnounPanel #anounList ul.AnounNotice li span{
+	padding-left: 15px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupAnounPanel #anounList ul.AnounNotice li span.anounContent{
+	display: block;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupNumberPanel{
+	width: 660px;
+	height: 500px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: none;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupNumberPanel #gnpClose{
+	width: 60px;
+	height: 30px;
+	background: #CCCCCC;
+	text-align: center;
+	line-height: 30px;
+	border-radius:5px ;
+	display: block;
+	position: relative;
+	left: 600px;
+	top: 0px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupNumberPanel #ControllerNumbers{
+	width: 660px;
+	height: 450px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupNumberPanel #ControllerNumbers ul.ControllerNumbersList{
+	width: 660px;
+	height: 450px;
+	list-style: none;
+	overflow-y: auto;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupNumberPanel #ControllerNumbers ul.ControllerNumbersList li{
+	border-bottom: 1px solid darkgrey;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupNumberPanel #ControllerNumbers ul.ControllerNumbersList li img{
+	width: 90px;
+	height: 90px;
+	margin: 5px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupNumberPanel #ControllerNumbers ul.ControllerNumbersList li span{
+	position: relative;
+	left: 10px;
+	top: -40px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupNumberPanel #ControllerNumbers ul.ControllerNumbersList li input.deleteNumber{
+	width: 60px;
+	height: 30px;
+	position: relative;
+	left: 430px;
+	top: -40px;
+	border: none;
+	border-radius: 10px;
+	background: red;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupDataPanel{
+	width: 660px;
+	height: 500px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 2;
+	display: none;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupDataPanel #gdpClose{
+	width: 60px;
+	height: 30px;
+	background: #CCCCCC;
+	text-align: center;
+	line-height: 30px;
+	border-radius:5px ;
+	display: block;
+	position: relative;
+	left: 600px;
+	top: 0px;
 }
 .main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc ul.groupListFunc{
-	width: 100%;
+	width: 350px;
 	height: 60px;
-	list-style: none;
+	list-style: none; 
 	background: rgba(0,0,0,0.7);
 }
 .main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc ul.groupListFunc li{
@@ -546,7 +795,7 @@ body{
 	width: 100%;
 	height: 380px;
 	position: relative;
-	display: none;
+	display: block;
 }
 .main .container #right #chatWindow #chatGroupMessage #groupMessage{
 	width: 100%;
@@ -670,7 +919,7 @@ body{
 	position: relative;
 	left: 0px;
 	top: 30px;
-	display: none;
+	display: block;
 }
 .main .container #right #chatWindow #chatBox #chatBoxTop{
 	width: 99.6%;

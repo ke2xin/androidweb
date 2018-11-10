@@ -29,9 +29,9 @@ public class WebSocketOperateUtil {
 
     public final static int User_Delete_Group_Number_C = 12;
 
-    public final static int User_Search_Group_C =13;
+    public final static int User_Search_Group_C =14;
 
-    public final static int User_Search_Group_Number_Info_C = 14;
+    public final static int User_Search_Group_Number_Info_C = 144;
 
     public final static int User_For_Me_C = 15;
 
@@ -45,7 +45,7 @@ public class WebSocketOperateUtil {
 
     public final static int User_Get_GroupUserLocation_C = 8;
 
-    public final static int User_Get_CallGroupUserPhone_C = 9;
+    public final static int User_Get_CallGroupUserPhone_C = 9999;
 
 
     public final static int User_Send_GroupMessage_C = 24;
