@@ -7,7 +7,7 @@
 	    this.User_Login_C = 1;
 	
 		//创建群
-	    this.User_CreateGroup_C = 2;
+	    this.User_CreateGroup_C = 3;
 	
 		//进入群
 	    this.User_Enter_Group_C = 3;

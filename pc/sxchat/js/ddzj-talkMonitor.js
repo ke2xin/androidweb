@@ -16,7 +16,9 @@
 		//自己的数据
 		this.owner = null;
 		this.webSocketAgent = null;
+		//时间截集合
 		this.timeStamp = [];
+		
 		
 		this.init = function(url){
 			this.disConnectWebsocket();
@@ -35,6 +37,10 @@
 			this.webSocketClient.addEventDispatchListener(operateIdTpye.User_Receive_GroupMessage,this.onReceiveGroupMessage,this);
 			//接收返回的时间截验证
 			this.webSocketClient.addEventDispatchListener(operateIdTpye.User_Send_TimeStamp,this.getReceiveTime,this);
+			//接收返回创建群的响应
+			this.webSocketClient.addEventDispatchListener(operateIdTpye.User_CreateGroup_C,this.onMessageByCreateGroup,this);
+			//接收返回搜索群的响应
+			this.webSocketClient.addEventDispatchListener(operateIdTpye.User_Search_Group_Number_Info_C,this.onMessageBySearchGroup,this);
 			
 			this.initViewClickListener();
 			
@@ -44,6 +50,12 @@
 		
 		this.initViewClickListener = function(){
 			this.addSendClickListener(this,this.onSendGroupMessage);
+			this.addSendCreateGroupMessageListener(this,this.onSendCreateGroupMessage);
+			this.onKeySerachGroupsListener(this,this.onSendSearchGroups);
+			
+			$("body").on("click","#chatClose",function(){
+				$("#chatWindow").attr("style","display: none;");
+			})
 		}
 		
 		//连接操作
@@ -61,7 +73,6 @@
 		//登陆成功
 		this.onLoginSuccess = function(event){
 			var data = event.data.data;
-
 			//存储自己的数据
 			this.owner = data.singal;
 			var groups = data.groups;
@@ -69,6 +80,8 @@
 			$(".sign").text(this.owner.userSign);
 			//设置头像地址
 			//$("#IPortrait").attr("src",this.owner.)
+			//隐藏
+			this.unView();
 			
 			if(groups.length){
 				//设置首先打开的为第一个聊天组
@@ -103,6 +116,7 @@
 			var group = event.target.group;
 			//如果打开的是当前的聊天群，直接无视
 			if(this.nowChatGroupObj.group.groupNumber === group.groupNumber){
+				this.openView("chat");
 				return;
 			}
 			
@@ -118,6 +132,22 @@
 			//发送获取群资料请求
 			this.webSocketAgent.onGetGroupData(event.target.group.groupNumber);
 			
+		}
+		
+		//返回打开聊天群的数据
+		this.onGetGroupData = function(event){
+			var data = event.data;
+			
+			//如果返回的数据不是当前打开的聊天直接无视
+			if(this.nowChatGroupObj.group.groupNumber !== data.groupNumber){
+				return;
+			}
+			
+			$(".chatGroupName").text(data.groupName);
+			$(".chatGroupNotification").text(data.groupAnoun);
+			$("#groupMessage").empty();
+			this.onReviewMessage();
+			this.openView("chat");
 		}
 		
 		//恢复群聊天记录
@@ -139,28 +169,13 @@
 			}
 		}
 		
-		
+		//发送已经接收消息的时间
 		this.sendHaveReceiveMessageTime = function(){
 			var dates = new Date();
 			var times = dates.getTime();
 			
 		}
-		
-		//返回打开聊天群的数据
-		this.onGetGroupData = function(event){
-			var data = event.data;
-			
-			//如果返回的数据不是当前打开的聊天直接无视
-			if(this.nowChatGroupObj.group.groupNumber !== data.groupNumber){
-				return;
-			}
-			
-			$(".chatGroupName").text(data.groupName);
-			$(".chatGroupNotification").text(data.groupAnoun);
-			$("#groupMessage").empty();
-			this.onReviewMessage();
-		}
-		
+
 		//添加发送消息监听
 		this.addSendClickListener = function(obj,call){
 			
@@ -191,6 +206,89 @@
 			//$("#groupMessage").append(li);
 			this.webSocketAgent.onUserToSendMessage(window.user.userName,groupId,content);
 			$("#chatBoxContent").val("");
+		}
+		
+		//添加创建群点击监听
+		this.addSendCreateGroupMessageListener = function(obj,cal){
+			
+			var funCal = function(event){
+				cal.call(obj,event);
+			}
+			$("body").on("click","#submitCreate",funCal);
+		}
+		
+		//用户创建群
+		this.onSendCreateGroupMessage = function(event){
+			var inputs = $(".formCreateGroup").children().children().children().children().children("input");
+			//输入参数不够四个，无视
+			if(inputs.length < 4)return;
+			
+			var groupName = inputs.eq(0).val();
+			var groupHobby = inputs.eq(1).val();
+			var groupDec = inputs.eq(2).val();
+			
+			if(groupName === "" || groupHobby === "" || groupDec === "")alert("请确认你输入的内容正确！！！");
+			if(inputs.eq(3).attr("id") != "submitCreate")return;
+			
+			inputs.eq(3).attr("disabled",true);
+			
+			this.webSocketAgent.onSendCreateGroup(window.user.userName, groupName, groupHobby, groupDec);
+		}
+			
+		//发送请求群
+		this.onSendSearchGroups = function(event){
+			$(searchBoxInput).val($(searchBoxInput).val().replace( /[^0-9]/g,''));
+			var searchContent = $("#searchBoxInput").val();
+          	
+          	this.webSocketAgent.onSendSearchGroups(searchContent);
+		}
+		
+		//返回创建群的消息响应
+		this.onMessageByCreateGroup = function(event){
+			var data = event.data;
+			var groups = data.groups;
+			var newGroup = groups[0];
+			
+			if(newGroup === undefined)return;
+			//添加群
+			this.addGroupToMonitor(newGroup,"prepend");
+			$(".formCreateGroup").children().children().children().children().children("input").eq(3).attr("disabled",false);
+		}
+		
+		//创建新群
+		this.addGroupToMonitor = function(g,type){
+			var group = new Group();
+			group.init(g);
+			group.addEventDispatchListener(operateIdTpye.Open_ChatObj,this.openChatGroup,this);
+			this.groupMap[g.groupNumber] = group;
+			
+			if(type === "prepend"){
+				$("#groupChat").prepend(group.getView());
+			}else if(type === "append"){
+				$("#groupChat").append(group.getView());
+			}
+			
+			return group;
+		}
+		
+		
+		//添加搜索群按键监听
+		this.onKeySerachGroupsListener = function(obj,cal){
+			
+			var func = function(event){
+				cal.call(obj,event);
+			}
+
+			$("body").on("keyup","#searchBoxInput",func);
+			$("body").on("keyup","#searchBoxInput",function(){
+				    $(this).val($(this).val().replace( /[^0-9]/g,''));
+				});
+		}
+		
+		
+		//返回查找群的消息响应
+		this.onMessageBySearchGroup = function(event){
+			console.log(event);
 		}
 		
 		//获取消息View
@@ -283,6 +381,7 @@
 			
 		}
 		
+		//回去接收的时间验证
 		this.getReceiveTime = function(event){
 			var data = event.data;
 			if(this.this.timeStamp[groupId]){
@@ -332,7 +431,23 @@
 			return $(li);
 		}
 		
+		//隐藏所有布局
+		this.unView = function(){
+			$("#chatWindow").attr("style","display: none;");
+			$("#createGroup").attr("style","display: none;");
+			$("#searchGroup").attr("style","display: none;");
+		}
 		
+		this.openView = function(type){
+			this.unView();
+			if(type === "chat"){
+				$("#chatWindow").attr("style","display: block;");
+			}else if(type === "createGroup"){
+				$("#chatWindow").attr("style","display: none;");
+			}else if(type === "searchGroup"){
+				$("#chatWindow").attr("style","display: none;");
+			}
+		}
 		
 		//下线操作
 		this.disConnectWebsocket =function(){

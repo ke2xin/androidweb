@@ -18,7 +18,7 @@
 			var newView = document.createElement("li");
 			newView.innerHTML = '<img src="img/group6.png" class="groupPortrait" />'+
 								'<span class="groupName">' + (this.group.groupName === undefined ? "" : this.group.groupName) + '</span>'+
-								'<span class="groupLastMessage">' + ((this.group.lastestGroupUser === undefined || this.group.lastestGroupUser === "" ) ? "" : (this.group.lastestGroupUser + '&nbsp;:&nbsp;')) +
+								'<span class="groupLastMessage">' + ((this.group.lastestGroupUser === undefined || this.group.lastestGroupUser === "" || this.group.lastestGroupUser === "null") ? "" : (this.group.lastestGroupUser + '&nbsp;:&nbsp;')) +
 								(this.group.lastestGroupMessage === undefined ? "" : this.group.lastestGroupMessage) + '</span>';
 			this.view = $(newView);
 		}
@@ -29,6 +29,7 @@
 			return this.view;
 			
 		}
+		
 		
 		this.addEvenListeners = function(){
 			

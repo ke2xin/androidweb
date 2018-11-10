@@ -178,7 +178,6 @@ function addListener(){
 	var groupLis=groupChat.getElementsByTagName('li');
 	for(var i=0;i<groupLis.length;i++){
 		groupLis[i].onclick=function(){
-			console.log(this);
 			createGroup.style.display='none';
 			chatWindow.style.display='block';
 			searchGroup.style.display='none';

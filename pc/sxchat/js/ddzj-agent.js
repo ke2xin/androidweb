@@ -55,6 +55,7 @@
 			this.wsClinet.sendMessage(jsonData);
 		}
 		
+		//用户发送接收消息时间
 		this.sendReceiveMessageTime = function(userId,groupId,timestamp){
 			var obj = new Object();
 			obj.operateId = operateIdType.User_Send_TimeStamp;
@@ -65,7 +66,29 @@
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);
 		}
+		
+		//用户创建群
+		this.onSendCreateGroup = function(userId,groupName,groupHobby,groupDec){
+			var obj = new Object();
+			obj.operateId = operateIdType.User_CreateGroup_C;
+			obj.uuid = userId;
+			obj.groupName = groupName;
+			obj.groupHobby = groupHobby;
+			obj.groupDec = groupDec;
 			
+			var jsonData = tool.toJson(obj);
+			this.wsClinet.sendMessage(jsonData);
+		}
+		
+		//用户查找群
+		this.onSendSearchGroups = function(searchGroupName){
+			var obj = new Object();
+			obj.operateId = operateIdType.User_Search_Group_Number_Info_C;
+			obj.group_id = searchGroupName;
+			
+			var jsonData = tool.toJson(obj);
+			this.wsClinet.sendMessage(jsonData);
+		}
 	}
 	window.ddzj.WsAgent = WsAgent;
 })(window);
