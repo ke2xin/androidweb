@@ -15,11 +15,11 @@ public class Notification implements Serializable {
     @Column(name = "id")
     public int id;
 
-    @ManyToOne(fetch = FetchType.LAZY,targetEntity = User.class)
+    @ManyToOne(fetch = FetchType.EAGER,targetEntity = User.class)
     @JoinColumn(name = "notification_suid",referencedColumnName = "user_uuid",foreignKey = @ForeignKey(name = "FK_NOTIFICATION_S_USER"))
     public User sendUserId;
 
-    @ManyToOne(fetch = FetchType.LAZY,targetEntity = User.class)
+    @ManyToOne(fetch = FetchType.EAGER,targetEntity = User.class)
     @JoinColumn(name = "notification_ruid",referencedColumnName = "user_uuid",foreignKey = @ForeignKey(name = "FK_NOTIFICATION_R_USER"))
     public User receiveUserId;
 

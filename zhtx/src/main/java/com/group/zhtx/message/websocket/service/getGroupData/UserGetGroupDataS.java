@@ -11,6 +11,7 @@ public class UserGetGroupDataS implements IMessage {
     private String groupName;
     private String groupPortrait;
     private String groupNumber;
+    private String status;
     private String groupAnoun;
     private List<UserGetGroupDataMember> members = new ArrayList<>();
 
@@ -64,5 +65,13 @@ public class UserGetGroupDataS implements IMessage {
 
     public void addMember(UserGetGroupDataMember member){
         this.members.add(member);
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

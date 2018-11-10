@@ -3,7 +3,7 @@ package com.group.zhtx.message.websocket.service.createGroupMessage;
 public class UserCreateGroup {
 
     private String groupName;
-    private String groupId;
+    private String groupNumber;
     private String groupPortrait;
     private String lastestGroupUser;
     private String lastGroupNumberName;
@@ -23,11 +23,11 @@ public class UserCreateGroup {
     }
 
     public String getGroupId() {
-        return groupId;
+        return groupNumber;
     }
 
     public void setGroupId(String groupId) {
-        this.groupId = groupId;
+        this.groupNumber = groupId;
     }
 
     public String getGroupPortrait() {

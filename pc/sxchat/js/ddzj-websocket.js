@@ -87,12 +87,8 @@
 		
 		
 		this.onMessage = function(event){
-
 			var data = JSON.parse(event.data);
-
-
 			var operateId = data.operateId;
-			
 			
 			if(operateId === null || operateId === undefined){
 				//没有操作码的直接无视

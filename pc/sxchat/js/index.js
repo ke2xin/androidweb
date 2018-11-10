@@ -1,4 +1,5 @@
 //创建和初始化地图函数：
+
 var map;
 function initMap() { 
 	createMap(); //创建地图
@@ -176,12 +177,132 @@ function addListener(){
 	}
 	//点击群在右边显示
 	var groupLis=groupChat.getElementsByTagName('li');
+	var obj=null;
 	for(var i=0;i<groupLis.length;i++){
 		groupLis[i].onclick=function(){
+			if(obj!=null){
+				obj.style.background='none';
+			}
+			obj=this;
 			createGroup.style.display='none';
 			chatWindow.style.display='block';
 			searchGroup.style.display='none';
 			dataI.style.display='none';
+			this.style.background='rgba(0,0,0,0.1)';
+		}
+	}
+	var groupMangerFuncList=groupMangerFunc.getElementsByClassName('groupMangerFuncList')[0];
+	var ullis=groupMangerFuncList.getElementsByTagName('li');
+	for(var i=0;i<ullis.length;i++){
+		ullis[i].onclick=function(){
+			console.log(this);
+			var name=this.getAttribute('name');
+			if(name=="groupAnoun"){
+				groupAnounPanel.style.display='block';
+				groupNumberPanel.style.display='none';
+				groupDataPanel.style.display='none';
+				groupManager.style.display='none';
+			}else if(name=="groupNumber"){
+				groupAnounPanel.style.display='none';
+				groupNumberPanel.style.display='block';
+				groupDataPanel.style.display='none';
+				groupManager.style.display='none';
+			}else if(name=="groupData"){
+				groupAnounPanel.style.display='none';
+				groupNumberPanel.style.display='none';
+				groupDataPanel.style.display='block';
+				groupManager.style.display='none';
+			}else if(name=='groupDissolution'){
+				console.log(this);
+				if(window.confirm("确认解散该群？")){
+					alert("已解散该群！");
+				}else{
+					alert("已取消。");
+				}
+			}
+		}
+	}
+	gapClose.onclick=function(){
+		groupAnounPanel.style.display='none';
+		groupNumberPanel.style.display='none';
+		groupDataPanel.style.display='none';
+		groupManager.style.display='block';
+	}
+	gnpClose.onclick=function(){
+		groupAnounPanel.style.display='none';
+		groupNumberPanel.style.display='none';
+		groupDataPanel.style.display='none';
+		groupManager.style.display='block';
+	}
+	gdpClose.onclick=function(){
+		groupAnounPanel.style.display='none';
+		groupNumberPanel.style.display='none';
+		groupDataPanel.style.display='none';
+		groupManager.style.display='block';
+	}
+	//切换聊天窗和功能 窗
+	chatLIistButton.onclick=function(){
+		console.log(this);
+		chatBlack.style.display='block';
+		chatLIistButton.style.display='none';
+		chatGroupMessage.style.display='none';
+		chatBox.style.display='none';
+		chatGroupListFunc.style.display='block';
+	}
+	chatBlack.onclick=function(){
+		console.log(this);
+		chatBlack.style.display='none';
+		chatLIistButton.style.display='block';
+		chatGroupMessage.style.display='block';
+		chatBox.style.display='block';
+		chatGroupListFunc.style.display='none';
+	}
+	//公告和群管理切换
+	var groupListFunc=chatGroupListFunc.getElementsByClassName('groupListFunc')[0];
+	var groupListFuncLis=groupListFunc.getElementsByTagName('li');
+	for(var i=0;i<groupListFuncLis.length;i++){
+		groupListFuncLis[i].onclick=function(){
+			console.log(this);
+			var name=this.getAttribute('name');
+			if(name=='anoun'){
+				groupAnoun.style.display='block';
+				groupManager.style.display='none';
+				groupAnounPanel.style.display='none';
+				groupNumberPanel.style.display='none';
+				groupDataPanel.style.display='none';
+			}else if(name=='manager'){
+				groupAnoun.style.display='none';
+				groupManager.style.display='block';
+				groupAnounPanel.style.display='none';
+				groupNumberPanel.style.display='none';
+				groupDataPanel.style.display='none';
+			}else if(name=='deleteMessage'){
+				if(window.confirm("确认删除？")){
+					alert("已经删除");
+				}else{
+					alert("已经取消");
+				}
+			}else if(name=='exitGroup'){
+				if(window.confirm("退出群？")){
+					alert("已经退出该群");
+				}else{
+					alert("已取消");
+				}
+			}
+		}
+	}
+	//显示我的资料面板
+	var Ilis=I.getElementsByTagName('li');
+	for(var i=0;i<Ilis.length;i++){
+		Ilis[i].onclick=function(){
+			console.log(this);
+			var name=this.getAttribute('name');
+			if(name='myData'){
+				createGroup.style.display='none';
+				chatWindow.style.display='none';
+				searchGroup.style.display='none';
+				dataI.style.display='block';
+			}
 		}
 	}
 }
@@ -191,8 +312,24 @@ function addGlobalVeriable(){	//全局变量
 	var chatWindow=document.getElementById('chatWindow');
 	var searchGroup=document.getElementById('searchGroup');
 	var dataI=document.getElementById('dataI');
-	console.log(createGroup);
 	var groupChat=document.getElementById('groupChat');//群面板
+	var groupMangerFunc=document.getElementById('groupMangerFunc');
+	var groupAnounPanel=document.getElementById('groupAnounPanel');
+	var groupNumberPanel=document.getElementById('groupNumberPanel');
+	var groupDataPanel=document.getElementById('groupDataPanel');
+	var groupManager=document.getElementById('groupManager');
+	var gapClose=document.getElementById('gapClose');
+	var gnpClose=document.getElementById('gnpClose');
+	var gdpClose=document.getElementById('gdpClose');
+	var chatLIistButton=document.getElementById('chatLIistButton');
+	var chatBlack=document.getElementById('chatBlack');
+	var chatGroupListFunc=document.getElementById('chatGroupListFunc');
+	var groupAnoun=document.getElementById('groupAnoun');
+	var groupManager=document.getElementById('groupManager');
+	var chatGroupMessage=document.getElementById('chatGroupMessage');
+	var chatBox=document.getElementById('chatBox');
+	var chatGroupListFunc=document.getElementById('chatGroupListFunc');
+	var I=document.getElementById('I');
 }
 
 function addLoadEvent(func){ 
