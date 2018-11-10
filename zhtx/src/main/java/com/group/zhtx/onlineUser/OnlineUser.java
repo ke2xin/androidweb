@@ -2,12 +2,18 @@ package com.group.zhtx.onlineUser;
 
 import com.group.zhtx.message.websocket.service.groupMessage.GroupMessageData;
 import com.group.zhtx.message.websocket.service.groupMessage.GroupMessageS;
+import com.group.zhtx.message.websocket.service.sendNotification.SendNotification;
+import com.group.zhtx.message.websocket.service.sendNotification.SendNotificationS;
 import com.group.zhtx.model.Group;
 
 import com.group.zhtx.model.Message;
+import com.group.zhtx.model.Notification;
+import com.group.zhtx.model.User;
 import com.group.zhtx.repository.GroupUserRepository;
 import com.group.zhtx.repository.MessageRepository;
+import com.group.zhtx.repository.NotificationRepository;
 import com.group.zhtx.thread.IAsyncCycle;
+import com.group.zhtx.util.common.WebSocketOperateUtil;
 import com.group.zhtx.webSocket.WebSocket;
 import jdk.nashorn.internal.runtime.logging.DebugLogger;
 import org.slf4j.Logger;
@@ -41,6 +47,7 @@ public class OnlineUser implements IAsyncCycle{
 
     private GroupUserRepository groupUserRepository;
 
+    private NotificationRepository notificationRepository;
     /*
         在线用户所在的线程和优先级
      */
@@ -52,12 +59,13 @@ public class OnlineUser implements IAsyncCycle{
 
     private OnlineUserManager onlineUserManager;
 
-    public OnlineUser(OnlineUserData userData, Session session, GroupUserRepository groupUserRepository, MessageRepository messageRepository,OnlineUserManager manager){
+    public OnlineUser(OnlineUserData userData, Session session ,OnlineUserManager manager){
         this.userData = userData;
         this.session = session;
-        this.messageRepository = messageRepository;
-        this.groupUserRepository = groupUserRepository;
         this.onlineUserManager = manager;
+        messageRepository =  this.onlineUserManager.getService().getMessageRepository();
+        groupUserRepository = this.onlineUserManager.getService().getGroupUserRepository();
+        notificationRepository = this.onlineUserManager.getService().getNotificationRepository();
     }
 
     @Override
@@ -82,6 +90,30 @@ public class OnlineUser implements IAsyncCycle{
 
         //发送组消息
         sendGroupMessage(groupsMessage);
+
+        List<Notification> notifications = notificationRepository.findUnReceiveNotificationByReceiveUser(userUuid);
+        SendNotificationS sendNotificationS = new SendNotificationS();
+        sendNotificationS.setOperateId(WebSocketOperateUtil.Send_Notifications);
+        if(notifications.size() >0){
+            sendNotificationS.setStatus("发送通知成功");
+            for(Notification n : notifications){
+                User user = n.getSendUserId();
+                if(user != null){
+                    SendNotification sendNotification = new SendNotification();
+                    sendNotification.setContent(n.content);
+                    sendNotification.setGroupUuid(n.groupId.getUuid());
+                    sendNotification.setRequsetUserUuid(n.receiveUserId.getUuid());
+                    sendNotification.setSendUserUuid(n.sendUserId.getUuid());
+                    sendNotification.setSendUserPortrait(n.getSendUserId().getPortrait());
+                    sendNotificationS.addNotification(sendNotification);
+                }
+            }
+        }else {
+            sendNotificationS.setStatus("没任何通知");
+        }
+        //发送通知
+        WebSocket webSocket = new WebSocket(WebSocketOperateUtil.Send_Notifications, sendNotificationS,null);
+        sendMessage(webSocket);
     }
 
     @Override

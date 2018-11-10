@@ -6,6 +6,8 @@
 	var wsAgent = window.ddzj.WsAgent;
 	var wsClient = window.ddzj.WsClient;
 	var Group = window.ddzj.GroupObj;
+	var SearchGroup = window.ddzj.SearchGroup;
+	var Notification = window.ddzj.Notification;
 	var TalkMonitor = function(){
 		//websocket对象
 		this.webSocketClient = null;
@@ -18,6 +20,7 @@
 		this.webSocketAgent = null;
 		//时间截集合
 		this.timeStamp = [];
+		this.notificationMap = [];
 		
 		
 		this.init = function(url){
@@ -41,7 +44,10 @@
 			this.webSocketClient.addEventDispatchListener(operateIdTpye.User_CreateGroup_C,this.onMessageByCreateGroup,this);
 			//接收返回搜索群的响应
 			this.webSocketClient.addEventDispatchListener(operateIdTpye.User_Search_Group_Number_Info_C,this.onMessageBySearchGroup,this);
-			
+			//用户加入群消息响应
+			this.webSocketClient.addEventDispatchListener(operateIdTpye.User_Application_Enter_Group_C,this.onMessageByEnterGroup,this);
+			//用户接收到群通知
+			this.webSocketClient.addEventDispatchListener(operateIdTpye.Receive_Notifications,this.onMessageByNotification,this);
 			this.initViewClickListener();
 			
 			
@@ -55,7 +61,7 @@
 			
 			$("body").on("click","#chatClose",function(){
 				$("#chatWindow").attr("style","display: none;");
-			})
+			});
 		}
 		
 		//连接操作
@@ -119,15 +125,12 @@
 				this.openView("chat");
 				return;
 			}
-			
 			//切换聊天群
 			this.nowChatGroupObj = event.target;
 
 			$(".toPick").removeClass("toPick");
 			this.nowChatGroupObj.getView().addClass("toPick");
 			this.nowChatGroupObj.getView().children("span.groupLastMessage").text("");
-			
-			//恢复历史聊天记录
 			
 			//发送获取群资料请求
 			this.webSocketAgent.onGetGroupData(event.target.group.groupNumber);
@@ -142,7 +145,6 @@
 			if(this.nowChatGroupObj.group.groupNumber !== data.groupNumber){
 				return;
 			}
-			
 			$(".chatGroupName").text(data.groupName);
 			$(".chatGroupNotification").text(data.groupAnoun);
 			$("#groupMessage").empty();
@@ -248,11 +250,11 @@
 			var data = event.data;
 			var groups = data.groups;
 			var newGroup = groups[0];
-			
 			if(newGroup === undefined)return;
 			//添加群
 			this.addGroupToMonitor(newGroup,"prepend");
 			$(".formCreateGroup").children().children().children().children().children("input").eq(3).attr("disabled",false);
+
 		}
 		
 		//创建新群
@@ -267,7 +269,7 @@
 			}else if(type === "append"){
 				$("#groupChat").append(group.getView());
 			}
-			
+			group.getView().click();
 			return group;
 		}
 		
@@ -285,12 +287,76 @@
 				});
 		}
 		
-		
 		//返回查找群的消息响应
 		this.onMessageBySearchGroup = function(event){
-			console.log(event);
+			var data = event.data;
+			var groups = data.dataInfoList;
+			if(groups){
+				$(".searchCountInfo").empty();
+				
+				for(var i = 0; i < groups.length;i++){
+					var group = groups[i];
+					var searchGroup = new SearchGroup(group);
+					searchGroup.init(group);
+					searchGroup.addEventDispatchListener(operateIdTpye.User_Application_Enter_Group_C,this.onEnterGroup,this);
+					$(".searchCountInfo").append(searchGroup.getView());
+				}
+				$(".searchCount").children("strong").text(groups.length);
+			}
+			
 		}
 		
+		//用户加入群
+		this.onEnterGroup = function(event){
+			var target = event.target;
+			var groupUuid = target.group.group_uuid;
+			var userUuId = window.user.userName;
+			console.log(event);
+			if(!groupUuid || !userUuId)return;
+			this.webSocketAgent.onUserEnterGroup(userUuId, groupUuid);
+			$(target.getView()).children("input.searchApplication").attr("disabled",true);
+			$(target.getView()).children("input.searchApplication").attr("value","申请中");
+		}
+		
+		//返回加入群消息响应
+		this.onMessageByEnterGroup = function(event){
+			var data = event.data;
+			var status = data.status;
+			if(data === undefined || data == null || data === null)return;
+			alert(data.information);
+			
+		}
+		
+		//接收到群通知
+		this.onMessageByNotification = function(event){
+			var datas = event.data.data;
+			if(datas.length > 0){
+				for(var i = 0; i < datas.length; ++i){
+					var data = datas[i];
+					var notif = new Notification();
+					this.notificationMap[data.notificationId] = notif;
+					notif.init(data);
+					notif.addEventDispatchListener(operateIdTpye.Refuse_Notification, this.onRefuseNotification, this);
+					notif.addEventDispatchListener(operateIdTpye.Receive_Notification, this.onReceiveNotification, this);
+					$("#notificationMessage").append(notif.getView());
+				}
+			}
+		}
+		
+		//接受通知
+		this.onReceiveNotification = function(event){
+			var target = event.target;
+			var notif = target.Notification;
+			this.webSocketAgent.onUserHandleNotification(notif.sendUserUuid, notif.requsetUserUuid, notif.groupUuid, "accept", 0);
+		}
+		
+		//拒绝通知
+		this.onRefuseNotification = function(event){
+			var target = event.target;
+			var notif = target.Notification;
+			this.webSocketAgent.onUserHandleNotification(notif.sendUserUuid, notif.requsetUserUuid, notif, "xxx", 1);
+		}
+
 		//获取消息View
 		this.getOtherMessageView = function(type,userName,userContent){
 			var li = document.createElement("li");
@@ -378,18 +444,18 @@
 			if(userId){
 				this.webSocketAgent.sendReceiveMessageTime(userId,groupId,timestamp);
 			}
-			
 		}
 		
 		//回去接收的时间验证
 		this.getReceiveTime = function(event){
 			var data = event.data;
-			if(this.this.timeStamp[groupId]){
+			var groupId = data.groupId;
+			console.log(data);
+			if(this.timeStamp[groupId]){
 				if(this.timeStamp[groupId] > data.timeStamp){
 					this.timeStamp[groupId] = data.timeStamp;
 				}
 			}
-			
 		}
 		
 		//获取当前时间

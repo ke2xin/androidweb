@@ -14,7 +14,10 @@
 		<script type="text/javascript" src="js/ddzj-agent.js" ></script>
 		<script type="text/javascript" src="js/getscript.js"></script>
 		<script type="text/javascript" src="js/ddzj-chatGroupObj.js" ></script>
+		<script type="text/javascript" src="js/ddzj-serachGroup.js"></script>
+		<script type="text/javascript" src="js/ddzj-Notification.js"></script>
 		<script type="text/javascript" src="js/ddzj-talkMonitor.js" ></script>
+		
 	</head>
 
 	<body>
@@ -30,6 +33,7 @@
 					
 					var talkMonitor = new TalkMonitor();
 					talkMonitor.init("ws://172.17.146.44:8080/ws");
+					//talkMonitor.init("ws://localhost:8080/ws");
 		</script>
 		<div class="main">
 			<div class="container">
@@ -57,12 +61,6 @@
 						</div>
 						<div id="middleNotificationMessage">
 							<ul id="notificationMessage">
-								<li>
-									<img  src="img/p1.jpg"/>
-									<span class="applicationMessage">小熊请求加入西游四人and马祖群聊</span>
-									<input type="button" value="同意" class="agree"/>
-									<input type="button" value="拒绝" class="refuse"/>
-								</li>
 							</ul>
 						</div>
 						<div id="middleI">
@@ -389,102 +387,231 @@
 												<span>苹果增</span>
 											</div>
 										</div>
-									</li>
-									<li class="left">
-										<div class="chat-sender">
-											<div class="nickeNamePortrait"><img src="img/p2.jpg" /></div>
-											<div class="nickName" >阿笨</div>
-											<div class="chatBackgroung">
-												<div class="chat-left_triangle"></div>
-												<span>苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费</span>
+										<div id="groupManager">
+											<div id="groupTile">
+												<img src="img/group3.png" />
+												<span  class="groupManagerGroupName">极光之恋</span>
+												<span class="groupManagerGroupId">12346798</span>
+											</div>
+											<div id="groupDataNumber">
+												<ul class="groupNumberInfo">
+													<li class="groupNumberList">
+														<img src="img/p1.jpg" />
+														<span>大笨</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p2.jpg" />
+														<span>小笨</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p3.jpg" />
+														<span>大哥</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p4.jpg" />
+														<span>二哥</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p1.jpg" />
+														<span>四弟</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p1.jpg" />
+														<span>三哥</span>
+													</li>
+														<li class="groupNumberList">
+														<img src="img/p1.jpg" />
+														<span>大笨</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p2.jpg" />
+														<span>小笨</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p3.jpg" />
+														<span>大哥</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p4.jpg" />
+														<span>二哥</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p1.jpg" />
+														<span>四弟</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p1.jpg" />
+														<span>三哥</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p1.jpg" />
+														<span>大笨</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p2.jpg" />
+														<span>小笨</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p3.jpg" />
+														<span>大哥</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p4.jpg" />
+														<span>二哥</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p1.jpg" />
+														<span>四弟</span>
+													</li>
+													<li class="groupNumberList">
+														<img src="img/p1.jpg" />
+														<span>三哥</span>
+													</li>
+													<li class="groupApplication">
+														<img src="img/application.png" />
+													</li>
+												</ul>
+											</div>
+											<div id="groupMangerFunc">
+												<ul class="groupMangerFuncList">
+													<li name="groupAnoun">
+														群公告
+													</li>
+													<li name="groupNumber">
+														管理群成员
+													</li>
+													<li name="groupData">
+														查看群资料
+													</li>
+													<li name="groupDissolution">
+														解散群
+													</li>
+												</ul>
 											</div>
 										</div>
-									</li>
-									<li class="left">
-										<div class="chat-sender">
-											<div class="nickeNamePortrait"><img src="img/p2.jpg" /></div>
-											<div class="nickName" >阿笨</div>
-											<div class="chatBackgroung">
-												<div class="chat-left_triangle"></div>
-												<span>苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费苹果增加三色选哈哈费苹果增加三款配件的颜色选哈哈费苹果增加三苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费</span>
+										<div id="groupAnounPanel">
+											<span id="gapClose">&times;</span>
+											<div id="anounList">
+												<ul class="AnounNotice">
+													<li>
+														<h4>开班会啦</h4>
+														<span class="anounContent">快点啦，开班回家啦</span>
+														<span class="edit">编辑</span>
+														<span class="deleteAnoun">删除</span>
+													</li>
+													<li>
+														<h4>通知</h4>
+														<span class="anounContent">
+															现在有个关于学习宪法的考试通知，
+															请大家积极参加考试，在易班上参加考试，考试题库有50题，随机抽取20题进行测试，
+															可以重复考试，次数不限，及格分数为80分，
+															满分100分(满分有小奖品送)。易班考试开放时间为2018年6月29日到2018年7月1日24:00点。即7月2号截止
+														</span>
+														<span class="edit">编辑</span>
+														<span class="deleteAnoun">删除</span>
+													</li>
+													<li>
+														<h4>毕业啦</h4>
+														<span class="anounContent">
+															快点啦，在不快点，你就结业了，哈哈哈哈哈哈哈哈哈，你敢，不信，你就试试，哈哈哈哈哈哈哈哈哈哈哈
+														</span>
+														<span class="edit">编辑</span>
+														<span class="deleteAnoun">删除</span>
+													</li>
+													<li>
+														<h4>通知</h4>
+														<span class="anounContent">
+															现在有个关于学习宪法的考试通知，
+															请大家积极参加考试，在易班上参加考试，考试题库有50题，随机抽取20题进行测试，
+															可以重复考试，次数不限，及格分数为80分，
+															满分100分(满分有小奖品送)。易班考试开放时间为2018年6月29日到2018年7月1日24:00点。即7月2号截止
+														</span>
+														<span class="edit">编辑</span>
+														<span class="deleteAnoun">删除</span>
+													</li>
+													<li>
+														<h4>毕业啦</h4>
+														<span class="anounContent">
+															快点啦，在不快点，你就结业了，哈哈哈哈哈哈哈哈哈，你敢，不信，你就试试，哈哈哈哈哈哈哈哈哈哈哈
+														</span>
+														<span class="edit">编辑</span>
+														<span class="deleteAnoun">删除</span>
+													</li>
+												</ul>
 											</div>
 										</div>
-									</li>
-									<li class="left">
-										<div class="chat-sender">
-											<div class="nickeNamePortrait"><img src="img/p2.jpg" /></div>
-											<div class="nickName" >阿笨</div>
-											<div class="chatBackgroung">
-												<div class="chat-left_triangle"></div>
-												<span>苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费</span>
+										<div id="groupNumberPanel">
+											<span id="gnpClose">&times;</span>
+											<div id="ControllerNumbers">
+												<ul class="ControllerNumbersList">
+													<li>
+														<img src="img/p4.jpg" />
+														<span>二哥</span>
+														<input type="button" value="删除" class="deleteNumber"/>
+													</li>
+													<li>
+														<img src="img/p4.jpg" />
+														<span>二哥</span>
+														<input type="button" value="删除" class="deleteNumber"/>
+													</li>
+													<li>
+														<img src="img/p4.jpg" />
+														<span>二哥</span>
+														<input type="button" value="删除" class="deleteNumber"/>
+													</li>
+													<li>
+														<img src="img/p4.jpg" />
+														<span>二哥</span>
+														<input type="button" value="删除" class="deleteNumber"/>
+													</li>
+													<li>
+														<img src="img/p4.jpg" />
+														<span>二哥</span>
+														<input type="button" value="删除" class="deleteNumber"/>
+													</li>
+													<li>
+														<img src="img/p4.jpg" />
+														<span>二哥</span>
+														<input type="button" value="删除" class="deleteNumber"/>
+													</li>
+												</ul>
 											</div>
 										</div>
-									</li>
-									<li class="right">
-										<div class="chat-sender">
-											<div class="nickeNamePortrait"><img src="img/p4.jpg" /></div>
-											<div class="nickName" >阿嗨反反复复放到</div>
-												<div class="chatBackgroung">
-													<div class="chatMessageDatile">
-														<div class="chat-left_triangle"></div>
-														<span>
-															苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色苹果增加三款
-															配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费苹果增加三款配件的颜色选哈哈费苹果增加三款配件的
-															颜色选哈哈费苹果增加三款配件的颜色选哈哈费苹
-															果增加三款配件的颜色选哈哈费选哈哈费苹果增加三款配件的颜色选哈哈费
-														</span>
-													</div>
-												</div>
+										<div id="groupDataPanel">
+											<span id="gdpClose">&times;</span>
+											<div id="groupDataSave">
+												<form>
+													<table>
+														<tr>
+															<td>点击更换头像</td>
+															<td><img src="img/group3.png"/></td>
+														</tr>
+														<tr>
+															<td>群昵称</td>
+															<td><input type="text" value="狂欢嘉年华" class="groupDataSaveName"/></td>
+														</tr>
+														<tr>
+															<!--
+                                                            	作者：offline
+                                                            	时间：2018-11-10
+                                                            	描述：
+                                                            	这里需要根据是否是群主而定
+                                                            -->
+															<td>进群时间</td>
+															<td>2018-2-12 4:2:23</td>
+														</tr>
+														<tr>
+															<td colspan="2"><input type="button" value="保存" id="groupDataSure"/></td>
+														</tr>
+													</table>
+												</form>
+											</div>
 										</div>
-									</li>
-									<li>
-										<div class="chat-notice">
-											<span class="notice">2018年11月15日23:53:23</span>
-										</div>
-									</li>
-									<li class="right">
-										<div class="chat-sender">
-											<div class="nickeNamePortrait"><img src="img/p4.jpg" /></div>
-											<div class="nickName" >帅过冯绍峰</div>
-												<div class="chatBackgroung">
-													<div class="chatMessageDatile">
-														<div class="chat-left_triangle"></div>
-														<span>
-															qw
-															ertyuiop
-															dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dddd苹dd苹
-															dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹苹dd苹dd苹dd苹dd苹dd苹ddd
-															苹ddd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dddd苹dd苹
-															dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹
-															tyuiop
-															dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dddd苹dd苹
-															dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹苹dd苹dd苹dd苹dd苹dd苹ddd
-															苹ddd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹dddd苹dd苹
-															dd苹dd苹dd苹dd苹dd苹dd苹dd苹dd苹
-														</span>
-													</div>
-												</div>
-										</div>
-									</li>
-									<li>
-										<div class="chat-notice">
-											<span class="notice">你已被群主移除</span>
-										</div>
-									</li>
-									<li class="right">
-										<div class="chat-sender">
-											<div class="nickeNamePortrait"><img src="img/p4.jpg" /></div>
-											<div class="nickName" >帅过冯绍峰</div>
-												<div class="chatBackgroung">
-													<div class="chatMessageDatile">
-														<div class="chat-left_triangle"></div>
-														<span>
-															qw
-														</span>
-													</div>
-												</div>
-										</div>
-									</li>
+									</div>
+								</div>
+							</div>
+							<div id="chatGroupMessage">
+								<ul id="groupMessage">
 								</ul>
 							</div>
 							<div id="chatBox">

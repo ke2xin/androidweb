@@ -111,6 +111,30 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         WebSocketManager.addWebSocketListener(this);
     }
 
+    public UserRepository getUserRepository() {
+        return userRepository;
+    }
+
+    public GroupRepository getGroupRepository() {
+        return groupRepository;
+    }
+
+    public GroupUserRepository getGroupUserRepository() {
+        return groupUserRepository;
+    }
+
+    public MessageRepository getMessageRepository() {
+        return messageRepository;
+    }
+
+    public NotificationRepository getNotificationRepository() {
+        return notificationRepository;
+    }
+
+    public UserGpsRepository getUserGpsRepository() {
+        return userGpsRepository;
+    }
+
     @Override
     public Map<Integer, String> getWebSocketService() throws Exception {
         Map<Integer,String> map = new HashMap<>();
@@ -361,7 +385,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         //创建在线用户数据
         OnlineUserData onlineUserData = new OnlineUserData(user.getUuid(),user.getPhone(),user.getName(),user.getPortrait());
         //创建在线用户
-        OnlineUser onlineUser = new OnlineUser(onlineUserData,session,groupUserRepository,messageRepository,onlineUserManager);
+        OnlineUser onlineUser = new OnlineUser(onlineUserData,session,onlineUserManager);
         //设置用户在线状态
         onlineUser.setOnline(true);
         //之后操作的唯一管理识别类

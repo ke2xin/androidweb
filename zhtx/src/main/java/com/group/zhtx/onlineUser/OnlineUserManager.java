@@ -2,11 +2,13 @@ package com.group.zhtx.onlineUser;
 
 import com.group.zhtx.model.Message;
 import com.group.zhtx.repository.MessageRepository;
+import com.group.zhtx.service.RepositoryService;
 import com.group.zhtx.thread.AsyncThreadManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.websocket.Session;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +26,13 @@ public class OnlineUserManager {
         value:用户uuid
      */
     public Map<String,String> sessionMap;
+
+    @Autowired
+    private RepositoryService service;
+
+    public RepositoryService getService() {
+        return service;
+    }
 
     @PostConstruct
     public void initMethod(){

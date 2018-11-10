@@ -22,11 +22,12 @@ public class WebSocketOperateUtil {
 
     public final static int User_Application_Enter_Group_C = 10;
 
+
     public final static int User_Accept_Enter_Group_C = 1000;
 
-    public final static int User_Refuse_Enter_Group_C = 11;
+    public final static int User_Refuse_Enter_Group_C = 12;
 
-    public final static int User_Delete_Group_Number_C = 12;
+    public final static int User_Delete_Group_Number_C = 6666;
 
     public final static int User_Search_Group_C =14;
 
@@ -47,6 +48,7 @@ public class WebSocketOperateUtil {
     public final static int User_Get_CallGroupUserPhone_C = 9999;
 
 
+    public final static int Send_Notifications = 98;
     public final static int User_Send_GroupMessage_C = 24;
     //用户发送时间截
     public final static int User_Send_TimeStamp = 99;
