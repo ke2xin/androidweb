@@ -767,6 +767,46 @@ body{
 	left: 600px;
 	top: 0px;
 }
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupDataPanel #groupDataSave{
+	width: 660px;
+	height: 450px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupDataPanel #groupDataSave form{
+	width: 660px;
+	height: 450px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupDataPanel #groupDataSave form table{
+	width: 660px;
+	height: 450px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupDataPanel #groupDataSave form table tr{
+	height: 100px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupDataPanel #groupDataSave form table tr td{
+	font-size: 20px;
+	text-align: center;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupDataPanel #groupDataSave form table tr td:nth-child(odd){
+	color: white;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupDataPanel #groupDataSave form table tr td img{
+	width: 90px;
+	height: 90px;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupDataPanel #groupDataSave form table tr td input#groupDataSure{
+	width: 80px;
+	height: 30px;
+	background: orange;
+	border-radius: 15px;
+	border: none;
+}
+.main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc #chatWindowManager #groupDataPanel #groupDataSave form table tr td input.groupDataSaveName{
+	width: 150px;
+	height: 35px;
+	border: none;
+	border-radius: 15px;
+	padding-left: 10px;
+}
 .main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc ul.groupListFunc{
 	width: 350px;
 	height: 60px;

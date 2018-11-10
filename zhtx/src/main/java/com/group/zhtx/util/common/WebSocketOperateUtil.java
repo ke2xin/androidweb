@@ -3,17 +3,17 @@ package com.group.zhtx.util.common;
 public class WebSocketOperateUtil {
 
     public final static String Portrait_Url = "F:\\zhtx\\";
-
+    //用户登录
     public final static int User_Login_C = 1;
 
     //创建群
     public final static int User_CreateGroup_C = 3;
-
-    public final static int User_Enter_Group_C = 999;
+    //进入群聊
+    public final static int User_Enter_Group_C = 4;
     //获取群资料
-    public final static int User_Get_Group_Data_C = 4;
+    public final static int User_Get_Group_Data_C = 5;
 
-    public final static int User_Quit_Group_C = 5;
+    public final static int User_Quit_Group_C = 55555;
 
     public final static int User_Save_GroupData_C = 6;
 
@@ -21,9 +21,9 @@ public class WebSocketOperateUtil {
 
     public final static int User_Phone_Relative_C = 8;
 
-    public final static int User_Application_Enter_Group_C = 9;
+    public final static int User_Application_Enter_Group_C = 10;
 
-    public final static int User_Accept_Enter_Group_C = 10;
+    public final static int User_Accept_Enter_Group_C = 1000;
 
     public final static int User_Refuse_Enter_Group_C = 11;
 

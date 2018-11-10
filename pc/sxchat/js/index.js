@@ -1,4 +1,5 @@
 //创建和初始化地图函数：
+
 var map;
 function initMap() { 
 	createMap(); //创建地图
@@ -179,13 +180,10 @@ function addListener(){
 	var obj=null;
 	for(var i=0;i<groupLis.length;i++){
 		groupLis[i].onclick=function(){
-<<<<<<< HEAD
 			if(obj!=null){
 				obj.style.background='none';
 			}
 			obj=this;
-=======
->>>>>>> a9bec229118dfb26d10f26881e4b33a8dbe64f3e
 			createGroup.style.display='none';
 			chatWindow.style.display='block';
 			searchGroup.style.display='none';
@@ -216,6 +214,11 @@ function addListener(){
 				groupManager.style.display='none';
 			}else if(name=='groupDissolution'){
 				console.log(this);
+				if(window.confirm("确认解散该群？")){
+					alert("已解散该群！");
+				}else{
+					alert("已取消。");
+				}
 			}
 		}
 	}
@@ -274,9 +277,17 @@ function addListener(){
 				groupNumberPanel.style.display='none';
 				groupDataPanel.style.display='none';
 			}else if(name=='deleteMessage'){
-				
+				if(window.confirm("确认删除？")){
+					alert("已经删除");
+				}else{
+					alert("已经取消");
+				}
 			}else if(name=='exitGroup'){
-				
+				if(window.confirm("退出群？")){
+					alert("已经退出该群");
+				}else{
+					alert("已取消");
+				}
 			}
 		}
 	}

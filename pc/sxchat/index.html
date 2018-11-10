@@ -4,15 +4,15 @@
 	<head>
 		<meta charset="utf-8" />
 		<title></title>
+		<script type="text/javascript" src="js/jquery-1.11.0.min.js" ></script>
 		<link rel="stylesheet" href="css/index.css" />
 		<script type="text/javascript" src="js/index.js"></script>
-		<script type="text/javascript" src="js/jquery-1.11.0.min.js" ></script>
 		<script type="text/javascript" src="js/ddzj-operateIdType.js" ></script>
 		<script type="text/javascript" src="js/ddzj-tool.js"></script>
 		<script type="text/javascript" src="js/ddzj-event.js" ></script>
 		<script type="text/javascript" src="js/ddzj-websocket.js" ></script>
 		<script type="text/javascript" src="js/ddzj-agent.js" ></script>
-		<!--<script type="text/javascript" src="js/getscript.js"></script>-->
+		<script type="text/javascript" src="js/getscript.js"></script>
 		<script type="text/javascript" src="js/ddzj-chatGroupObj.js" ></script>
 		<script type="text/javascript" src="js/ddzj-talkMonitor.js" ></script>
 	</head>
@@ -348,7 +348,31 @@
 										<div id="groupDataPanel">
 											<span id="gdpClose">&times;</span>
 											<div id="groupDataSave">
-												
+												<form>
+													<table>
+														<tr>
+															<td>点击更换头像</td>
+															<td><img src="img/group3.png"/></td>
+														</tr>
+														<tr>
+															<td>群昵称</td>
+															<td><input type="text" value="狂欢嘉年华" class="groupDataSaveName"/></td>
+														</tr>
+														<tr>
+															<!--
+                                                            	作者：offline
+                                                            	时间：2018-11-10
+                                                            	描述：
+                                                            	这里需要根据是否是群主而定
+                                                            -->
+															<td>进群时间</td>
+															<td>2018-2-12 4:2:23</td>
+														</tr>
+														<tr>
+															<td colspan="2"><input type="button" value="保存" id="groupDataSure"/></td>
+														</tr>
+													</table>
+												</form>
 											</div>
 										</div>
 									</div>
@@ -584,19 +608,19 @@
 								</tr>
 								<tr>
 									<td>昵称</td>
-									<td><input type="text" class="dataInfoDatile"/></td>
+									<td><input type="text" class="dataInfoDatile" value="大业"/></td>
 								</tr>
 								<tr>
 									<td>个性签名</td>
-									<td><input type="text" class="dataInfoDatile"/></td>
+									<td><input type="text" class="dataInfoDatile" value="心术一方"/></td>
 								</tr>
 								<tr>
 									<td>手机号码</td>
-									<td><input type="text" class="dataInfoDatile"/></td>
+									<td><input type="text" class="dataInfoDatile" value="158456713466"/></td>
 								</tr>
 								<tr>
 									<td>邮箱</td>
-									<td><input type="text" class="dataInfoDatile"/></td>
+									<td><input type="text" class="dataInfoDatile" value="45647@sd.f"/></td>
 								</tr>
 								<tr>
 									<td colspan="2"><input type="submit" value="保存修改" id="dataISave"/></td>
