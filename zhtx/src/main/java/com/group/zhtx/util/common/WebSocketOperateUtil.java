@@ -23,19 +23,8 @@ public class WebSocketOperateUtil {
 
     public final static int User_Application_Enter_Group_C = 10;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    public final static int User_Accept_Enter_Group_C = 11;
-=======
+
     public final static int User_Accept_Enter_Group_C = 1000;
->>>>>>> 6e4286b46efedebbab57646a753b1c0938ff4be0
-=======
-    public final static int User_Accept_Enter_Group_C = 1000;
->>>>>>> 6e4286b46efedebbab57646a753b1c0938ff4be0
-=======
-    public final static int User_Accept_Enter_Group_C = 1000;
->>>>>>> 6e4286b46efedebbab57646a753b1c0938ff4be0
 
     public final static int User_Refuse_Enter_Group_C = 12;
 
