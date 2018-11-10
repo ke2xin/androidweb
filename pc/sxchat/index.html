@@ -5,11 +5,32 @@
 		<meta charset="utf-8" />
 		<title></title>
 		<link rel="stylesheet" href="css/index.css" />
-		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=mv5BTA8aclwokTIN8DzPX2l1CP8vl7yn"></script>
 		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript" src="js/jquery-1.11.0.min.js" ></script>
+		<script type="text/javascript" src="js/ddzj-operateIdType.js" ></script>
+		<script type="text/javascript" src="js/ddzj-tool.js"></script>
+		<script type="text/javascript" src="js/ddzj-event.js" ></script>
+		<script type="text/javascript" src="js/ddzj-websocket.js" ></script>
+		<script type="text/javascript" src="js/ddzj-agent.js" ></script>
+		<!--<script type="text/javascript" src="js/getscript.js"></script>-->
+		<script type="text/javascript" src="js/ddzj-chatGroupObj.js" ></script>
+		<script type="text/javascript" src="js/ddzj-talkMonitor.js" ></script>
 	</head>
 
 	<body>
+		<script type="text/javascript">
+			
+			
+					var TalkMonitor = window.ddzj.TalkMonitor;
+					var User = function(userName,password){
+						this.userName = userName;
+						this.password = password;
+					}
+					window.user = new User(123,123);
+					
+					var talkMonitor = new TalkMonitor();
+					talkMonitor.init("ws://172.17.146.44:8080/ws");
+		</script>
 		<div class="main">
 			<div class="container">
 				<div class="head">
@@ -32,43 +53,6 @@
 					<div id="middle">
 						<div id="middleGroupChat">
 							<ul id="groupChat">
-								<li>
-									<img src="img/group1.png" class="groupPortrait" />
-									<span class="groupName">。点滴之间</span>
-									<span class="groupLastMessage">
-										小智&nbsp;:&nbsp;哈哈哈哈哈啊哈哈！
-									</span>
-								</li>
-								<li>
-									<img src="img/group6.png" class="groupPortrait" />
-									<span class="groupName">评审小组</span>
-									<span class="groupLastMessage">小猴&nbsp;:&nbsp;所有人，我要生气啦</span>
-								</li>
-								<li>
-									<img src="img/group8.png" class="groupPortrait" />
-									<span class="groupName">六大神兽</span>
-									<span class="groupLastMessage">大亮&nbsp;:&nbsp;这个手刹不灵</span>
-								</li>
-								<li>
-									<img src="img/group4.png" class="groupPortrait" />
-									<span class="groupName">代代亲</span>
-									<span class="groupLastMessage">姐姐&nbsp;:&nbsp;最近怎了啦</span>
-								</li>
-								<li>
-									<img src="img/group3.png" class="groupPortrait" />
-									<span class="groupName">怀集集中营</span>
-									<span class="groupLastMessage">三木&nbsp;:&nbsp;今天要搞事情了，都出来冒个泡吧</span>
-								</li>
-								<li>
-									<img src="img/group2.png" class="groupPortrait" />
-									<span class="groupName">软件162</span>
-						 			<span class="groupLastMessage">老师&nbsp;:&nbsp;要开始找工作了，你们要小心啊</span>
-								</li>
-								<li>
-									<img src="img/group7.png" class="groupPortrait" />
-									<span class="groupName">猪大肠炒豆芽</span>
-									<span class="groupLastMessage">老板&nbsp;:&nbsp;客官你的菜来了！</span>
-								</li>
 							</ul>
 						</div>
 						<div id="middleNotificationMessage">
@@ -76,30 +60,6 @@
 								<li>
 									<img  src="img/p1.jpg"/>
 									<span class="applicationMessage">小熊请求加入西游四人and马祖群聊</span>
-									<input type="button" value="同意" class="agree"/>
-									<input type="button" value="拒绝" class="refuse"/>
-								</li>
-								<li>
-									<img  src="img/p2.jpg"/>
-									<span class="applicationMessage">神马都是浮云请求加入六大神兽群聊</span>
-									<input type="button" value="同意" class="agree"/>
-									<input type="button" value="拒绝" class="refuse"/>
-								</li>
-								<li>
-									<img  src="img/p3.jpg"/>
-									<span class="applicationMessage">天方夜谭请求加入代代亲群聊</span>
-									<input type="button" value="同意" class="agree"/>
-									<input type="button" value="拒绝" class="refuse"/>
-								</li>
-								<li>
-									<img  src="img/p4.jpg"/>
-									<span class="applicationMessage">百里挑一请求加入怀集集中营</span>
-									<input type="button" value="同意" class="agree"/>
-									<input type="button" value="拒绝" class="refuse"/>
-								</li>
-								<li>
-									<img  src="img/p5.jpg"/>
-									<span class="applicationMessage">法海不懂爱请求加入点滴之间</span>
 									<input type="button" value="同意" class="agree"/>
 									<input type="button" value="拒绝" class="refuse"/>
 								</li>
@@ -154,18 +114,18 @@
 							<table>
 								<tr>
 									<td>群名称：</td>
-									<td><input type="text" value="千年等一回"/></td>
+									<td><input type="text" placeholder="请输入群昵称" value="测试创建群"/></td>
 								</tr>
 								<tr>
 									<td>群爱好：</td>
-									<td><input type="text" value="有胆你就来"/></td>
+									<td><input type="text" placeholder="请输入群爱好" value="测试创建群"/></td>
 								</tr>
 								<tr>
 									<td>群描述：</td>
-									<td><input type="text" value="进群者备注姓名"/></td>
+									<td><input type="text" placeholder="请输入群描述" value="测试创建群"/></td>
 								</tr>
 								<tr>
-									<td colspan="2"><input type="submit" value="确认创建" id="submitCreate"/></td>
+									<td colspan="2"><input type="button" value="确认创建" id="submitCreate"/></td>
 								</tr>
 							</table>
 						</form>
@@ -586,7 +546,7 @@
 					<div id="searchGroup" name="searchGroup">
 						<h4 class="tissearchGroup">搜索群</h4>
 						<div class="searchBox">
-							<input type="text" placeholder="请输入群名称" id="searchBoxInput"/>
+							<input type="text" placeholder="请输入群号" id="searchBoxInput"/>
 						</div>
 						<div id="searchResult">
 							<h5 class="searchCount">共<strong>1</strong>条结果</h5>

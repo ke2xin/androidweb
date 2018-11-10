@@ -179,10 +179,13 @@ function addListener(){
 	var obj=null;
 	for(var i=0;i<groupLis.length;i++){
 		groupLis[i].onclick=function(){
+<<<<<<< HEAD
 			if(obj!=null){
 				obj.style.background='none';
 			}
 			obj=this;
+=======
+>>>>>>> a9bec229118dfb26d10f26881e4b33a8dbe64f3e
 			createGroup.style.display='none';
 			chatWindow.style.display='block';
 			searchGroup.style.display='none';

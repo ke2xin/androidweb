@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link type="text/css" rel="stylesheet" href="css/default.css"/>
+		<script type="text/javascript" src="js/jquery-1.11.0.min.js" ></script>
+	</head>
+	<body>
+		<div class="container">
+			<div class="mark"></div>
+
+			<div class="loginDialog">
+				<div class="title">点滴之间</div>
+				<div class="login">
+					<p class="loginTitle">用户登陆</p>
+					<div class="loginRow">
+						<div class="loginRowLeft">用户名:</div>
+						<input type="text" class="loginRowRight" name="userName"/>
+					</div>
+					<div class="loginRow">
+						<div class="loginRowLeft">密码:</div>
+						<input type="text" class="loginRowRight" name="userPassword"/>
+					</div>
+					<div class="loginRow">
+						<input type="button" class="loginButton" value="登陆"/>
+					</div>
+					<div class="loginRow">
+						<div class="loginLeftText">注册账号</div>
+						<div class="loginCenterText"> |</div>
+						<div class="loginRightText">找回密码</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	
+	<script type="application/javascript">
+		$(function(){        
+			var w=window.screen.width;      
+			var zoom=w/1920;
+		
+			$("#container").css({
+			        "zoom",zoom,
+			        "-moz-transform":"scale("+zoom+")",
+			　　　　　　"-moz-transform-origin":"top left"
+			      });
+		 });		
+	</script>
+</html>

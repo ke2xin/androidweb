@@ -288,9 +288,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             webSocket.clear();
             return;
         }
-
-
-
         UserLoginData data = new UserLoginData();
         UserLoginDataSingal singal = new UserLoginDataSingal();
 

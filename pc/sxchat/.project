@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>sxchat</name>
+	<name>demo4</name>
 	<comment>Create By HBuilder</comment>
 	<projects>
 	</projects>
@@ -16,7 +16,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1541081244137</id>
+			<id>1540797228819</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
@@ -34,7 +34,11 @@
 			</matcher>
 		</filter>
 		<filter>
+<<<<<<< HEAD
 			<id>1541748110114</id>
+=======
+			<id>1541748507283</id>
+>>>>>>> a9bec229118dfb26d10f26881e4b33a8dbe64f3e
 			<name></name>
 			<type>26</type>
 			<matcher>
@@ -43,7 +47,11 @@
 			</matcher>
 		</filter>
 		<filter>
+<<<<<<< HEAD
 			<id>1541748110131</id>
+=======
+			<id>1541748507371</id>
+>>>>>>> a9bec229118dfb26d10f26881e4b33a8dbe64f3e
 			<name></name>
 			<type>26</type>
 			<matcher>
