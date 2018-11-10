@@ -5,19 +5,18 @@ public class WebSocketOperateUtil {
     public final static String Portrait_Url = "F:\\zhtx\\";
     //用户登录
     public final static int User_Login_C = 1;
-
     //创建群
     public final static int User_CreateGroup_C = 3;
     //进入群聊
     public final static int User_Enter_Group_C = 4;
     //获取群资料
     public final static int User_Get_Group_Data_C = 5;
+    //退出群聊
+    public final static int User_Quit_Group_C = 6;
 
-    public final static int User_Quit_Group_C = 55555;
+    public final static int User_Save_GroupData_C = 7;
 
-    public final static int User_Save_GroupData_C = 6;
-
-    public final static int User_Group_Number_Location_C = 7;
+    public final static int User_Group_Number_Location_C = 777777;
 
     public final static int User_Phone_Relative_C = 8;
 

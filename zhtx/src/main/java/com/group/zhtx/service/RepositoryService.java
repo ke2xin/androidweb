@@ -121,6 +121,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         map.put(WebSocketOperateUtil.User_Quit_Group_C,"quitGroup");
         map.put(WebSocketOperateUtil.User_Group_Number_Location_C,"searchGroupNumberLocation");
         map.put(WebSocketOperateUtil.User_Phone_Relative_C,"relativeNumberByPhone");
+        map.put(WebSocketOperateUtil.User_Save_GroupData_C,"saveGroupData");
         map.put(WebSocketOperateUtil.User_Application_Enter_Group_C,"applicaEnterGroup");
         map.put(WebSocketOperateUtil.User_Accept_Enter_Group_C,"acceptUserEnterGroup");
         map.put(WebSocketOperateUtil.User_Refuse_Enter_Group_C,"refuseEnterGroup");
@@ -573,11 +574,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 data.setMembers(new ArrayList<>());
                 webSocket=new WebSocket(operateId,data,null);
                 session.getBasicRemote().sendObject(webSocket);
-//                session.getBasicRemote().sendText("{" +
-//                        "operateId : 5," +
-//                        "status : fail," +
-//                        "data : []" +
-//                        "}");
             } catch (IOException e) {
                 e.printStackTrace();
                 //销毁消息包
@@ -619,8 +615,8 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         UserQuitGroupC userQuitGroupC=(UserQuitGroupC) webSocket.getIMessage();
         int operateId=userQuitGroupC.getOperateId();
         Session session=webSocket.getSession();
-        GroupUser groupUser=groupUserRepository.getGroupUserByGroupAndUuid(userQuitGroupC.getUser_uuid(),userQuitGroupC.getGroup_id());
-        System.out.println("uuid="+userQuitGroupC.getUser_uuid()+"\tgroupId="+userQuitGroupC.getGroup_id());
+        System.out.println("uuid="+userQuitGroupC.getUserUuid()+"\tgroupId="+userQuitGroupC.getGroupId());
+        GroupUser groupUser=groupUserRepository.getGroupUserByGroupAndUuid(userQuitGroupC.getUserUuid(),userQuitGroupC.getGroupId());
         System.out.println(groupUser);
         QuitDataS quitDataS=new QuitDataS();
         if(groupUser==null){//不存在该群号时直接返回
@@ -643,6 +639,22 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             quitDataS.setOperateId(operateId);
             quitDataS.setStatus("success");
             quitDataS.setInformation("成功退出群聊");
+            List<Group>groups=groupRepository.getGroupByUuid(userQuitGroupC.getUserUuid());
+            for(int i=0;i<groups.size();i++){
+                Group group=groups.get(i);
+                UserCreateGroup groupData=new UserCreateGroup();
+                groupData.setGroupName(group.getName());
+                groupData.setGroupId(group.getUuid());
+                groupData.setGroupPortrait(group.getPortarit());
+                //获取群最新消息
+                List<Message>lastestMessage=messageRepository.getLastestMessageByGroupUuid(group.getUuid());
+                if(lastestMessage.size()==0){//如果该没有消息，也就是刚刚创建的群
+                   // groupData.se
+                }else{
+
+                }
+                Message message=lastestMessage.get(0);
+            }
             webSocket=new WebSocket(operateId,quitDataS,null);
             try {
                 session.getBasicRemote().sendObject(webSocket);
@@ -676,12 +688,15 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         UserSaveGroupDataC userSaveGroupDataC = (UserSaveGroupDataC) webSocket.getIMessage();
         int operateId = webSocket.getOperateId();
         Session session = webSocket.getSession();
-
+        System.out.println(userSaveGroupDataC.getGroupId()+""+checkUserIsOnline(session.getId(),null));
         //检测用户是否登录
-        if(!checkUserIsOnline(session.getId(),null))return;
+        //if(!checkUserIsOnline(session.getId(),null))return;
 
         Group group = groupRepository.findById(userSaveGroupDataC.getGroupId()).orElse(null);
-
+        System.out.println("群旧的名称："+group.getName());
+        System.out.println("群旧的描述："+group.getHobby());
+        System.out.println("群旧的公告："+group.getAnoun());
+        System.out.println(group);
         if(group == null){
             return;
         }
@@ -690,17 +705,26 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         String groupName = userSaveGroupDataC.getGroupName();
         String groupDec = userSaveGroupDataC.getGroupDec();
         String groupHobby = userSaveGroupDataC.getGroupHobby();
-
+        System.out.println("客户端发来的群名称："+groupName);
+        System.out.println("客户端发来的描述："+groupHobby);
+        System.out.println("客户端发来的公告："+groupDec);
         if(groupName != null){
             group.setName(groupName);
-        }else if (groupDec != null){
+        }
+        if (groupDec != null){
             group.setAnoun(groupDec);
-        }else if (groupHobby != null){
+        }
+        if (groupHobby != null){
             group.setHobby(groupHobby);
         }
+
         //保存修改的群资料，并刷新缓存
         groupRepository.saveAndFlush(group);
 
+        Group group1=groupRepository.findById(userSaveGroupDataC.getGroupId()).orElse(null);
+        System.out.println("群新的名称："+group1.getName());
+        System.out.println("群新的描述："+group1.getHobby());
+        System.out.println("群新的公告："+group1.getAnoun());
         UserSaveGroupDataS userSaveGroupDataS = new UserSaveGroupDataS();
 
         userSaveGroupDataS.setOperateId(operateId);

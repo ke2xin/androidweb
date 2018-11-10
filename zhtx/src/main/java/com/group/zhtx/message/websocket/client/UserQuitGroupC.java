@@ -6,8 +6,8 @@ import java.io.Serializable;
 
 public class UserQuitGroupC implements Serializable, IMessage {
     private int operateId;
-    private String group_id;
-    private String user_uuid;
+    private String groupId;
+    private String userUuid;
 
     public int getOperateId() {
         return operateId;
@@ -17,19 +17,19 @@ public class UserQuitGroupC implements Serializable, IMessage {
         this.operateId = operateId;
     }
 
-    public String getGroup_id() {
-        return group_id;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public void setGroup_id(String group_id) {
-        this.group_id = group_id;
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
-    public String getUser_uuid() {
-        return user_uuid;
+    public String getUserUuid() {
+        return userUuid;
     }
 
-    public void setUser_uuid(String user_uuid) {
-        this.user_uuid = user_uuid;
+    public void setUserUuid(String userUuid) {
+        this.userUuid = userUuid;
     }
 }

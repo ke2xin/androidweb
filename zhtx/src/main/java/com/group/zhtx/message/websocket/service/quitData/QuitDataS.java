@@ -1,12 +1,16 @@
 package com.group.zhtx.message.websocket.service.quitData;
 
 import com.group.zhtx.message.IMessage;
+import com.group.zhtx.message.websocket.service.createGroupMessage.UserCreateGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuitDataS implements IMessage {
     private int operateId;
     private String status;
     private String information;
-
+    private List<UserCreateGroup>grouops=new ArrayList();
     public int getOperateId() {
         return operateId;
     }
@@ -29,5 +33,8 @@ public class QuitDataS implements IMessage {
 
     public void setInformation(String information) {
         this.information = information;
+    }
+    public void addGroups(UserCreateGroup group){
+        grouops.add(group);
     }
 }
