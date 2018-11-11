@@ -408,7 +408,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         if(!checkUserIsOnline(session.getId(),userUuid))return;
 
         //如果申请创建群的用户不存在，直接返回
-        User user = userRepository.findById(userCreateGroupC.getUuid()).orElse(null);
+        User user = userRepository.findById(userUuid).orElse(null);
         if(user == null){
             userCreateGroupS.setStatus("fail");
             userCreateGroupS.setInformation("创建群的用户不存在");
@@ -429,7 +429,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         group.setAnoun(userCreateGroupC.getGroupDec());
         group.setCreater(user);
         group.setCreateTime(new Date());
-        group.setStatus((short) 1);
+        group.setStatus((short) 1);//0表示该群已封，1表示正常
         group.setHobby(userCreateGroupC.getGroupHobby());
 
         //将用户创建的群加入群组表这中
@@ -439,8 +439,9 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         groupUser.setGroup(group);
         groupUser.setJoinTime(new Date());
         groupUser.setReceiveTime(new Date());
-        //设置群主角色
+        //设置群主角色，0表示群主，1表示群成员
         groupUser.setRole((short) 0);
+        //设置群成员状态，0表示不在线，1表示在线
         groupUser.setStatus((short) 1);
         groupUser.setUser(user);
 
@@ -453,14 +454,10 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         userCreateGroupS.setStatus("success");
         userCreateGroupS.setInformation("创建群成功");
         List<Group> groupLists=groupUserRepository.getAllGroupByUuidAndPX(userCreateGroupC.getUuid());
-
-
-
-
         System.out.println("你拥有的群度："+groupLists.size());
         for(int i=0;i<groupLists.size();i++){
             Group group1=groupLists.get(i);
-            System.out.println("群名称："+group1.getCreateTime());
+            System.out.println("创建群时间："+group1.getCreateTime());
             if(groupNumber.equals(group1.getUuid())){//用户刚刚创建的群
                     UserCreateGroup createGroup = new UserCreateGroup();
                     createGroup.setGroupId(group.getUuid());
@@ -478,6 +475,9 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 createGroup.setGroupName(group1.getName());
                 createGroup.setGroupId(group1.getUuid());
                 createGroup.setGroupPortrait(group1.getPortarit());
+                //根据用户uuid和拥有的所有群的id查找该用户在该群的群角色
+                GroupUser gu=groupUserRepository.getGroupUserByGroupAndUuid(userCreateGroupC.getUuid(),group1.getUuid());
+                createGroup.setGroupRole(gu.getRole());
                 //获取群最新消息
                 List<Message> messageLists=messageRepository.getLastestMessageByGroupUuid(group1.getUuid());
                 if(messageLists.size()==0){
@@ -486,7 +486,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                     createGroup.setLastGroupSendTime(-1);
                     createGroup.setLastestGroupMessage("");
                     createGroup.setGroupMessageCount(0);
-                    createGroup.setGroupRole(-1);
                 }else {
                     Message message = messageLists.get(0);
                     User lastUser = userRepository.findByUuid(message.getUser().getUuid());
@@ -496,8 +495,8 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                     createGroup.setLastestGroupMessage(message.getContent());
                     //获取用户最后接受消息时间
                     Date receiveTime = groupUserRepository.getGroupLastestTime(lastUser.getUuid(), group1.getUuid());
-                    createGroup.setGroupMessageCount(messageRepository.getCountOfUnReadMessageByGroupUuidAndTime(group1.getUuid(), receiveTime));
-                    createGroup.setGroupRole(groupUser.getRole());
+                    int messageCount=messageRepository.getCountOfUnReadMessageByGroupUuidAndTime(group1.getUuid(),receiveTime);
+                    createGroup.setGroupMessageCount(messageCount);
                 }
                 userCreateGroupS.addUserCreateGroup(createGroup);
             }
@@ -514,6 +513,10 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         UserEnterGroupC enterGroupC=(UserEnterGroupC) webSocket.getIMessage();
         int operateId=enterGroupC.getOperateId();
         Session session=webSocket.getSession();
+
+        //检测用户是否登录
+        if(!checkUserIsOnline(session.getId(),null))return;
+
         List<Message>messages=messageRepository.getChatMessageByGroupId(enterGroupC.getGroup_uuid(),enterGroupC.getGroup_uuid());
         EnterGroupDataS groupDataS=new EnterGroupDataS();
         List<EnterDataInfo>data=new ArrayList<>();
@@ -640,6 +643,10 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         int operateId=userQuitGroupC.getOperateId();
         Session session=webSocket.getSession();
         System.out.println("uuid="+userQuitGroupC.getUserUuid()+"\tgroupId="+userQuitGroupC.getGroupId());
+
+        //检测用户是否登录
+        if(!checkUserIsOnline(session.getId(),userQuitGroupC.getUserUuid()))return;
+
         GroupUser groupUser=groupUserRepository.getGroupUserByGroupAndUuid(userQuitGroupC.getUserUuid(),userQuitGroupC.getGroupId());
         System.out.println(groupUser);
         QuitDataS quitDataS=new QuitDataS();
@@ -659,7 +666,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             return;
         }
         if(groupUser.getRole()==1){//判断该成员是否是群成员还是群主，0表示群主，1表示群成员
-            groupUserRepository.delete(groupUser);
+            groupUserRepository.delete(groupUser);//删除该群的成员
             quitDataS.setOperateId(operateId);
             quitDataS.setStatus("success");
             quitDataS.setInformation("成功退出群聊");
@@ -670,14 +677,30 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 groupData.setGroupName(group.getName());
                 groupData.setGroupId(group.getUuid());
                 groupData.setGroupPortrait(group.getPortarit());
+                //根据用户uuid和用户拥有的所有的群的id查找群角色
+                GroupUser gu=groupUserRepository.getGroupUserByGroupAndUuid(userQuitGroupC.getUserUuid(),group.getUuid());
+                System.out.println("群成员："+gu);
+                groupData.setGroupRole(gu.getRole());
                 //获取群最新消息
                 List<Message>lastestMessage=messageRepository.getLastestMessageByGroupUuid(group.getUuid());
                 if(lastestMessage.size()==0){//如果该没有消息，也就是刚刚创建的群
-                   // groupData.se
+                    groupData.setGroupMessageCount(0);
+                    groupData.setLastestGroupMessage(null);
+                    groupData.setLastGroupSendTime(-1);
+                    groupData.setLastestGroupUser(null);
+                    groupData.setLastGroupNumberName(null);
                 }else{
-
+                    //获取用户最后接受消息时间
+                    Date receiveTime=groupUserRepository.getGroupLastestTime(userQuitGroupC.getUserUuid(),group.getUuid());
+                    int messageCount=messageRepository.getCountOfUnReadMessageByGroupUuidAndTime(group.getUuid(),receiveTime);
+                    groupData.setGroupMessageCount(messageCount);
+                    Message message=lastestMessage.get(0);
+                    groupData.setLastestGroupUser(message.getUser().getUuid());
+                    groupData.setLastGroupNumberName(message.getUser().getName());
+                    groupData.setLastestGroupMessage(message.getContent());
+                    groupData.setLastGroupSendTime(message.getSendTime().getTime());
                 }
-                Message message=lastestMessage.get(0);
+                quitDataS.addGroups(groupData);
             }
             webSocket=new WebSocket(operateId,quitDataS,null);
             try {
