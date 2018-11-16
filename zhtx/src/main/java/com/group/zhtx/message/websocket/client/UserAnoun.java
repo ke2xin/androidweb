@@ -2,12 +2,11 @@ package com.group.zhtx.message.websocket.client;
 
 import com.group.zhtx.message.IMessage;
 
-import java.io.Serializable;
-
-public class UserApplicationEnterGroupC implements Serializable, IMessage {
+public class UserAnoun implements IMessage {
     private int operateId;
     private String uuid;
     private String groupId;
+    private String anoun;
 
     public int getOperateId() {
         return operateId;
@@ -31,5 +30,13 @@ public class UserApplicationEnterGroupC implements Serializable, IMessage {
 
     public void setGroupId(String groupId) {
         this.groupId = groupId;
+    }
+
+    public String getAnoun() {
+        return anoun;
+    }
+
+    public void setAnoun(String anoun) {
+        this.anoun = anoun;
     }
 }

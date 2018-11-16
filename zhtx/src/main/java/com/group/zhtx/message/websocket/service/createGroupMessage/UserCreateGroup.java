@@ -10,7 +10,6 @@ public class UserCreateGroup {
     private long lastGroupSendTime;
     private String lastestGroupMessage;
     private int groupMessageCount;
-
     private int groupRole;
 
 

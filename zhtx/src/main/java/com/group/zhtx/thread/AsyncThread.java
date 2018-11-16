@@ -72,6 +72,7 @@ public class AsyncThread extends Thread {
                     try {
                         handleData.addCycle(cycle);
                     } catch (Exception e) {
+                        e.printStackTrace();
                         System.out.println(l + "addCycle失败");
                     }
                 }

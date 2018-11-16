@@ -70,4 +70,12 @@ public class UserGps implements Serializable {
     public void setDirectionAndAngle(String directionAndAngle) {
         this.directionAndAngle = directionAndAngle;
     }
+
+    public Date getLocationDate() {
+        return locationDate;
+    }
+
+    public void setLocationDate(Date locationDate) {
+        this.locationDate = locationDate;
+    }
 }

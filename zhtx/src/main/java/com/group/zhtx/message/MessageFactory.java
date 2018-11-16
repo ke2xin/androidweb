@@ -9,7 +9,7 @@ public class MessageFactory {
     private static Gson gson = new Gson();
 
     public static IMessage newMessageByOperateCode(int opercode, String data){
-
+        System.out.println("客户端发来的信息："+data);
         switch (opercode){
             case WebSocketOperateUtil.User_Login_C:
                 return gson.fromJson(data, UserLoginC.class);
@@ -32,7 +32,6 @@ public class MessageFactory {
             case WebSocketOperateUtil.User_Phone_Relative_C:
                 return gson.fromJson(data, UserRelativNumberC.class);
             case WebSocketOperateUtil.User_Application_Enter_Group_C:
-                System.out.println("申请加入群聊"+opercode+"||"+WebSocketOperateUtil.User_Enter_Group_C);
                 return gson.fromJson(data, UserApplicationEnterGroupC.class);
             case WebSocketOperateUtil.User_Accept_Enter_Group_C:
                 return gson.fromJson(data, UserAcceptAndRefuseEnterGroupC.class);
@@ -56,6 +55,10 @@ public class MessageFactory {
                 return gson.fromJson(data,UserDissolutionGroupC.class);
             case WebSocketOperateUtil.User_Send_TimeStamp:
                 return gson.fromJson(data,UserSendTimeStampC.class);
+            case WebSocketOperateUtil.User_Location:
+                return gson.fromJson(data,UserLocationC.class);
+            case WebSocketOperateUtil.User_Anoun:
+                return gson.fromJson(data,UserAnoun.class);
             default:
                 return null;
         }

@@ -8,6 +8,7 @@ public class WebSocketTDecoder implements Decoder.Text<WebSocket> {
 
     @Override
     public WebSocket decode(String s) throws DecodeException {
+        System.out.println("我根据字符串解码");
         return WebSocketUtil.decodeJson(s);
     }
 

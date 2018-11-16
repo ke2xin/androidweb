@@ -1,11 +1,14 @@
 package com.group.zhtx.model;
 
+import org.hibernate.annotations.Proxy;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "chat_group_user")
+@Proxy(lazy = false)
 public class GroupUser implements Serializable{
 
     @Id

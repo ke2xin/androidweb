@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>demo4</name>
-	<comment>Create By HBuilder</comment>
+	<name>sxchat</name>
+	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -16,42 +16,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1540797228819</id>
-			<name></name>
-			<type>10</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.orFilterMatcher</id>
-				<arguments>
-					<matcher>
-						<id>org.eclipse.ui.ide.multiFilter</id>
-						<arguments>1.0-projectRelativePath-matches-false-false-bin</arguments>
-					</matcher>
-					<matcher>
-						<id>org.eclipse.ui.ide.multiFilter</id>
-						<arguments>1.0-projectRelativePath-matches-false-false-setting</arguments>
-					</matcher>
-				</arguments>
-			</matcher>
-		</filter>
-		<filter>
-<<<<<<< HEAD
-			<id>1541748110114</id>
-=======
-			<id>1541748507283</id>
->>>>>>> a9bec229118dfb26d10f26881e4b33a8dbe64f3e
-			<name></name>
-			<type>26</type>
-			<matcher>
-				<id>org.eclipse.ui.ide.multiFilter</id>
-				<arguments>1.0-name-matches-false-false-node_modules</arguments>
-			</matcher>
-		</filter>
-		<filter>
-<<<<<<< HEAD
-			<id>1541748110131</id>
-=======
-			<id>1541748507371</id>
->>>>>>> a9bec229118dfb26d10f26881e4b33a8dbe64f3e
+			<id>1541903183758</id>
 			<name></name>
 			<type>26</type>
 			<matcher>

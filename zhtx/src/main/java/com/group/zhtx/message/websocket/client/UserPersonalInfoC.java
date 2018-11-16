@@ -5,11 +5,11 @@ import com.group.zhtx.message.IMessage;
 public class UserPersonalInfoC implements IMessage {
     private int operateId;
     private String uuid;
-    private String uuid_pic;
-    private String user_name;
-    private String user_qianming;
-    private String user_phone;
-    private String user_email;
+    private String uuidPic;
+    private String userName;
+    private String userQianming;
+    private String userPhone;
+    private String userEmail;
 
     public int getOperateId() {
         return operateId;
@@ -27,43 +27,43 @@ public class UserPersonalInfoC implements IMessage {
         this.uuid = uuid;
     }
 
-    public String getUuid_pic() {
-        return uuid_pic;
+    public String getUuidPic() {
+        return uuidPic;
     }
 
-    public void setUuid_pic(String uuid_pic) {
-        this.uuid_pic = uuid_pic;
+    public void setUuidPic(String uuidPic) {
+        this.uuidPic = uuidPic;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getUser_qianming() {
-        return user_qianming;
+    public String getUserQianming() {
+        return userQianming;
     }
 
-    public void setUser_qianming(String user_qianming) {
-        this.user_qianming = user_qianming;
+    public void setUserQianming(String userQianming) {
+        this.userQianming = userQianming;
     }
 
-    public String getUser_phone() {
-        return user_phone;
+    public String getUserPhone() {
+        return userPhone;
     }
 
-    public void setUser_phone(String user_phone) {
-        this.user_phone = user_phone;
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 
-    public String getUser_email() {
-        return user_email;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUser_email(String user_email) {
-        this.user_email = user_email;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }

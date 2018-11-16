@@ -3,6 +3,10 @@ function globalVeriable(){
 	var groupManager=document.getElementById('groupManager');
 	var userManagerList=document.getElementById('userManagerList');
 	var groupManagerList=document.getElementById('groupManagerList');
+	var forbidUser=document.getElementById('forbidUser');
+	var startUser=document.getElementById('startUser');
+	var forbidGroup=document.getElementById('forbidGroup');
+	var startGroup=document.getElementById('startGroup');
 }
 function addListener(){
 	console.log(groupManagerList);
@@ -24,6 +28,40 @@ function addListener(){
 		}else{
 			groupManagerList.style.display='none';
 			managerFlag=false;
+		}
+	}
+	var userManagerListLis=userManagerList.getElementsByTagName('li');
+	var groupManagerListLis=groupManagerList.getElementsByTagName('li');
+	for(var i=0;i<userManagerListLis.length;i++){
+		userManagerListLis[i].onclick=function(){
+			var name=this.getAttribute('name');
+			if(name=="forbidUser"){
+				forbidUser.style.display='block';
+				startUser.style.display='none';
+				forbidGroup.style.display='none';
+				startGroup.style.display='none';
+			}else if(name=="startUser"){
+				forbidUser.style.display='none';
+				startUser.style.display='block';
+				forbidGroup.style.display='none';
+				startGroup.style.display='none';
+			}
+		}
+	}
+	for(var i=0;i<groupManagerListLis.length;i++){
+		groupManagerListLis[i].onclick=function(){
+			var name=this.getAttribute('name');
+			if(name=="forbidGroup"){
+				forbidUser.style.display='none';
+				startUser.style.display='none';
+				forbidGroup.style.display='block';
+				startGroup.style.display='none';
+			}else if(name=="startGroup"){
+				forbidUser.style.display='none';
+				startUser.style.display='none';
+				forbidGroup.style.display='none';
+				startGroup.style.display='block';
+			}
 		}
 	}
 }

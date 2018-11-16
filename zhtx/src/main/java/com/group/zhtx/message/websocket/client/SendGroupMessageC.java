@@ -5,8 +5,8 @@ import com.group.zhtx.message.IMessage;
 public class SendGroupMessageC implements IMessage {
 
     private int operateId;
-    private String userUuid;
-    private String groupUuid;
+    private String uuid;
+    private String groupId;
     private String content;
 
     public int getOperateId() {
@@ -17,20 +17,20 @@ public class SendGroupMessageC implements IMessage {
         this.operateId = operateId;
     }
 
-    public String getUserUuid() {
-        return userUuid;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setUserUuid(String userUuid) {
-        this.userUuid = userUuid;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
-    public String getGroupUuid() {
-        return groupUuid;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public void setGroupUuid(String groupUuid) {
-        this.groupUuid = groupUuid;
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
     public String getContent() {

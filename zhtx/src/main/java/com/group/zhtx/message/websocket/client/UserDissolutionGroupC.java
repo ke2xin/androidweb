@@ -1,13 +1,17 @@
 package com.group.zhtx.message.websocket.client;
 
 import com.group.zhtx.message.IMessage;
+import com.group.zhtx.message.websocket.service.createGroupMessage.UserCreateGroup;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDissolutionGroupC implements Serializable,IMessage {
     private int operateId;
     private String uuid;
-    private String group_id;
+    private String groupId;
+
 
     public int getOperateId() {
         return operateId;
@@ -25,11 +29,12 @@ public class UserDissolutionGroupC implements Serializable,IMessage {
         this.uuid = uuid;
     }
 
-    public String getGroup_id() {
-        return group_id;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public void setGroup_id(String group_id) {
-        this.group_id = group_id;
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
+
 }

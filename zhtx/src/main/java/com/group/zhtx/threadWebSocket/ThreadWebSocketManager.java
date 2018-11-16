@@ -50,7 +50,7 @@ public class ThreadWebSocketManager {
             threadDegree = AsyncThreadManager.getRandomThreadAndPriority();
        }
         Method method = WebSocketManager.getMethodByOperateId(operateId);
-       System.out.println(method.getName());
+       System.out.println("根据操作码获取映射方法："+method.getName());
 
        if(method == null){
            return false;

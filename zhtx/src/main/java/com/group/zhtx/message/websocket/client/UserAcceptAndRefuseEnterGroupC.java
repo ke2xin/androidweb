@@ -6,9 +6,9 @@ import java.io.Serializable;
 
 public class UserAcceptAndRefuseEnterGroupC implements Serializable, IMessage {
     private int operateId;
-    private String request_user_uuid;
-    private String send_user_uuid;
-    private String group_uuid;
+    private String requestUserUuid;
+    private String sendUserUuid;
+    private String groupUuid;
     private String result;
 
     public int getOperateId() {
@@ -19,28 +19,28 @@ public class UserAcceptAndRefuseEnterGroupC implements Serializable, IMessage {
         this.operateId = operateId;
     }
 
-    public String getRequest_user_uuid() {
-        return request_user_uuid;
+    public String getRequestUserUuid() {
+        return requestUserUuid;
     }
 
-    public void setRequest_user_uuid(String request_user_uuid) {
-        this.request_user_uuid = request_user_uuid;
+    public void setRequestUserUuid(String requestUserUuid) {
+        this.requestUserUuid = requestUserUuid;
     }
 
-    public String getSend_user_uuid() {
-        return send_user_uuid;
+    public String getSendUserUuid() {
+        return sendUserUuid;
     }
 
-    public void setSend_user_uuid(String send_user_uuid) {
-        this.send_user_uuid = send_user_uuid;
+    public void setSendUserUuid(String sendUserUuid) {
+        this.sendUserUuid = sendUserUuid;
     }
 
-    public String getGroup_uuid() {
-        return group_uuid;
+    public String getGroupUuid() {
+        return groupUuid;
     }
 
-    public void setGroup_uuid(String group_uuid) {
-        this.group_uuid = group_uuid;
+    public void setGroupUuid(String groupUuid) {
+        this.groupUuid = groupUuid;
     }
 
     public String getResult() {

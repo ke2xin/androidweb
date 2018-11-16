@@ -79,13 +79,13 @@ public class WebSocketUtil {
                 o.addProperty("userPortrait",src.getUser().getPortrait());
                 o.addProperty("messageUserName",src.getUser().getName());
                 o.addProperty("messageUserId",src.getUser().getUuid());
-                o.addProperty("messagecontent",src.getContent());
+                o.addProperty("messageContent",src.getContent());
                 o.addProperty("messageTime",src.getSendTime().getTime());
                 return o;
             }
         }).create();
         String s=gson.toJson(webSocket.getIMessage());
-        System.out.println(s);
+        System.out.println("这是我编码返回给客户端的信息："+s);
         return s;
     }
 

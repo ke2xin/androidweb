@@ -17,6 +17,8 @@ public interface GroupRepository extends JpaRepository<Group,String>,JpaSpecific
     @Query("select g from Group g where g.uuid in (select gu.group from GroupUser gu where gu.user.uuid = ?1)")
     public List<Group> getGroupByUuid(String user);
 
+
+
     public Group findByUuid(String uuid);
 
     //根据用户给的群号模糊查找
@@ -25,4 +27,10 @@ public interface GroupRepository extends JpaRepository<Group,String>,JpaSpecific
     //根据用户传入的群号和用户账号查找该群
     @Query("select g from  Group g where g.uuid=?1 and g.creater.uuid=?2")
     public Group getGroupByUuidAndCreater(String groupId,String uuid);
+
+    @Query("select g from Group g where g.uuid like %?1% or g.name like %?1% ")
+    public List<Group>getAllGroupIdOrGroupName(String param);
+
+    //根据用户id和群id查找群
+    public Group findByUuidAndCreater(String groupId,User user);
 }

@@ -4,11 +4,11 @@ import com.group.zhtx.message.websocket.service.groupMessage.GroupMessageData;
 import com.group.zhtx.message.websocket.service.groupMessage.GroupMessageS;
 import com.group.zhtx.message.websocket.service.sendNotification.SendNotification;
 import com.group.zhtx.message.websocket.service.sendNotification.SendNotificationS;
-import com.group.zhtx.model.Group;
+import com.group.zhtx.message.websocket.service.sendUserLocation.SendGroupLocationData;
+import com.group.zhtx.message.websocket.service.sendUserLocation.SendGroupLocationS;
+import com.group.zhtx.model.*;
 
-import com.group.zhtx.model.Message;
-import com.group.zhtx.model.Notification;
-import com.group.zhtx.model.User;
+import com.group.zhtx.repository.GroupRepository;
 import com.group.zhtx.repository.GroupUserRepository;
 import com.group.zhtx.repository.MessageRepository;
 import com.group.zhtx.repository.NotificationRepository;
@@ -20,7 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 
+import javax.websocket.EncodeException;
 import javax.websocket.Session;
+import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.LinkedBlockingDeque;
 
@@ -48,6 +50,9 @@ public class OnlineUser implements IAsyncCycle{
     private GroupUserRepository groupUserRepository;
 
     private NotificationRepository notificationRepository;
+
+    //群存储库
+    private GroupRepository groupRepository;
     /*
         在线用户所在的线程和优先级
      */
@@ -56,6 +61,13 @@ public class OnlineUser implements IAsyncCycle{
     private LinkedBlockingDeque<Message> waitToSendMessage = new LinkedBlockingDeque<>();
 
     private ArrayList<Message> currentsendMessages = new ArrayList<>();
+
+
+    //等待发送位置信息
+    private LinkedBlockingDeque<Map<String,UserGps>>waitToSendLocationInfo=new LinkedBlockingDeque<>();
+    //当前要发送的位置信息
+    private ArrayList<Map<String,UserGps>>currentSendLocationInfo=new ArrayList<>();
+
 
     private OnlineUserManager onlineUserManager;
 
@@ -66,6 +78,9 @@ public class OnlineUser implements IAsyncCycle{
         messageRepository =  this.onlineUserManager.getService().getMessageRepository();
         groupUserRepository = this.onlineUserManager.getService().getGroupUserRepository();
         notificationRepository = this.onlineUserManager.getService().getNotificationRepository();
+        //获取群存储库
+        groupRepository=this.onlineUserManager.getService().getGroupRepository();
+
     }
 
     @Override
@@ -93,18 +108,21 @@ public class OnlineUser implements IAsyncCycle{
 
         List<Notification> notifications = notificationRepository.findUnReceiveNotificationByReceiveUser(userUuid);
         SendNotificationS sendNotificationS = new SendNotificationS();
-        sendNotificationS.setOperateId(WebSocketOperateUtil.Send_Notifications);
+        sendNotificationS.setOperateId(100);
         if(notifications.size() >0){
             sendNotificationS.setStatus("发送通知成功");
             for(Notification n : notifications){
                 User user = n.getSendUserId();
                 if(user != null){
                     SendNotification sendNotification = new SendNotification();
-                    sendNotification.setContent(n.content);
-                    sendNotification.setGroupUuid(n.groupId.getUuid());
-                    sendNotification.setRequsetUserUuid(n.receiveUserId.getUuid());
-                    sendNotification.setSendUserUuid(n.sendUserId.getUuid());
-                    sendNotification.setSendUserPortrait(n.getSendUserId().getPortrait());
+                    sendNotification.setNoticeContent(n.content);
+                    sendNotification.setGroupId(n.groupId.getUuid());
+                    sendNotification.setGroupName(n.groupId.getName());
+                    sendNotification.setSendUserName(n.sendUserId.getName());
+                    sendNotification.setUserUuid(n.receiveUserId.getUuid());
+                    sendNotification.setStatus(n.status);
+                    sendNotification.setSendUuid(n.sendUserId.getUuid());
+                    sendNotification.setGroupPortrait(n.getSendUserId().getPortrait());
                     sendNotificationS.addNotification(sendNotification);
                 }
             }
@@ -112,8 +130,12 @@ public class OnlineUser implements IAsyncCycle{
             sendNotificationS.setStatus("没任何通知");
         }
         //发送通知
-        WebSocket webSocket = new WebSocket(WebSocketOperateUtil.Send_Notifications, sendNotificationS,null);
+        WebSocket webSocket = new WebSocket(100, sendNotificationS,null);
         sendMessage(webSocket);
+
+
+        //转发用户的位置信息给其他人
+
     }
 
     @Override
@@ -127,6 +149,17 @@ public class OnlineUser implements IAsyncCycle{
             Map<String,List<Message>> groupMessages = getSendGroupMessageMap(messages);
             //发送群消息
             sendGroupMessage(groupMessages);
+        }
+
+
+        //获取当前要发送的位置信息
+        ArrayList<Map<String,UserGps>>gps=getCurrentSendLocationInfo();
+        if(gps.size()!=0){
+            //分类各群用户的位置信息
+            System.out.println("转发位置信息的长度："+gps.size());
+            Map<String,UserGps>groupLocation=getSendGroupLocationMap(gps);
+            System.out.println(groupLocation.keySet().toArray());
+            sendGroupLocation(groupLocation);
         }
     }
 
@@ -160,6 +193,18 @@ public class OnlineUser implements IAsyncCycle{
     }
 
     /*
+        添加等待发送用户的位置信息
+     */
+    public boolean addWaitToSendUserLocation(Map<String,UserGps> userGps){
+        try {
+            waitToSendLocationInfo.put(userGps);
+            return true;
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    /*
         获取需要发送的消息
      */
     public ArrayList<Message> getCurrentSendMessages(){
@@ -169,13 +214,21 @@ public class OnlineUser implements IAsyncCycle{
         return currentsendMessages;
     }
 
+    /*
+        获取需要发送的位置信息
+     */
+    public ArrayList<Map<String,UserGps>>getCurrentSendLocationInfo(){
+        currentSendLocationInfo.clear();
+        waitToSendLocationInfo.drainTo(currentSendLocationInfo);
+        return currentSendLocationInfo;
+    }
 
     public void sendGroupMessage(Map<String,List<Message>> groupMessageMap){
 
         Object[] keys = groupMessageMap.keySet().toArray();
         GroupMessageS groupMessageS = new GroupMessageS();
-        //设置发送组消息的操作码为23
-        groupMessageS.setOperateId(23);
+        //设置发送组消息的操作码为22
+        groupMessageS.setOperateId(WebSocketOperateUtil.Message_Push);
 
 
         for (Object key : keys) {
@@ -211,7 +264,55 @@ public class OnlineUser implements IAsyncCycle{
     }
 
 
+    /*
+        转发位置信息
+     */
+    public void sendGroupLocation(Map<String,UserGps>groupLocation){
+        Object []keys=groupLocation.keySet().toArray();
+        System.out.println("转发的群号："+groupLocation.keySet());
+        SendGroupLocationS sendGroupLocationS=new SendGroupLocationS();
+        sendGroupLocationS.setOperateId(101);
+        sendGroupLocationS.setStatus("success");
+        sendGroupLocationS.setDes("转发成功");
+        for(Object key:keys){
+            String groupId=(String)key;
+            int id=Integer.valueOf(groupId);
+            UserGps gps=groupLocation.get(groupId);
+            sendGroupGps(sendGroupLocationS,id,gps);
+        }
+        WebSocket webSocket=new WebSocket(101,sendGroupLocationS,null);
+        sendLocation(webSocket);
+    }
 
+    /*
+        发送组位置信息
+     */
+    public void sendGroupGps(SendGroupLocationS groupLocationS,int groupId,UserGps gps){
+        SendGroupLocationData sendGroupLocationData=new SendGroupLocationData();
+        sendGroupLocationData.setGroupId(groupId);
+        sendGroupLocationData.setLatitude(gps.getLatitude());
+        sendGroupLocationData.setLongitude(gps.getLonggitude());
+        sendGroupLocationData.setUserName(gps.getUser().getName());
+        groupLocationS.setData(sendGroupLocationData);
+    }
+
+    /*
+        发送位置信息
+     */
+    public void sendLocation(WebSocket webSocket){
+        try {
+            if(session.isOpen()){
+                OnlineUser onlineUser=onlineUserManager.getOnlineUserBySessionId(session.getId());
+                System.out.println("当前用户是否在线："+onlineUser.getSession().isOpen());
+                System.out.println("用户是谁："+onlineUser.getData().getUuid());
+                session.getBasicRemote().sendObject(webSocket);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (EncodeException e) {
+            e.printStackTrace();
+        }
+    }
     /*
         分类发给群组的消息集合
         key:GroupId
@@ -237,6 +338,29 @@ public class OnlineUser implements IAsyncCycle{
         return messageMap;
     }
 
+    /*
+        分类发给群组的位置信息集合
+     */
+    public Map<String ,UserGps>getSendGroupLocationMap(ArrayList<Map<String,UserGps>> gps){
+        Map <String,UserGps> gpsMap=new HashMap<>();
+        Map <String,UserGps> g=gps.get(0);
+        Object [] keys=g.keySet().toArray();
+        for(Object key:keys){
+           List<Group> groups=groupRepository.getGroupByUuid(gps.get(0).get(key).getUser().getUuid());
+           for(int i=0; i<groups.size();i++){
+               String groupId=groups.get(i).getUuid();
+               if(!gpsMap.containsKey(groupId)){
+                   UserGps gpsList=new UserGps();
+                   //gpsMap.put(groupId,gps.get(0));
+                   //gpsList.add(userGps);
+                   continue;
+               }
+               UserGps userGpsList=gpsMap.get(groupId);
+               //userGpsList.add(userGps);
+           }
+        }
+        return gpsMap;
+    }
 
     public OnlineUserData getData() {
         return userData;

@@ -2,49 +2,85 @@ package com.group.zhtx.message.websocket.service.sendNotification;
 
 public class SendNotification {
 
-    private String requsetUserUuid;
-    private String sendUserUuid;
-    private String groupUuid;
-    private String content;
-    private String sendUserPortrait;
+    private String userUuid;
+    private String sendUuid;
+    private String sendUserName;
+    private String noticeContent;
+    private long noticeTime;
+    private String groupName ;
+    private String groupPortrait ;
+    private int status;
+    private String groupId;
 
-    public String getRequsetUserUuid() {
-        return requsetUserUuid;
+    public String getUserUuid() {
+        return userUuid;
     }
 
-    public void setRequsetUserUuid(String requsetUserUuid) {
-        this.requsetUserUuid = requsetUserUuid;
+    public void setUserUuid(String userUuid) {
+        this.userUuid = userUuid;
     }
 
-    public String getSendUserUuid() {
-        return sendUserUuid;
+    public String getNoticeContent() {
+        return noticeContent;
     }
 
-    public void setSendUserUuid(String sendUserUuid) {
-        this.sendUserUuid = sendUserUuid;
+    public void setNoticeContent(String noticeContent) {
+        this.noticeContent = noticeContent;
     }
 
-    public String getGroupUuid() {
-        return groupUuid;
+    public long getNoticeTime() {
+        return noticeTime;
     }
 
-    public void setGroupUuid(String groupUuid) {
-        this.groupUuid = groupUuid;
+    public void setNoticeTime(long noticeTime) {
+        this.noticeTime = noticeTime;
     }
 
-    public String getContent() {
-        return content;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
-    public String getSendUserPortrait() {
-        return sendUserPortrait;
+    public String getGroupPortrait() {
+        return groupPortrait;
     }
 
-    public void setSendUserPortrait(String sendUserPortrait) {
-        this.sendUserPortrait = sendUserPortrait;
+    public void setGroupPortrait(String groupPortrait) {
+        this.groupPortrait = groupPortrait;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
+
+    public String getSendUuid() {
+        return sendUuid;
+    }
+
+    public void setSendUuid(String sendUuid) {
+        this.sendUuid = sendUuid;
+    }
+
+    public String getSendUserName() {
+        return sendUserName;
+    }
+
+    public void setSendUserName(String sendUserName) {
+        this.sendUserName = sendUserName;
     }
 }

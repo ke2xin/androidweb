@@ -1,11 +1,13 @@
-package com.group.zhtx.message.websocket.service.AcceptAndRefuseEnterGroup;
+package com.group.zhtx.message.websocket.service.sendUserLocation;
+
 
 import com.group.zhtx.message.IMessage;
 
-public class AcceptAndRefuseDataS implements IMessage {
+
+public class SendUserLocationS  implements IMessage {
     private int operateId;
     private String status;
-    private AcceptAndRefuseInfo data;
+    private SendUserLocationInfo data;
     private String information;
 
     public int getOperateId() {
@@ -16,20 +18,12 @@ public class AcceptAndRefuseDataS implements IMessage {
         this.operateId = operateId;
     }
 
-    public AcceptAndRefuseInfo getData() {
+    public SendUserLocationInfo getData() {
         return data;
     }
 
-    public void setData(AcceptAndRefuseInfo data) {
+    public void setData(SendUserLocationInfo data) {
         this.data = data;
-    }
-
-    public String getInformation() {
-        return information;
-    }
-
-    public void setInformation(String information) {
-        this.information = information;
     }
 
     public String getStatus() {
@@ -38,5 +32,13 @@ public class AcceptAndRefuseDataS implements IMessage {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public void setInformation(String information) {
+        this.information = information;
     }
 }

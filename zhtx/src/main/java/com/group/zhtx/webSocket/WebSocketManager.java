@@ -23,7 +23,7 @@ public class WebSocketManager {
         if(maps.size() == 0)return false;
 
         Object[] keys = maps.keySet().toArray();
-        System.out.println("这是key"+maps.keySet());
+        System.out.println("这是key，也就是操作码"+maps.keySet());
 
         for(int i = 0; i < keys.length; ++i){
             Integer operateId = (Integer) keys[i];
@@ -37,7 +37,6 @@ public class WebSocketManager {
             Method method = webSocketListener.getClass().getMethod(maps.get(operateId), WebSocket.class);
             System.out.println("这是websocketmanager的方法"+method.getName()+"   "+maps.get(operateId));
             wsMethodsMap.put(operateId, method);
-            System.out.println(method.getName());
 
             //每个处理方法只对应一个实体
             if(wsInstanceMap.containsKey(method)){
@@ -54,7 +53,7 @@ public class WebSocketManager {
     public static Method getMethodByOperateId(Integer operateId){
 
         if (wsMethodsMap.containsKey(operateId)){
-            System.out.println("根据id来获取方法");
+            System.out.println("根据id来判断是否存在该方法，并返回");
             return wsMethodsMap.get(operateId);
         }
         return null;

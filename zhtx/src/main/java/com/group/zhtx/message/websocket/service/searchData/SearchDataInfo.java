@@ -1,42 +1,42 @@
 package com.group.zhtx.message.websocket.service.searchData;
 
-import com.group.zhtx.util.common.WebSocketOperateUtil;
+
 
 public class SearchDataInfo {
-    private String group_desc;
-    private String group_name;
-    private String group_portarit;
-    private String group_uuid;
+    private String groupDesc;
+    private String groupName;
+    private String groupPortarit;
+    private String groupUuid;
 
-    public String getGroup_desc() {
-        return group_desc;
+    public String getGroupDesc() {
+        return groupDesc;
     }
 
-    public void setGroup_desc(String group_desc) {
-        this.group_desc = group_desc;
+    public void setGroupDesc(String groupDesc) {
+        this.groupDesc = groupDesc;
     }
 
-    public String getGroup_name() {
-        return group_name;
+    public String getGroupName() {
+        return groupName;
     }
 
-    public void setGroup_name(String group_name) {
-        this.group_name = group_name;
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 
-    public String getGroup_portarit() {
-        return group_portarit;
+    public String getGroupPortarit() {
+        return groupPortarit;
     }
 
-    public void setGroup_portarit(String group_portarit) {
-        this.group_portarit = WebSocketOperateUtil.Portrait_Url+group_portarit;
+    public void setGroupPortarit(String groupPortarit) {
+        this.groupPortarit = groupPortarit;
     }
 
-    public String getGroup_uuid() {
-        return group_uuid;
+    public String getGroupUuid() {
+        return groupUuid;
     }
 
-    public void setGroup_uuid(String group_uuid) {
-        this.group_uuid = group_uuid;
+    public void setGroupUuid(String groupUuid) {
+        this.groupUuid = groupUuid;
     }
 }

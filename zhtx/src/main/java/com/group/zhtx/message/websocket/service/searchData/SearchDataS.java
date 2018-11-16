@@ -8,7 +8,7 @@ import java.util.List;
 public class SearchDataS implements IMessage {
    private int operateId;
    private String status;
-   private List<SearchDataInfo> dataInfoList=new ArrayList<>();
+   private List<SearchDataInfo> data=new ArrayList<>();
    private String information;
 
     public int getOperateId() {
@@ -27,12 +27,12 @@ public class SearchDataS implements IMessage {
         this.status = status;
     }
 
-    public List<SearchDataInfo> getDataInfoList() {
-        return dataInfoList;
+    public List<SearchDataInfo> getData() {
+        return data;
     }
 
-    public void setDataInfoList(List<SearchDataInfo> dataInfoList) {
-        this.dataInfoList = dataInfoList;
+    public void setData(List<SearchDataInfo> data) {
+        this.data = data;
     }
 
     public String getInformation() {

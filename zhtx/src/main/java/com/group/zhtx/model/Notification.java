@@ -23,7 +23,7 @@ public class Notification implements Serializable {
     @JoinColumn(name = "notification_ruid",referencedColumnName = "user_uuid",foreignKey = @ForeignKey(name = "FK_NOTIFICATION_R_USER"))
     public User receiveUserId;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Group.class)
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = Group.class)
     @JoinColumn(name = "notification_groupId",referencedColumnName = "group_uuid",foreignKey = @ForeignKey(name = "FK_NOTIFICATION_GROUP"))
     public Group groupId;
 

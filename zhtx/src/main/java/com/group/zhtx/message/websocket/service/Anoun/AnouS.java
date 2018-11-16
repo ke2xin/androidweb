@@ -1,15 +1,12 @@
-package com.group.zhtx.message.websocket.service.ApplicationGroup;
+package com.group.zhtx.message.websocket.service.Anoun;
 
 import com.group.zhtx.message.IMessage;
 
-public class ApplicationGroupDataS implements IMessage {
+public class AnouS implements IMessage {
     private int operateId;
     private String status;
-    private int resultCode;
     private String groupId;
-    private Object []data;
     private String information;
-
 
     public int getOperateId() {
         return operateId;
@@ -27,20 +24,12 @@ public class ApplicationGroupDataS implements IMessage {
         this.status = status;
     }
 
-    public int getResultCode() {
-        return resultCode;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public void setResultCode(int resultCode) {
-        this.resultCode = resultCode;
-    }
-
-    public Object[] getData() {
-        return data;
-    }
-
-    public void setData(Object[] data) {
-        this.data = data;
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 
     public String getInformation() {
@@ -49,13 +38,5 @@ public class ApplicationGroupDataS implements IMessage {
 
     public void setInformation(String information) {
         this.information = information;
-    }
-
-    public String getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
     }
 }
