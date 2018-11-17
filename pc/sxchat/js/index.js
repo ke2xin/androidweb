@@ -179,7 +179,7 @@ function addListener(){
 	var groupLis=groupChat.getElementsByTagName('li');
 	var obj=null;
 	for(var i=0;i<groupLis.length;i++){
-		groupLis[i].onclick=function(){
+/* 		groupLis[i].onclick=function(){
 			if(obj!=null){
 				obj.style.background='none';
 			}
@@ -189,7 +189,7 @@ function addListener(){
 			searchGroup.style.display='none';
 			dataI.style.display='none';
 			this.style.background='rgba(0,0,0,0.1)';
-		}
+		} */
 	}
 	var groupMangerFuncList=groupMangerFunc.getElementsByClassName('groupMangerFuncList')[0];
 	var ullis=groupMangerFuncList.getElementsByTagName('li');

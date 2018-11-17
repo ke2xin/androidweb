@@ -16,8 +16,8 @@
 		<script type="text/javascript" src="js/ddzj-chatGroupObj.js" ></script>
 		<script type="text/javascript" src="js/ddzj-serachGroup.js"></script>
 		<script type="text/javascript" src="js/ddzj-Notification.js"></script>
-		<script type="text/javascript" src="js/ddzj-groupMember.js"></script>
 		<script type="text/javascript" src="js/ddzj-talkMonitor.js" ></script>
+		
 	</head>
 
 	<body>
@@ -25,14 +25,15 @@
 			
 			
 					var TalkMonitor = window.ddzj.TalkMonitor;
-					var wsClient = window.ddzj.WsClient;
 					var User = function(userName,password){
 						this.userName = userName;
 						this.password = password;
 					}
-					window.user = new User(250,250);
+					window.user = new User(123,123);
+					
 					var talkMonitor = new TalkMonitor();
-					talkMonitor.init("ws://localhost:8080/ws");
+					talkMonitor.init("ws://172.17.146.44:8080/ws");
+					//talkMonitor.init("ws://localhost:8080/ws");
 		</script>
 		<div class="main">
 			<div class="container">
@@ -69,7 +70,7 @@
 									<span class="nickName">帅过吴彦祖</span>
 									<span class="sign">不服，你就来战!!!!</span>
 								</li>
-								<li name="myData" id="myData">
+								<li name="myData">
 									<img src="img/myData.png" />
 									<span class="myData">我的资料</span>
 								</li>
@@ -106,7 +107,7 @@
 				</div>
 				<div id="right">
 					<div id="chatWindow">
-					<div id="chatWindowInfo">
+						<div id="chatWindowInfo">
 						<div id="chatWindowTitle">
 								<input type="image" src="img/chatListButton.png" id="chatLIistButton" />
 								<input type="button" value="返回" id="chatBlack"/>
@@ -119,8 +120,8 @@
 								
 								<div id="chatGroupListFunc">
 									<ul class="groupListFunc">
-										<li name="anoun" class="anoun">公告</li>
-										<li name="manager" class="manager">群管理</li>
+										<li name="anoun">公告</li>
+										<li name="manager">群管理</li>
 										<li name="deleteMessage">清空消息</li>
 										<li class="exitGroup" name="exitGroup">退出群</li>
 									</ul>
@@ -128,7 +129,7 @@
 										<div id="groupAnoun">
 											<form>
 												<textarea class="anoun" placeholder="请输入你要发布的公告"></textarea>
-												<input type="button" value="发布" id="publicAnoun"/>
+												<input type="submit" value="发布" id="publicAnoun"/>
 											</form>
 										</div>
 										<div id="groupManager">
@@ -151,16 +152,16 @@
 											</div>
 											<div id="groupMangerFunc">
 												<ul class="groupMangerFuncList">
-													<li name="groupAnoun" class="groupAnoun">
+													<li name="groupAnoun">
 														群公告
 													</li>
-													<li name="groupNumber" class="groupNumber">
+													<li name="groupNumber">
 														管理群成员
 													</li>
-													<li name="groupData" class="groupData">
+													<li name="groupData">
 														查看群资料
 													</li>
-													<li name="groupDissolution" class="groupDissolution">
+													<li name="groupDissolution">
 														解散群
 													</li>
 												</ul>
@@ -261,7 +262,7 @@
 													<table>
 														<tr>
 															<td>点击更换头像</td>
-															<td><img src="img/group3.png" class="groupReplaceImage"/></td>
+															<td><img src="img/group3.png"/></td>
 														</tr>
 														<tr>
 															<td>群昵称</td>
@@ -321,7 +322,7 @@
 								</div>
 						</div>
 					</div>	
-					<div id="chatWindowMap">
+						<div id="chatWindowMap">
 							<div id="mapLocation">
 								<img src="img/black.png" class="black" id="black"/>
 								<span class="location">位置</span>
@@ -452,14 +453,14 @@
 								</tr>
 								<tr>
 									<td>手机号码</td>
-									<td><input type="text" class="dataInfoDatile" value="1234567891111"/></td>
+									<td><input type="text" class="dataInfoDatile" value="158456713466"/></td>
 								</tr>
 								<tr>
 									<td>邮箱</td>
-									<td><input type="text" class="dataInfoDatile" value="374397122@qq.com"/></td>
+									<td><input type="text" class="dataInfoDatile" value="45647@sd.f"/></td>
 								</tr>
 								<tr>
-									<td colspan="2"><input type="button" value="保存修改" id="dataISave"/></td>
+									<td colspan="2"><input type="submit" value="保存修改" id="dataISave"/></td>
 								</tr>
 							</table>
 						</form>
@@ -468,6 +469,5 @@
 				</div>
 			</div>
 		</div>
-
 	</body>
 </html>

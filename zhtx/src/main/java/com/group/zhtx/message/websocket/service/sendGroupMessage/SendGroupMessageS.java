@@ -6,7 +6,7 @@ public class SendGroupMessageS implements IMessage{
 
     private int operateId;
     private String status;
-    private String content;
+    private String MessageContent;
     private String information;
 
 
@@ -27,11 +27,11 @@ public class SendGroupMessageS implements IMessage{
     }
 
     public String getContent() {
-        return content;
+        return MessageContent;
     }
 
     public void setContent(String content) {
-        this.content = content;
+        this.MessageContent = content;
     }
 
     public String getInformation() {
