@@ -13,4 +13,12 @@ public class IndexController {
     public String toRegister(){
         return "testRegister";
     }
+    @RequestMapping("/manager")
+    public String toManager(){//管理员页面
+        return "manager";
+    }
+    @RequestMapping("/managerLogin")
+    public String toManagerLogin(){//管理员登录页面
+        return "managerLogin";
+    }
 }

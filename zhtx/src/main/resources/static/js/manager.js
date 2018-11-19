@@ -9,7 +9,7 @@ function globalVeriable(){
 	var startGroup=document.getElementById('startGroup');
 }
 function addListener(){
-	console.log(groupManagerList+'哈哈');
+	console.log(groupManagerList+"哈哈哈");
 	var userFlag=false;
 	var managerFlag=false;
 	userManager.onclick=function(){
@@ -65,13 +65,36 @@ function addListener(){
 		}
 	}
 }
+
 function verifyLogin() {
     console.log("这是检查登录的：");
-	var a=session.getActiveAttrib("a");
-    console.log("这是检查登录的："+a);
-	if(a!=null){
-		console.log(a);
+    var theUser=sessionStorage.getItem("theUser");
+    console.log("这是检查登录的："+theUser);
+    if(theUser==null){
+    	window.location.href="http://localhost:8080/managerLogin";
 	}
+}
+
+//执行异步请求函数
+function asyncHandle(){
+    console.log("行异步请求函数");
+	var serch=new searchHandel(sendKeyWordToBack);
+}
+function searchHandel(handle) {
+	console.log("这是异步函数的具体实现");
+    var searchText=$("#searchText");
+    console.log(searchText);
+    var init=function () {//定义一个初始化函数
+		console.log("这是初始化函数");
+		searchText.bind("keyup",sendKeyWord);
+    }
+    var sendKeyWord=function (event) {
+		var valText=$.trim(searchText.val());
+		console.log("这是搜索的内容："+valText);
+    }
+}
+function sendKeyWordToBack(keyword) {
+	console.log("这是发送信息到后台");
 }
 function addLoadEvent(func){
 	var oldonload=window.onload; 
@@ -87,3 +110,4 @@ function addLoadEvent(func){
 addLoadEvent(globalVeriable);
 addLoadEvent(addListener);
 addLoadEvent(verifyLogin);
+addLoadEvent(asyncHandle);

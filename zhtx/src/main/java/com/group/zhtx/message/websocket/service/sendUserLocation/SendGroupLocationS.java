@@ -9,7 +9,7 @@ import java.util.List;
 public class SendGroupLocationS implements IMessage {
     private int operateId;
     private String status;
-    private SendGroupLocationData data;
+    private List<SendGroupLocationData> data=new ArrayList<>();
     private String des;
 
     public int getOperateId() {
@@ -28,11 +28,11 @@ public class SendGroupLocationS implements IMessage {
         this.status = status;
     }
 
-    public SendGroupLocationData getData() {
+    public List<SendGroupLocationData> getData() {
         return data;
     }
 
-    public void setData(SendGroupLocationData data) {
+    public void setData(List<SendGroupLocationData> data) {
         this.data = data;
     }
 
@@ -42,5 +42,9 @@ public class SendGroupLocationS implements IMessage {
 
     public void setDes(String des) {
         this.des = des;
+    }
+
+    public void addSendData(SendGroupLocationData sendGroupLocationData){
+        data.add(sendGroupLocationData);
     }
 }

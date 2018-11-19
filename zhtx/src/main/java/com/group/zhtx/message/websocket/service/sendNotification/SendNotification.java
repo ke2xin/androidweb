@@ -11,6 +11,7 @@ public class SendNotification {
     private String groupPortrait ;
     private int status;
     private String groupId;
+    private int noticeId;
 
     public String getUserUuid() {
         return userUuid;
@@ -82,5 +83,13 @@ public class SendNotification {
 
     public void setSendUserName(String sendUserName) {
         this.sendUserName = sendUserName;
+    }
+
+    public int getNoticeId() {
+        return noticeId;
+    }
+
+    public void setNoticeId(int noticeId) {
+        this.noticeId = noticeId;
     }
 }

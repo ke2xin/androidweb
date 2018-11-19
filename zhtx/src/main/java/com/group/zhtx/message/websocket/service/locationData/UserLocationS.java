@@ -7,14 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserLocationS implements IMessage {
-    private String operateId;
+    private int operateId;
     private String status;
     private List<UserLocationGroup>data=new ArrayList<>();
-    public String getOperateId() {
+
+    public int getOperateId() {
         return operateId;
     }
 
-    public void setOperateId(String operateId) {
+    public void setOperateId(int operateId) {
         this.operateId = operateId;
     }
 
