@@ -16,7 +16,7 @@ public class WebSocketOperateUtil {
 
     public final static int User_Save_GroupData_C = 7;
 
-    public final static int User_Group_Number_Location_C = 8;
+    public final static int User_Group_Number_Location_C = 777777;
 
     //电话联系
     public final static int User_Phone_Relative_C = 9;
@@ -48,7 +48,11 @@ public class WebSocketOperateUtil {
     //解散群
     public final static int User_Dissolution_Group = 20;
 
+<<<<<<< HEAD
     //public final static int User_Get_GroupUserLocation_C = 8;
+=======
+    public final static int User_Get_GroupUserLocation_C = 8;
+>>>>>>> parent of accf4a9... 首页
 
     public final static int User_Get_CallGroupUserPhone_C = 9999;
 

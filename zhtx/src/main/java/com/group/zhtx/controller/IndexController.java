@@ -14,6 +14,7 @@ public class IndexController {
     public String toRegister(){
         return "register";
     }
+<<<<<<< HEAD
 
     @GetMapping("/login")
     public String toLogin(){
@@ -24,4 +25,6 @@ public class IndexController {
     public String toUpdataPassword(){
         return "updataPassword";
     }
+=======
+>>>>>>> parent of accf4a9... 首页
 }
