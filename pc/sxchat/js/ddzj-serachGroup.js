@@ -16,7 +16,7 @@
 		
 		this.createView = function(){
 			var newView = document.createElement("li");
-			newView.innerHTML = '<img src="img/group5.png" />' + '<span class="searchGroupName">' + this.group.groupName + '</span>' + '<input type="button" value="申请加入群聊" class="searchApplication"/>'
+			newView.innerHTML = '<img src="img/group5.png" />' + '<span class="searchGroupName">' + this.group.group_name + '</span>' + '<input type="button" value="申请加入群聊" class="searchApplication"/>'
 
 			this.view = $(newView);
 		}

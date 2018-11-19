@@ -941,9 +941,8 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
     public void searchGroupNumberLocation(WebSocket webSocket){
         System.out.println("正在查看群成员位置信息");
         UserLocationInfoC userLocationInfoC =(UserLocationInfoC) webSocket.getIMessage();
-        System.out.println("群号："+ userLocationInfoC.getGroup_id());
+        System.out.println("群号："+ userLocationInfoC.getGroupId());
         Session session = webSocket.getSession();
-<<<<<<< HEAD
         String group_id= userLocationInfoC.getGroupId();
         Group group=groupRepository.findById(group_id).orElse(null);
 
@@ -955,27 +954,10 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             userLocationS.setInformation("不存在的群组");
             webSocket = new WebSocket(webSocket.getOperateId(),userLocationS,null);
             sendMessageWithWebSocket(session,webSocket);
-=======
-        String group_id= userLocationInfoC.getGroup_id();
-        Group group=groupRepository.findById(group_id).orElse(null);
-        if(group==null){
-            try{
-                session.getBasicRemote().sendText("{"+
-                        "operateId:"+ userLocationInfoC.getOperateId()+","+
-                        "status:\"fail\","+
-                        "data:[]"+
-                        "}");
-            }catch (IOException e){
-                e.printStackTrace();
-                //清除消息包
-                webSocket.clear();
-            }
->>>>>>> parent of accf4a9... 首页
             return;
         }
 
         List<GroupUser>groupUsers=groupUserRepository.findByGroup(group);
-<<<<<<< HEAD
         userLocationS.setOperateId(userLocationInfoC.getOperateId());
         userLocationS.setStatus("success");
         List<UserLocationGroup> data=new ArrayList<>();
@@ -990,31 +972,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 userLocationGroupS.setUserLocationLatitude(userGps.getLatitude());
                 userLocationGroupS.setUserLocationTime(userGps.getLocationDate().getTime());
                 data.add(userLocationGroupS);
-=======
-        System.out.println("群规模"+groupUsers.size());
-        UserLocationS userLocationS=new UserLocationS();
-        userLocationS.setOperateId(userLocationInfoC.getOperateId()+"");
-        userLocationS.setStatus("success");
-        List<UserLocationGroup> data=new ArrayList<>();
-        for(int i=0;i<groupUsers.size();i++){
-            GroupUser gu=groupUsers.get(i);
-            System.out.println(gu.getUser().getUuid());
-            User user=userRepository.findById(gu.getUser().getUuid()).orElse(null);
-            if(user!=null){
-                UserGps userGps=userGpsRepository.findByUser(user);
-                System.out.println(userGps.getLatitude());
-                UserLocationGroup userLocationGroupS=new UserLocationGroup();
-                userLocationGroupS.setUserName("dddd"+user.getName());
-                System.out.println(user.getName()+"||\t"+user.getPortrait());
-                userLocationGroupS.setUserPortarit(user.getPortrait());
-                userLocationGroupS.setUser_location_longitude(userGps.getLonggitude());
-                userLocationGroupS.setUser_location_latitude(userGps.getLatitude());
-                userLocationGroupS.setUser_location_corner(userGps.getDirectionAndAngle());
-                userLocationGroupS.setUser_location_time(new Date().toString());
-                data.add(userLocationGroupS);
-            }else{
-                return;
->>>>>>> parent of accf4a9... 首页
             }
         }
         userLocationS.setData(data);
@@ -1113,7 +1070,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         System.out.println("groups="+group.getCreater().getUuid());
         User receiveUser=group.getCreater();
         User sendUser=userRepository.findByUuid(applicationEnterGroupC.getUuid());
-<<<<<<< HEAD
         //如果用户不存在，直接返回
         if(sendUser == null)return;
         GroupUser groupUser = groupUserRepository.getGroupUserByGroupAndUser(sendUser,group);
@@ -1131,8 +1087,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             return;
         }
 
-=======
->>>>>>> parent of accf4a9... 首页
         //根据群号、接收方和发送方查找数据库有没有这条通知，如果有这条通知无需再插入这条通知
         Notification notif=notificationRepository.findByReceiveUserIdAndSendUserIdAndGroupId(receiveUser,sendUser,group);
         if(notif==null){
@@ -1183,7 +1137,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 } catch (IOException e) {
                     e.printStackTrace();
                     webSocket.clear();
-<<<<<<< HEAD
                 } catch (EncodeException e) {
                     e.printStackTrace();
                 }
@@ -1203,27 +1156,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 } catch (EncodeException e) {
                     e.printStackTrace();
                 }
-=======
-                } catch (EncodeException e) {
-                    e.printStackTrace();
-                }
-            }else if(receiveUser.getUuid().equals(sendUser.getUuid())){
-                try {
-                    applicationGroupDataS.setOperateId(operateId);
-                    applicationGroupDataS.setStatus("fail");
-                    applicationGroupDataS.setResultCode(-1);
-                    applicationGroupDataS.setData(new Object[0]);
-                    applicationGroupDataS.setGroupId(applicationEnterGroupC.getGroupId());
-                    applicationGroupDataS.setInformation("你已是该群成员，不用在申请！");
-                    webSocket=new WebSocket(operateId,applicationGroupDataS,null);
-                    session.getBasicRemote().sendObject(webSocket);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    webSocket.clear();
-                } catch (EncodeException e) {
-                    e.printStackTrace();
-                }
->>>>>>> parent of accf4a9... 首页
                 return;
             }else{
                 try {

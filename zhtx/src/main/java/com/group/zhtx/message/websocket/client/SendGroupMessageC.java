@@ -7,7 +7,7 @@ public class SendGroupMessageC implements IMessage {
     private int operateId;
     private String uuid;
     private String groupId;
-    private String groupMessage;
+    private String content;
 
     public int getOperateId() {
         return operateId;
@@ -34,10 +34,10 @@ public class SendGroupMessageC implements IMessage {
     }
 
     public String getContent() {
-        return groupMessage;
+        return content;
     }
 
     public void setContent(String content) {
-        this.groupMessage = content;
+        this.content = content;
     }
 }

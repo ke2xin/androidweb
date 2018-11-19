@@ -11,12 +11,16 @@ public class UserLocationS implements IMessage {
     private String status;
     private List<UserLocationGroup>data=new ArrayList<>();
 <<<<<<< HEAD
+<<<<<<< HEAD
     private String information;
 
     public int getOperateId() {
 =======
     public String getOperateId() {
 >>>>>>> parent of accf4a9... 首页
+=======
+    public String getOperateId() {
+>>>>>>> parent of d069db5... Merge branch 'master' of https://github.com/ke2xin/androidweb
         return operateId;
     }
 
@@ -38,13 +42,5 @@ public class UserLocationS implements IMessage {
 
     public void setData(List<UserLocationGroup> data) {
         this.data = data;
-    }
-
-    public String getInformation() {
-        return information;
-    }
-
-    public void setInformation(String information) {
-        this.information = information;
     }
 }

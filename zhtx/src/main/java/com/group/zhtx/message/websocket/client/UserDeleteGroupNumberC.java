@@ -6,9 +6,9 @@ import java.io.Serializable;
 
 public class UserDeleteGroupNumberC implements Serializable, IMessage {
     private int operateId;
-    private String groupId;
+    private String group_id;
     private String uuid;
-    private String delUuid;
+    private String del_uuid;
 
     public int getOperateId() {
         return operateId;
@@ -19,11 +19,11 @@ public class UserDeleteGroupNumberC implements Serializable, IMessage {
     }
 
     public String getGroup_id() {
-        return groupId;
+        return group_id;
     }
 
-    public void setGroup_id(String groupId) {
-        this.groupId = groupId;
+    public void setGroup_id(String group_id) {
+        this.group_id = group_id;
     }
 
     public String getUuid() {
@@ -35,10 +35,10 @@ public class UserDeleteGroupNumberC implements Serializable, IMessage {
     }
 
     public String getDel_uuid() {
-        return delUuid;
+        return del_uuid;
     }
 
-    public void setDel_uuid(String delUuid) {
-        this.delUuid = delUuid;
+    public void setDel_uuid(String del_uuid) {
+        this.del_uuid = del_uuid;
     }
 }

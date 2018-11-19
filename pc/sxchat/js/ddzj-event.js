@@ -67,6 +67,7 @@
 		this.addEventDispatchListener = function(operateId,listener,func){
 		
 			var listenerc = this.EventDispatchListener[operateId];
+			
 			if(tool.isNull(listenerc)){
 				this.EventDispatchListener[operateId] = [listener];
 				
@@ -81,13 +82,14 @@
 					var l = listenerc[i];
 					if(l === listener){
 						check = 1;
-						break;
+						break
 					}
 				}
 				
 				if(check < 0){
 					listenerc.push(listener);
-					var funcc = this.EventFunction[listener];
+					
+					var funcc = EventFunction[listener];
 					if(tool.isNull(funcc)){
 						this.EventFunction[listener] = func;
 					}
@@ -130,7 +132,7 @@
 		}
 		
 		this.removeAllEventDispatchListeners = function(){
-			this.mEventListeners = null;
+			his.mEventListeners = null;
 		}
 		
 		this.dispatchEvent = function(event){

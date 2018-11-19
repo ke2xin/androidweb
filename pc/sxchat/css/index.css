@@ -811,11 +811,11 @@ body{
 	width: 350px;
 	height: 60px;
 	list-style: none; 
+	background: rgba(0,0,0,0.7);
 }
 .main .container #right #chatWindow #chatWindowTitle #chatGroupListFunc ul.groupListFunc li{
 	width: 86px;
 	height: 60px;
-	background: rgba(0,0,0,0.7);
 	line-height: 60px;
 	text-align: center;
 	float: left;

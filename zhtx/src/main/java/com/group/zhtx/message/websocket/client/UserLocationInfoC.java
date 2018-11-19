@@ -12,10 +12,14 @@ public class UserLocationInfoC implements Serializable, IMessage {
     }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     public UserLocationInfoC(int operateId, String groupId) {
 =======
     public UserLocationInfoC(int operateId, String group_id) {
 >>>>>>> parent of accf4a9... 首页
+=======
+    public UserLocationInfoC(int operateId, String group_id) {
+>>>>>>> parent of d069db5... Merge branch 'master' of https://github.com/ke2xin/androidweb
         this.operateId = operateId;
         this.group_id = group_id;
     }

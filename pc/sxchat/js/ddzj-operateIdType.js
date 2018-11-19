@@ -3,7 +3,9 @@
 	var OperateIdType = function(){
 		
 		
-		
+		//用户登陆
+	    this.User_Login_C = 1;
+	
 		//创建群
 	    this.User_CreateGroup_C = 3;
 	
@@ -13,6 +15,9 @@
 		
 	
 		
+	
+		//保存修改群资料
+	    this.User_Save_GroupData_C = 6;
 	
 		
 	
@@ -37,12 +42,9 @@
 	    this.User_Save_Personal_Info = 17;
     
     	//发送群消息
-    	this.User_Send_GroupMessage = 21;
+    	this.User_Send_GroupMessage = 24;
     	//接收到新的群消息
-    	this.User_Receive_GroupMessage = 22;
-    	this.User_Send_GroupDec = 25;
-    	//用户登陆
-	    this.User_Login_C = 1;
+    	this.User_Receive_GroupMessage = 23;
     	//获取群资料
 	    this.User_Get_Group_Data_C = 5;
     	//退出群
@@ -75,14 +77,13 @@
 	    this.User_Delete_Group_Number_C = 20;
     	
     	
-    	this.Receive_Notifications = 23;
+    	this.Receive_Notifications = 98;
     	
     	this.Refuse_Notification = 97;
     	this.Receive_Notification = 96;
     	//打开聊天群
     	this.Open_ChatObj = 100;
-    	//剔除用户
-    	this.DeleteGroupMember = 96;
+    	
     	
     	//发送接收消息的时间截
     	this.User_Send_TimeStamp = 99;

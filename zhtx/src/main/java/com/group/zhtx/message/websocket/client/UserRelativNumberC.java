@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class UserRelativNumberC implements Serializable, IMessage {
     private int operateId;
-    private String groupId;
+    private String group_id;
 
     public int getOperateId() {
         return operateId;
@@ -17,10 +17,10 @@ public class UserRelativNumberC implements Serializable, IMessage {
     }
 
     public String getGroup_id() {
-        return groupId;
+        return group_id;
     }
 
     public void setGroup_id(String group_id) {
-        this.groupId = group_id;
+        this.group_id = group_id;
     }
 }

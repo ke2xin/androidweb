@@ -31,6 +31,7 @@
 		
 		this.connect = function(){
 			this.webSocket = new WebSocket(this.url);
+			
 			this.onOpenListener(this,this.onOpen);
 			this.onMessageListener(this, this.onMessage);
 			this.onCloseListener(this,this.onClose);
@@ -64,6 +65,7 @@
 		
 		//发送消息
 		this.sendMessage = function(data){
+
 			if(!this.isconnected){
 				return;
 			}
@@ -72,7 +74,6 @@
 				this.webSocket.send(data);
 				return;
 			}
-			
 			var blobs = new Blob([data]);
 			this.webSocket.send(blobs);
 		}
@@ -88,10 +89,12 @@
 		this.onMessage = function(event){
 			var data = JSON.parse(event.data);
 			var operateId = data.operateId;
+			
 			if(operateId === null || operateId === undefined){
 				//没有操作码的直接无视
 				return;
 			}
+			
 			//分发消息
 			this.dispatchEventWith(operateId,data);
 		}

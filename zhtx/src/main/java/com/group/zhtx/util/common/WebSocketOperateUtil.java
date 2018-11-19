@@ -28,7 +28,7 @@ public class WebSocketOperateUtil {
 
     public final static int User_Refuse_Enter_Group_C = 12;
 
-    public final static int User_Delete_Group_Number_C = 13;
+    public final static int User_Delete_Group_Number_C = 6666;
 
     //搜索群
     public final static int User_Search_Group_C =14;
@@ -49,10 +49,14 @@ public class WebSocketOperateUtil {
     public final static int User_Dissolution_Group = 20;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     //public final static int User_Get_GroupUserLocation_C = 8;
 =======
     public final static int User_Get_GroupUserLocation_C = 8;
 >>>>>>> parent of accf4a9... 首页
+=======
+    public final static int User_Get_GroupUserLocation_C = 8;
+>>>>>>> parent of d069db5... Merge branch 'master' of https://github.com/ke2xin/androidweb
 
     public final static int User_Get_CallGroupUserPhone_C = 9999;
 
