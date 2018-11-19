@@ -110,7 +110,11 @@
 			alert("连接服务器失败了啊");
 			this.webSocketClient = null;
 			this.isConnect =false;
+			window.location = "login.html";
 		}
+
+
+
 
 		//登陆成功
 		this.onLoginSuccess = function(event){
@@ -118,8 +122,14 @@
 			var data = event.data.data;
 			if(event.data.status == "fail"){
 				alert("登陆失败");
+				window.location = "login.html";
 				return;
 			}
+			//登陆成功后倒计时去除
+			setTimeout(function(){
+				$(".forwardGround").remove();
+			},1000);
+			
 			//存储自己的数据
 			this.owner = data.singal;
 			var groups = data.groups;
@@ -599,6 +609,8 @@
 				this.webSocketAgent.onUserOffline(window.user.userName);
 				window.user = undefined;
 				this.TalkMonitor = undefined;
+				window.localStorage.clear();
+				window.location = "login.html";
 			}
 		}
 		

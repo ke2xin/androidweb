@@ -1,29 +1,14 @@
 (function(window){
 	if(!window.ddzj)window.ddzj = {};
 	var OperateIdType = function(){
-		
-		
-		
+
 		//创建群
 	    this.User_CreateGroup_C = 3;
 	
 		//进入群
 	    this.User_Enter_Group_C = 3;
-	
-		
-	
-		
-	
-		
-	
 		//获取用户电话
 	    this.User_Phone_Relative_C = 8;
-	
-		
-	
-		
-
-	
 		//查找群
 	    this.User_Search_Group_C =13;
 	
