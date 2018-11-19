@@ -1,17 +1,17 @@
 package com.group.zhtx.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class IndexController {
-    @RequestMapping("/t")
+
+    @GetMapping("/index")
     public String toIndex(){
-        return "index";
+        return "chatIndex";
     }
-    @RequestMapping("/i")
+    @GetMapping("/register")
     public String toRegister(){
-<<<<<<< HEAD
         return "register";
     }
 <<<<<<< HEAD
@@ -24,9 +24,6 @@ public class IndexController {
     @GetMapping("/updataPassword")
     public String toUpdataPassword(){
         return "updataPassword";
-=======
-        return "testRegister";
->>>>>>> parent of d069db5... Merge branch 'master' of https://github.com/ke2xin/androidweb
     }
 =======
 >>>>>>> parent of accf4a9... 首页

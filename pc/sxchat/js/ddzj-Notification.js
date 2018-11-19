@@ -15,10 +15,16 @@
 
 		this.createView = function(){
 			var newView = document.createElement("li");
-			newView.innerHTML = '<img  src="img/p1.jpg"/>'+
-								'<span class="applicationMessage">' + (this.Notification.content === undefined ? "" : this.Notification.content) + '</span>'+
-								'<input type="button" value="同意" class="agree"/>' +
-								'<input type="button" value="拒绝" class="refuse"/>';
+				
+			if(this.Notification.status == 0){
+				newView.innerHTML = '<img  src="img/p1.jpg"/>'+
+								'<span class="applicationMessage">' + this.Notification.sendUserName +'请求加入'+ this.Notification.groupName + '群聊'+ '</span>';
+				newView.innerHTML += '<input type="button" value="同意" class="agree"/>' +'<input type="button" value="拒绝" class="refuse"/>';
+			}else{
+				newView.innerHTML = '<img  src="img/p1.jpg"/>'+
+								'<span class="applicationMessage">' + this.Notification.groupName + '</span>';
+				newView.innerHTML += '<span class="agree">' + this.Notification.noticeContent + '</span>';
+			}
 			this.view = $(newView);
 		}
 		

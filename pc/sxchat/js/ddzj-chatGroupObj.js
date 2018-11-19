@@ -21,11 +21,11 @@
 								'<span class="groupLastMessage">' + ((this.group.lastestGroupUser === undefined || this.group.lastestGroupUser === "" || this.group.lastestGroupUser === "null") ? "" : (this.group.lastestGroupUser + '&nbsp;:&nbsp;')) +
 								(this.group.lastestGroupMessage === undefined ? "" : this.group.lastestGroupMessage) + '</span>';
 			this.view = $(newView);
+			this.addEvenListeners();
 		}
 		
 		this.getView = function(){
 			//添加事件监听
-			this.addEvenListeners();
 			return this.view;
 			
 		}

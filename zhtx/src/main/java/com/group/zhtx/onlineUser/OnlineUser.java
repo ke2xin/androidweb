@@ -104,7 +104,7 @@ public class OnlineUser implements IAsyncCycle{
         }
 
         //发送组消息
-        sendGroupMessage(groupsMessage);
+       // sendGroupMessage(groupsMessage);
 
         List<Notification> notifications = notificationRepository.findUnReceiveNotificationByReceiveUser(userUuid);
         SendNotificationS sendNotificationS = new SendNotificationS();

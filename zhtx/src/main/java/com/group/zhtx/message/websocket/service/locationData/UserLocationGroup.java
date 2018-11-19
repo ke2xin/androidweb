@@ -6,21 +6,15 @@ public class UserLocationGroup {
     private String userName;
     private String userPortarit;
 <<<<<<< HEAD
-<<<<<<< HEAD
     private String userLocationLongitude;
     private String userLocationLatitude;
     private long userLocationTime;
 =======
-=======
->>>>>>> parent of d069db5... Merge branch 'master' of https://github.com/ke2xin/androidweb
     private String user_location_longitude;
     private String user_location_latitude;
     private String user_location_corner;
     private String user_location_time;
-<<<<<<< HEAD
 >>>>>>> parent of accf4a9... 首页
-=======
->>>>>>> parent of d069db5... Merge branch 'master' of https://github.com/ke2xin/androidweb
 
     public String getUserName() {
         return userName;
@@ -55,7 +49,6 @@ public class UserLocationGroup {
     }
 
 <<<<<<< HEAD
-<<<<<<< HEAD
     public long getUserLocationTime() {
         return userLocationTime;
     }
@@ -67,12 +60,6 @@ public class UserLocationGroup {
         return user_location_corner;
     }
 
-=======
-    public String getUser_location_corner() {
-        return user_location_corner;
-    }
-
->>>>>>> parent of d069db5... Merge branch 'master' of https://github.com/ke2xin/androidweb
     public void setUser_location_corner(String user_location_corner) {
         this.user_location_corner = user_location_corner;
     }
@@ -83,9 +70,6 @@ public class UserLocationGroup {
 
     public void setUser_location_time(String user_location_time) {
         this.user_location_time = user_location_time;
-<<<<<<< HEAD
 >>>>>>> parent of accf4a9... 首页
-=======
->>>>>>> parent of d069db5... Merge branch 'master' of https://github.com/ke2xin/androidweb
     }
 }
