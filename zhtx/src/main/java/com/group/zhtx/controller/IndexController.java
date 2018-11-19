@@ -1,16 +1,27 @@
 package com.group.zhtx.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class IndexController {
-    @RequestMapping("/t")
+
+    @GetMapping("/index")
     public String toIndex(){
-        return "index";
+        return "chatIndex";
     }
-    @RequestMapping("/i")
+    @GetMapping("/register")
     public String toRegister(){
-        return "testRegister";
+        return "register";
+    }
+
+    @GetMapping("/login")
+    public String toLogin(){
+        return "login";
+    }
+
+    @GetMapping("/updataPassword")
+    public String toUpdataPassword(){
+        return "updataPassword";
     }
 }

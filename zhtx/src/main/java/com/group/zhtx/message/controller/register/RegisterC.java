@@ -1,6 +1,6 @@
 package com.group.zhtx.message.controller.register;
 
-public class RegisterC {
+public class  RegisterC {
 
     private String uuid;
     private String password;

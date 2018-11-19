@@ -12,20 +12,19 @@
 			this.wsClinet.connect();
 			
 		}
-		
-		
-		
+
 		//用户登陆
 		this.onLoginChat = function(userUuid,userPassword){
-			
 			var obj = new Object();
 			obj.operateId = operateIdType.User_Login_C;
 			obj.uuid = userUuid;
 			obj.password = userPassword;
 			
-			this.sendMessage(obj);
+			var jsondata = JSON.stringify(obj);
+			
+			this.wsClinet.sendMessage(jsondata);
 		}
-		
+
 		//获取群资料
 		this.onGetGroupData = function(groupId){
 			var obj = new Object();
@@ -33,17 +32,17 @@
 			obj.groupId = groupId;
 			
 			var jsonData = tool.toJson(obj);
-			this.sendMessage(obj);
+			this.wsClinet.sendMessage(jsonData);
 		}
 		
 		//保存修改群资料
 		this.onSaveGroupData = function(groupId, groupName, groupDec){
 			var obj = new Object();
 			obj.operateId = operateIdType.User_Save_GroupData_C;
-			obj.group_id = groupId;
-			obj.group_name = groupName;
-			obj.group_dec = groupDec;
-			
+			obj.groupId = groupId;
+			obj.groupName = groupName;
+			obj.groupDec = groupDec;
+		
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);
 		}
@@ -59,9 +58,9 @@
 		this.onUserToSendMessage = function(userId,groupId,content){
 			var obj = new Object();
 			obj.operateId = operateIdType.User_Send_GroupMessage;
-			obj.userUuid = userId;
-			obj.groupUuid = groupId;
-			obj.content = content;
+			obj.uuid = userId;
+			obj.groupId = groupId;
+			obj.groupMessage = content;
 
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);
@@ -96,7 +95,7 @@
 		this.onGetGroupUserLocations = function(groupId){
 			var obj = new Object();
 			obj.operateId = operateIdType.User_Group_Number_Location_C;
-			obj.group_id = groupId;
+			obj.groupId = groupId;
 			
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);
@@ -118,7 +117,7 @@
 		this.onSendSearchGroups = function(searchGroupName){
 			var obj = new Object();
 			obj.operateId = operateIdType.User_Search_Group_Number_Info_C;
-			obj.group_id = searchGroupName;
+			obj.groupId = searchGroupName;
 			
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);
@@ -129,7 +128,19 @@
 			var obj = new Object();
 			obj.operateId = operateIdType.User_Application_Enter_Group_C;
 			obj.uuid = userId;
-			obj.group_id = groupId;
+			obj.groupId = groupId;
+			
+			var jsonData = tool.toJson(obj);
+			this.wsClinet.sendMessage(jsonData);
+		}
+		
+		//发送群公告
+		this.onSendGroupAnnoun = function(userId,groupId,groupDec){
+			var obj = new Object();
+			obj.operateId = operateIdType.User_Send_GroupDec;
+			obj.uuid = userId;
+			obj.groupId = groupId;
+			obj.anoun = groupDec;
 			
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);
@@ -138,9 +149,9 @@
 		//处理通知
 		this.onUserHandleNotification = function(sendId, receiveId, groupId, result, type){
 			var obj = new Object();
-			obj.request_user_uuid = receiveId;
-			obj.send_user_uuid = sendId;
-			obj.group_uuid = groupId;
+			obj.requestUserUuid = receiveId;
+			obj.sendUserUuid = sendId;
+			obj.groupUuid = groupId;
 			obj.result = result;
 			
 			if(type === 0){
@@ -157,8 +168,8 @@
 		this.onQuitGroup = function(groupId,userId){
 			var obj = new Object();
 			obj.operateId = operateIdType.User_Quit_Group_C;
-			obj.group_id = groupId;
-			obj.user_uuid = userId;
+			obj.groupId = groupId;
+			obj.userUuid = userId;
 			
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);
@@ -170,9 +181,9 @@
 		this.onManagerGroupUser = function(groupId,userId,delId){
 			var obj = new Object();
 			obj.operateId = operateIdType.Manager_GroupUser;
-			obj.group_id = groupId;
+			obj.groupId = groupId;
 			obj.uuid = userId;
-			obj.del_uuid = delId;
+			obj.delUuid = delId;
 			
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);
@@ -188,7 +199,7 @@
 			this.wsClinet.sendMessage(jsonData);
 		}
 		
-		//查看群成员个人信息
+		//查看个人信息
 		this.onSearchOwn =function(userId){
 			var obj = new Object();
 			obj.operateId = operateIdType.User_For_Me_C;
@@ -213,11 +224,11 @@
 			var obj = new Object();
 			obj.operateId = operateIdType.Save_Own_Data;
 			obj.uuid = userId;
-			obj.uuid_pic = pic;
-			obj.user_name = name;
-			obj.user_qianming = qianming;
-			obj.user_phone = phone;
-			obj.user_email = email;
+			obj.uuidPic = pic;
+			obj.userName = name;
+			obj.userQianming = qianming;
+			obj.userPhone = phone;
+			obj.userEmail = email;
 
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);
