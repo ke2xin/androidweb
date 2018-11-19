@@ -123,7 +123,6 @@ public class OnlineUser implements IAsyncCycle{
                     sendNotification.setStatus(n.status);
                     sendNotification.setSendUuid(n.sendUserId.getUuid());
                     sendNotification.setGroupPortrait(n.getSendUserId().getPortrait());
-                    sendNotification.setNoticeId(n.getId());
                     sendNotificationS.addNotification(sendNotification);
                 }
             }
@@ -159,7 +158,7 @@ public class OnlineUser implements IAsyncCycle{
             //分类各群用户的位置信息
             System.out.println("转发位置信息的长度："+gps.size());
             Map<String,UserGps>groupLocation=getSendGroupLocationMap(gps);
-            System.out.println("keySet="+groupLocation.keySet());
+            System.out.println(groupLocation.keySet().toArray());
             sendGroupLocation(groupLocation);
         }
     }
@@ -294,8 +293,7 @@ public class OnlineUser implements IAsyncCycle{
         sendGroupLocationData.setLatitude(gps.getLatitude());
         sendGroupLocationData.setLongitude(gps.getLonggitude());
         sendGroupLocationData.setUserName(gps.getUser().getName());
-        sendGroupLocationData.setUserId(gps.getUser().getUuid());
-        groupLocationS.addSendData(sendGroupLocationData);
+        groupLocationS.setData(sendGroupLocationData);
     }
 
     /*
@@ -345,14 +343,20 @@ public class OnlineUser implements IAsyncCycle{
      */
     public Map<String ,UserGps>getSendGroupLocationMap(ArrayList<Map<String,UserGps>> gps){
         Map <String,UserGps> gpsMap=new HashMap<>();
-        for(Map <String,UserGps> key:gps){
-           Object [] b=key.keySet().toArray();
-           System.out.println("key.keySet()"+key.keySet());
-           for(Object obj:b){
-               if(!gpsMap.containsKey(obj)){
-                   gpsMap.put((String)obj,key.get(obj));
+        Map <String,UserGps> g=gps.get(0);
+        Object [] keys=g.keySet().toArray();
+        for(Object key:keys){
+           List<Group> groups=groupRepository.getGroupByUuid(gps.get(0).get(key).getUser().getUuid());
+           for(int i=0; i<groups.size();i++){
+               String groupId=groups.get(i).getUuid();
+               if(!gpsMap.containsKey(groupId)){
+                   UserGps gpsList=new UserGps();
+                   //gpsMap.put(groupId,gps.get(0));
+                   //gpsList.add(userGps);
                    continue;
                }
+               UserGps userGpsList=gpsMap.get(groupId);
+               //userGpsList.add(userGps);
            }
         }
         return gpsMap;

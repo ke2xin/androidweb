@@ -10,7 +10,6 @@ public class UserAcceptAndRefuseEnterGroupC implements Serializable, IMessage {
     private String sendUserUuid;
     private String groupUuid;
     private String result;
-    private int noticeId;
 
     public int getOperateId() {
         return operateId;
@@ -50,13 +49,5 @@ public class UserAcceptAndRefuseEnterGroupC implements Serializable, IMessage {
 
     public void setResult(String result) {
         this.result = result;
-    }
-
-    public int getNoticeId() {
-        return noticeId;
-    }
-
-    public void setNoticeId(int noticeId) {
-        this.noticeId = noticeId;
     }
 }

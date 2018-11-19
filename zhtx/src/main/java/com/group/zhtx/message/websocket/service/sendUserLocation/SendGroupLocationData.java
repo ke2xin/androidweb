@@ -6,7 +6,6 @@ import java.util.List;
 
 public class SendGroupLocationData {
     private int groupId;
-    private String userId;
     private String userName;
     private String longitude;
     private String latitude;
@@ -41,13 +40,5 @@ public class SendGroupLocationData {
 
     public void setLatitude(String latitude) {
         this.latitude = latitude;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 }

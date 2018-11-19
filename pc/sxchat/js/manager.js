@@ -9,7 +9,7 @@ function globalVeriable(){
 	var startGroup=document.getElementById('startGroup');
 }
 function addListener(){
-	console.log(groupManagerList+'哈哈');
+	console.log(groupManagerList);
 	var userFlag=false;
 	var managerFlag=false;
 	userManager.onclick=function(){
@@ -65,14 +65,6 @@ function addListener(){
 		}
 	}
 }
-function verifyLogin() {
-    console.log("这是检查登录的：");
-	var a=session.getActiveAttrib("a");
-    console.log("这是检查登录的："+a);
-	if(a!=null){
-		console.log(a);
-	}
-}
 function addLoadEvent(func){
 	var oldonload=window.onload; 
 	if(typeof window.onload!='function'){
@@ -86,4 +78,3 @@ function addLoadEvent(func){
 }
 addLoadEvent(globalVeriable);
 addLoadEvent(addListener);
-addLoadEvent(verifyLogin);
