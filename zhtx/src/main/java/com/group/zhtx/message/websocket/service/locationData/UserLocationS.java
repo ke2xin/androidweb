@@ -10,7 +10,6 @@ public class UserLocationS implements IMessage {
     private int operateId;
     private String status;
     private List<UserLocationGroup>data=new ArrayList<>();
-    private String information;
 
     public int getOperateId() {
         return operateId;
@@ -34,13 +33,5 @@ public class UserLocationS implements IMessage {
 
     public void setData(List<UserLocationGroup> data) {
         this.data = data;
-    }
-
-    public String getInformation() {
-        return information;
-    }
-
-    public void setInformation(String information) {
-        this.information = information;
     }
 }

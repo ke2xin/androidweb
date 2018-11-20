@@ -12,7 +12,6 @@ public class GroupMessageS implements IMessage {
      */
     private int operateId;
 
-    private String status;
     /*
         返回的组消息
      */
@@ -41,14 +40,6 @@ public class GroupMessageS implements IMessage {
 
     public void addMessage(GroupMessageData message) {
         data.add(message);
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public String getDescription() {

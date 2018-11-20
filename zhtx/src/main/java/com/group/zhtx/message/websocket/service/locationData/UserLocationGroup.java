@@ -1,13 +1,14 @@
 package com.group.zhtx.message.websocket.service.locationData;
 
-import com.group.zhtx.util.common.WebSocketOperateUtil;
+
 
 public class UserLocationGroup {
     private String userName;
-    private String userPortarit;
+    private String userPortrait;
     private String userLocationLongitude;
     private String userLocationLatitude;
-    private long userLocationTime;
+    private String userLocationCorner;
+    private String userLocationTime;
 
     public String getUserName() {
         return userName;
@@ -17,12 +18,12 @@ public class UserLocationGroup {
         this.userName = userName;
     }
 
-    public String getUserPortarit() {
-        return userPortarit;
+    public String getUserPortrait() {
+        return userPortrait;
     }
 
-    public void setUserPortarit(String userPortarit) {
-        this.userPortarit = WebSocketOperateUtil.Portrait_Url+userPortarit;
+    public void setUserPortrait(String userPortrait) {
+        this.userPortrait = userPortrait;
     }
 
     public String getUserLocationLongitude() {
@@ -41,11 +42,19 @@ public class UserLocationGroup {
         this.userLocationLatitude = userLocationLatitude;
     }
 
-    public long getUserLocationTime() {
+    public String getUserLocationCorner() {
+        return userLocationCorner;
+    }
+
+    public void setUserLocationCorner(String userLocationCorner) {
+        this.userLocationCorner = userLocationCorner;
+    }
+
+    public String getUserLocationTime() {
         return userLocationTime;
     }
 
-    public void setUserLocationTime(long userLocationTime) {
+    public void setUserLocationTime(String userLocationTime) {
         this.userLocationTime = userLocationTime;
     }
 }

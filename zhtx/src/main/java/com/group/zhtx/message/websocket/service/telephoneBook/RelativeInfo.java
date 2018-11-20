@@ -4,7 +4,8 @@ import com.group.zhtx.util.common.WebSocketOperateUtil;
 
 public class RelativeInfo {
     private String userName;
-    private String userPortarit;
+    private String uuid;
+    private String userPortrait;
     private String userPhone;
 
     public String getUserName() {
@@ -15,12 +16,20 @@ public class RelativeInfo {
         this.userName = userName;
     }
 
-    public String getUserPortarit() {
-        return userPortarit;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setUserPortarit(String userPortarit) {
-        this.userPortarit = WebSocketOperateUtil.Portrait_Url+userPortarit;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getUserPortrait() {
+        return userPortrait;
+    }
+
+    public void setUserPortrait(String userPortrait) {
+        this.userPortrait = userPortrait;
     }
 
     public String getUserPhone() {
