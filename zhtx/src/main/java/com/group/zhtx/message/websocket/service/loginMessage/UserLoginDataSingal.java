@@ -7,6 +7,8 @@ public class UserLoginDataSingal {
     private String userPortrait;
     private String userName;
     private String userSign;
+    private String userEmail;
+    private String userPhone;
 
 
     public String getUserPortrait() {
@@ -31,5 +33,21 @@ public class UserLoginDataSingal {
 
     public void setUserSign(String userSign) {
         this.userSign = userSign;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
     }
 }

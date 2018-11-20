@@ -10,7 +10,6 @@ public class ApplicationGroupDataS implements IMessage {
     private Object []data;
     private String information;
 
-
     public int getOperateId() {
         return operateId;
     }

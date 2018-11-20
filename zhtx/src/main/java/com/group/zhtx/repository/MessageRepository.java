@@ -17,7 +17,7 @@ public interface MessageRepository extends JpaRepository<Message,Long> {
     @Query("select count(*) from Message m where m.sendTime >=?2 and m.group.uuid =?1")
     public int getCountOfUnReadMessageByGroupUuidAndTime(String groupuuid,Date leaveTime);
 
-    @Query("select m from Message m where m.sendTime >?2 and m.group.uuid =?1")
+    @Query("select m from Message m where m.sendTime >=?2 and m.group.uuid =?1")
     public List<Message> getUnReadMessageByGroupUuidAndTime(String groupuuid,Date leaveTime);
 
 

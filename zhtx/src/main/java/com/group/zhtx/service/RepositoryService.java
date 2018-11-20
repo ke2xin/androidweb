@@ -8,7 +8,6 @@ import com.group.zhtx.message.controller.register.RegisterC;
 import com.group.zhtx.message.controller.register.PasswordC;
 import com.group.zhtx.message.websocket.service.AcceptAndRefuseEnterGroup.AcceptAndRefuseInfo;
 import com.group.zhtx.message.websocket.service.AcceptAndRefuseEnterGroup.AcceptAndRefuseDataS;
-import com.group.zhtx.message.websocket.service.AcceptAndRefuseEnterGroup.AcceptNotification;
 import com.group.zhtx.message.websocket.service.Anoun.AnouS;
 import com.group.zhtx.message.websocket.service.ApplicationGroup.ApplicationGroupDataS;
 import com.group.zhtx.message.websocket.service.createGroupMessage.UserCreateGroup;
@@ -145,6 +144,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
     public Map<Integer, String> getWebSocketService() throws Exception {
         Map<Integer,String> map = new HashMap<>();
         map.put(WebSocketOperateUtil.User_Login_C,"userLogin");//用户登录
+        map.put(WebSocketOperateUtil.User_Home_C,"userHome");//用户首页
         map.put(WebSocketOperateUtil.User_CreateGroup_C,"createGroup");//用户创建群
         map.put(WebSocketOperateUtil.User_Enter_Group_C,"enterGroup");//用户进入群聊
         map.put(WebSocketOperateUtil.User_Get_Group_Data_C,"getGroupData");//用户获取群资料
@@ -165,7 +165,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         map.put(WebSocketOperateUtil.User_Dissolution_Group,"dissolutionGroup");
         map.put(WebSocketOperateUtil.User_Send_GroupMessage_C,"getSendGroupMessage");
         map.put(WebSocketOperateUtil.User_Send_TimeStamp,"getReceiveTimeStamp");
-        map.put(WebSocketOperateUtil.User_Location,"saveUserLocationInfo");//保存用户位置信息
+        map.put(WebSocketOperateUtil.User_Location_C,"saveUserLocationInfo");//保存用户位置信息
         map.put(WebSocketOperateUtil.User_Anoun,"publicAnoun");//群公告
         return map;
     }
@@ -242,10 +242,9 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         //销毁消息包
         webSocket.clear();
     }
-
     /*
-        发送位置信息
-     */
+          发送位置信息
+       */
     private void sendLocationWithWebSocket(Session session,WebSocket webSocket){
         System.out.println("发送位置信息");
         try {
@@ -257,6 +256,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         }
         webSocket.clear();
     }
+
     private void sendMessageWithText(Session session,String text){
         try {
             session.getBasicRemote().sendText(text);
@@ -299,7 +299,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         用户登陆
      */
     public void userLogin(WebSocket webSocket){
-        System.out.println("用户登录");
         UserLoginC registerC = (UserLoginC) webSocket.getIMessage();
         Session session = webSocket.getSession();
         String uuid = registerC.getUuid();
@@ -337,18 +336,74 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             webSocket.clear();
             return;
         }
+        loginAndHome(user,userLoginS,webSocket);
+
+        //创建在线用户数据
+        OnlineUserData onlineUserData = new OnlineUserData(user.getUuid(),user.getPhone(),user.getName(),user.getPortrait());
+        //创建在线用户
+        OnlineUser onlineUser = new OnlineUser(onlineUserData,session,onlineUserManager);
+        //设置用户在线状态
+        onlineUser.setOnline(true);
+        //之后操作的唯一管理识别类
+        onlineUserManager.addOnlineUser(onlineUser);
+    }
+
+    /*
+       用户首页
+     */
+    public void userHome(WebSocket webSocket){
+            System.out.println("用户首页");
+            UserHomeC userHomeC=(UserHomeC) webSocket.getIMessage();
+            int operateId=userHomeC.getOperateId();
+            Session session=webSocket.getSession();
+            String uuid=userHomeC.getUuid();
+            User user=userRepository.findById(uuid).orElse(null);
+            UserLoginS userLoginS = new UserLoginS();
+            if(user == null){
+                try {
+                    userLoginS.setOperateId(operateId);
+                    userLoginS.setStatus("fail");
+                    userLoginS.setInformation("不存在这个用户或者用户名错误");
+                    webSocket = new WebSocket(operateId,userLoginS,null);
+                    session.getBasicRemote().sendObject(webSocket);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                //销毁消息包
+                webSocket.clear();
+                return;
+            }
+            loginAndHome(user,userLoginS,webSocket);
+    }
+
+    /*
+        登录和首页公用代码
+     */
+    public void loginAndHome(User user,UserLoginS userLoginS,WebSocket webSocket){
+        Session session=webSocket.getSession();
         UserLoginData data = new UserLoginData();
         UserLoginDataSingal singal = new UserLoginDataSingal();
 
         singal.setUserName(user.getName());
-        singal.setUserPortrait(user.getPortrait());
+        if(user.getPortrait()==null){
+            singal.setUserPortrait(user.getPortrait()+"0");
+        }else{
+            singal.setUserPortrait(user.getPortrait());
+        }
         if(user.getSign()==null){
-            singal.setUserSign(0+"");
-        }else {
+            singal.setUserSign(user.getSign()+"0");
+        }else{
             singal.setUserSign(user.getSign());
         }
+        if(user.getEmail()==null){
+            singal.setUserEmail(user.getEmail()+"0");
+        }else{
+            singal.setUserEmail(user.getEmail());
+        }
+        singal.setUserPhone(user.getPhone());
+
         data.setSingal(singal);
-        List<Group> groups = groupRepository.getGroupByUuid(uuid);
+        List<Group> groups = groupRepository.getGroupByUuid(user.getUuid());
 
         for(int i = 0; i <groups.size(); i++){
             Group group = groups.get(i);
@@ -407,17 +462,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             e.printStackTrace();
             webSocket.clear();
         }
-
-        //创建在线用户数据
-        OnlineUserData onlineUserData = new OnlineUserData(user.getUuid(),user.getPhone(),user.getName(),user.getPortrait());
-        //创建在线用户
-        OnlineUser onlineUser = new OnlineUser(onlineUserData,session,onlineUserManager);
-        //设置用户在线状态
-        onlineUser.setOnline(true);
-        //之后操作的唯一管理识别类
-        onlineUserManager.addOnlineUser(onlineUser);
     }
-
     /*
         用户创建群
      */
@@ -662,6 +707,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
 
         webSocket = new WebSocket(operateId,data,null);
         sendMessageWithWebSocket(session,webSocket);
+
     }
 
     /*
@@ -675,12 +721,15 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         System.out.println("uuid="+userQuitGroupC.getUserUuid()+"\tgroupId="+userQuitGroupC.getGroupId());
 
         //检测用户是否登录
-        if(!checkUserIsOnline(session.getId(),userQuitGroupC.getUserUuid()))return;
+        //if(!checkUserIsOnline(session.getId(),userQuitGroupC.getUserUuid()))return;
 
         GroupUser groupUser=groupUserRepository.getGroupUserByGroupAndUuid(userQuitGroupC.getUserUuid(),userQuitGroupC.getGroupId());
         System.out.println(groupUser);
+        Group quitGroup=groupRepository.findByUuid(userQuitGroupC.getGroupId());
+        User receiver=quitGroup.getCreater();
+        User sender=userRepository.findByUuid(userQuitGroupC.getUserUuid());
         QuitDataS quitDataS=new QuitDataS();
-        if(groupUser==null){//不存在该群号时直接返回
+        if(groupUser==null||quitGroup==null||receiver==null||sender==null){//不存在该群号时直接返回
             quitDataS.setOperateId(operateId);
             quitDataS.setStatus("fail");
             quitDataS.setInformation("不存在该群号或者不存在该成员");
@@ -696,10 +745,23 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             return;
         }
         if(groupUser.getRole()==1){//判断该成员是否是群成员还是群主，0表示群主，1表示群成员
+            //修改通知表里面的状态，处理结果为4表示自退
+            List<Notification> notifications=notificationRepository.findByReceiveUserIdAndSendUserIdAndGroupId(receiver,sender,quitGroup);
+            if(notifications==null){
+                return;
+            }
+            for(int i=0;i<notifications.size();i++){//当用户退出群的时候，把所有的通知记录都改为状态4,除了被群主拒绝的通知记录的状态保留为2
+                Notification notification=notifications.get(i);
+                if(notification.getResult()==2)continue;
+                if(notification.getResult()!=4){
+                    notification.setResult(4);
+                    notification.setContent("用户退出群聊");
+                    notificationRepository.saveAndFlush(notification);
+                }
+            }
             groupUserRepository.delete(groupUser);//删除该群的成员
             quitDataS.setOperateId(operateId);
             quitDataS.setStatus("success");
-            quitDataS.setGroupId(userQuitGroupC.getGroupId());
             quitDataS.setInformation("成功退出群聊");
             List<Group>groups=groupRepository.getGroupByUuid(userQuitGroupC.getUserUuid());
             for(int i=0;i<groups.size();i++){
@@ -827,22 +889,20 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         SendGroupMessageC sendGroupMessageC = (SendGroupMessageC) webSocket.getIMessage();
         int operateId = webSocket.getOperateId();
         Session session = webSocket.getSession();
-        System.out.println("是否在线："+checkUserIsOnline(session.getId(),null));
+
         //检测用户是否登录
         if(!checkUserIsOnline(session.getId(),null))return;
 
-        OnlineUser onlineUser = onlineUserManager.getOnlineUserByUuid(sendGroupMessageC.getUuid());
-        System.out.println("onlineUser="+onlineUser);
+        OnlineUser onlineUser = onlineUserManager.getOnlineUserByUuid(sendGroupMessageC.getUserUuid());
         if(onlineUser == null){
             onlineUser = onlineUserManager.getOnlineUserBySessionId(session.getId());
             if (onlineUser == null)return;
         }
 
-        String groupId = sendGroupMessageC.getGroupId();
-        String userId = sendGroupMessageC.getUuid();
-        System.out.println("发送的groupId="+groupId);
-        Group group = groupRepository.findById(groupId).orElse(null);
+        String groupId = sendGroupMessageC.getGroupUuid();
+        String userId = sendGroupMessageC.getUserUuid();
 
+        Group group = groupRepository.findById(groupId).orElse(null);
         User user = userRepository.findById(userId).orElse(null);
 
         if(group == null || user == null){
@@ -866,8 +926,8 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         //查找所有的群成员
         List<GroupUser> groupUsers = groupUserRepository.findByGroup(group);
         for (GroupUser gu : groupUsers){
-            String currentGroupUuid = gu.getUser().getUuid();
-            OnlineUser currentOnlineUser = onlineUserManager.getOnlineUserByUuid(currentGroupUuid);
+            String currentgroupUuid = gu.getUser().getUuid();
+            OnlineUser currentOnlineUser = onlineUserManager.getOnlineUserByUuid(currentgroupUuid);
             //如果在线用户没有这个Id，无视
             if(currentOnlineUser == null)continue;
             currentOnlineUser.addWaitToSendMessage(message);
@@ -941,86 +1001,71 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
     public void searchGroupNumberLocation(WebSocket webSocket){
         System.out.println("正在查看群成员位置信息");
         UserLocationInfoC userLocationInfoC =(UserLocationInfoC) webSocket.getIMessage();
-        System.out.println("群号："+ userLocationInfoC.getGroup_id());
+        System.out.println("群号："+ userLocationInfoC.getGroupId());
         Session session = webSocket.getSession();
-<<<<<<< HEAD
+        int operateId=webSocket.getOperateId();
         String group_id= userLocationInfoC.getGroupId();
         Group group=groupRepository.findById(group_id).orElse(null);
-
-        UserLocationS userLocationS=new UserLocationS();
-        //群组为空，报错
-        if(group==null){
-            userLocationS.setStatus("fail");
-            userLocationS.setOperateId(webSocket.getOperateId());
-            userLocationS.setInformation("不存在的群组");
-            webSocket = new WebSocket(webSocket.getOperateId(),userLocationS,null);
-            sendMessageWithWebSocket(session,webSocket);
-=======
-        String group_id= userLocationInfoC.getGroup_id();
-        Group group=groupRepository.findById(group_id).orElse(null);
+        UserLocationS userLocationS=new UserLocationS();//返回客户端的信息
+        List<UserLocationGroup> data=new ArrayList<>();
         if(group==null){
             try{
-                session.getBasicRemote().sendText("{"+
-                        "operateId:"+ userLocationInfoC.getOperateId()+","+
-                        "status:\"fail\","+
-                        "data:[]"+
-                        "}");
-            }catch (IOException e){
+                userLocationS.setStatus("fail");
+                userLocationS.setOperateId(operateId);
+                userLocationS.setData(data);
+                webSocket = new WebSocket(webSocket.getOperateId(),userLocationS,null);
+                session.getBasicRemote().sendObject(webSocket);
+            }catch (Exception e){
                 e.printStackTrace();
                 //清除消息包
                 webSocket.clear();
             }
->>>>>>> parent of accf4a9... 首页
             return;
         }
 
+
         List<GroupUser>groupUsers=groupUserRepository.findByGroup(group);
-<<<<<<< HEAD
+        System.out.println("群规模"+groupUsers.size());
         userLocationS.setOperateId(userLocationInfoC.getOperateId());
         userLocationS.setStatus("success");
-        List<UserLocationGroup> data=new ArrayList<>();
-        for(int i = 0;i < groupUsers.size();i++){
-            GroupUser gu=groupUsers.get(i);
-            User currentUser = gu.getUser();
-            UserGps userGps=userGpsRepository.findByUser(currentUser);
-            if(userGps != null){
-                UserLocationGroup userLocationGroupS=new UserLocationGroup();
-                userLocationGroupS.setUserPortarit(currentUser.getPortrait());
-                userLocationGroupS.setUserLocationLongitude(userGps.getLonggitude());
-                userLocationGroupS.setUserLocationLatitude(userGps.getLatitude());
-                userLocationGroupS.setUserLocationTime(userGps.getLocationDate().getTime());
-                data.add(userLocationGroupS);
-=======
-        System.out.println("群规模"+groupUsers.size());
-        UserLocationS userLocationS=new UserLocationS();
-        userLocationS.setOperateId(userLocationInfoC.getOperateId()+"");
-        userLocationS.setStatus("success");
-        List<UserLocationGroup> data=new ArrayList<>();
+
         for(int i=0;i<groupUsers.size();i++){
             GroupUser gu=groupUsers.get(i);
-            System.out.println(gu.getUser().getUuid());
+            System.out.println("群成员的id:"+gu.getUser().getUuid());
             User user=userRepository.findById(gu.getUser().getUuid()).orElse(null);
             if(user!=null){
                 UserGps userGps=userGpsRepository.findByUser(user);
-                System.out.println(userGps.getLatitude());
-                UserLocationGroup userLocationGroupS=new UserLocationGroup();
-                userLocationGroupS.setUserName("dddd"+user.getName());
-                System.out.println(user.getName()+"||\t"+user.getPortrait());
-                userLocationGroupS.setUserPortarit(user.getPortrait());
-                userLocationGroupS.setUser_location_longitude(userGps.getLonggitude());
-                userLocationGroupS.setUser_location_latitude(userGps.getLatitude());
-                userLocationGroupS.setUser_location_corner(userGps.getDirectionAndAngle());
-                userLocationGroupS.setUser_location_time(new Date().toString());
-                data.add(userLocationGroupS);
+                OnlineUser onlineUser=onlineUserManager.getOnlineUserByUuid(user.getUuid());
+                if(userGps!=null&&onlineUser!=null&&onlineUser.isOnline()){//查找该群的在线用户的位置信息
+                    System.out.println("用户的位置表："+userGps);
+                    System.out.println(userGps.getLatitude());
+                    UserLocationGroup userLocationGroupS=new UserLocationGroup();
+                    userLocationGroupS.setUserName(user.getName());
+                    System.out.println("用户名："+user.getName()+"\t用户给头像路径："+user.getPortrait());
+                    if(user.getPortrait()==null){
+                        userLocationGroupS.setUserPortrait(user.getPortrait()+"0");
+                    }else{
+                        userLocationGroupS.setUserPortrait(user.getPortrait());
+                    }
+                    userLocationGroupS.setUserLocationLongitude(userGps.getLonggitude());
+                    userLocationGroupS.setUserLocationLatitude(userGps.getLatitude());
+                    userLocationGroupS.setUserLocationCorner(userGps.getDirectionAndAngle());
+                    userLocationGroupS.setUserLocationTime(new Date().toString());
+                    data.add(userLocationGroupS);
+                }
             }else{
                 return;
->>>>>>> parent of accf4a9... 首页
             }
         }
         userLocationS.setData(data);
-        int operateId=webSocket.getOperateId();
         webSocket=new WebSocket(operateId,userLocationS,null);
-        sendMessageWithWebSocket(session,webSocket);
+        try{
+            session.getBasicRemote().sendObject(webSocket);
+        }catch (IOException e){
+            e.printStackTrace();
+        } catch (EncodeException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -1061,7 +1106,8 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             User user=userRepository.findByUuid(groupUser.getUser().getUuid());
             RelativeInfo relativeInfoS=new RelativeInfo();
             relativeInfoS.setUserName(user.getName());
-            relativeInfoS.setUserPortarit(user.getPortrait());
+            relativeInfoS.setUuid(user.getUuid());
+            relativeInfoS.setUserPortrait(user.getPortrait());
             relativeInfoS.setUserPhone(user.getPhone());
             relativeInfoSs.add(relativeInfoS);
         }
@@ -1089,6 +1135,8 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         UserApplicationEnterGroupC applicationEnterGroupC=(UserApplicationEnterGroupC) webSocket.getIMessage();
         System.out.println("申请加入的群号："+applicationEnterGroupC.getGroupId()+"\t申请方："+applicationEnterGroupC.getUuid());
         Group group=groupRepository.findByUuid(applicationEnterGroupC.getGroupId());
+        User receiveUser=group.getCreater();
+        User sendUser=userRepository.findByUuid(applicationEnterGroupC.getUuid());
         ApplicationGroupDataS applicationGroupDataS=new ApplicationGroupDataS();
         //没有该群号直接返回
         if(group==null){
@@ -1099,7 +1147,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 applicationGroupDataS.setResultCode(-1);
                 applicationGroupDataS.setData(new Object[0]);
                 applicationGroupDataS.setInformation("不存在该群号");
-                applicationGroupDataS.setGroupId(null);
                 webSocket=new WebSocket(operateId,applicationGroupDataS,null);
                 session.getBasicRemote().sendObject(webSocket);
             } catch (IOException e) {
@@ -1111,61 +1158,39 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             return;
         }
         System.out.println("groups="+group.getCreater().getUuid());
-        User receiveUser=group.getCreater();
-        User sendUser=userRepository.findByUuid(applicationEnterGroupC.getUuid());
-<<<<<<< HEAD
-        //如果用户不存在，直接返回
-        if(sendUser == null)return;
-        GroupUser groupUser = groupUserRepository.getGroupUserByGroupAndUser(sendUser,group);
-
-        if(groupUser != null && groupUser.getUser().getUuid().equals(sendUser.getUuid())){
-            //发送的用户已经是该群的成员
-            applicationGroupDataS.setOperateId(operateId);
-            applicationGroupDataS.setStatus("fail");
-            applicationGroupDataS.setResultCode(-1);
-            applicationGroupDataS.setData(new Object[0]);
-            applicationGroupDataS.setGroupId(applicationEnterGroupC.getGroupId());
-            applicationGroupDataS.setInformation("你已是该群成员，不用在申请！");
-            webSocket=new WebSocket(operateId,applicationGroupDataS,null);
-            sendMessageWithWebSocket(session,webSocket);
-            return;
-        }
-
-=======
->>>>>>> parent of accf4a9... 首页
-        //根据群号、接收方和发送方查找数据库有没有这条通知，如果有这条通知无需再插入这条通知
-        Notification notif=notificationRepository.findByReceiveUserIdAndSendUserIdAndGroupId(receiveUser,sendUser,group);
-        if(notif==null){
-            if(receiveUser!=null&&sendUser!=null&&!receiveUser.getUuid().equals(sendUser.getUuid())){//这里判断接受者和发送者不能是同一个人
-                Notification notification=new Notification();
-                notification.setContent("申请加入群聊");
-                notification.setCreateTime(new Date());
-                notification.setGroupId(group);
-                notification.setResult(0);
-                notification.setStatus(0);
-                notification.setReceiveUserId(receiveUser);
-                notification.setSendUserId(sendUser);
-                notificationRepository.save(notification);
-                try {
-                    applicationGroupDataS.setOperateId(operateId);
+        List<Notification>notifications=notificationRepository.findNotificationLists(receiveUser.getUuid(),sendUser.getUuid(),group.getUuid());
+        System.out.println("通知的数目："+notifications.size());
+        if(notifications.size()==0){
+            System.out.println("用户第一次申请加群");
+            applicaEnterGroupRecircle(receiveUser,sendUser,applicationGroupDataS,webSocket);
+        }else{
+            //获取最新的一条通知
+            Notification notification=notifications.get(0);
+            if(notification.getResult()==4||notification.getResult()==2){//如果这个通知是自退的话，再生成一个新的通知，这个是用户退出后再次申请
+                System.out.println("用户退出或者遭到了群主的拒绝，再次申请");
+                applicaEnterGroupRecircle(receiveUser,sendUser,applicationGroupDataS,webSocket);
+            }else{
+                try{
+                    System.out.println("用户用户在未得到群主同意之前多次申请");
                     applicationGroupDataS.setStatus("success");
+                    applicationGroupDataS.setOperateId(operateId);
                     applicationGroupDataS.setResultCode(0);
                     applicationGroupDataS.setData(new Object[0]);
                     applicationGroupDataS.setGroupId(applicationEnterGroupC.getGroupId());
                     applicationGroupDataS.setInformation("发送成功，等待管理员审核");
                     webSocket=new WebSocket(operateId,applicationGroupDataS,null);
                     session.getBasicRemote().sendObject(webSocket);
-
                     //把这个通知即时发送给群主
                     OnlineUser onlineUser=onlineUserManager.getOnlineUserByUuid(receiveUser.getUuid());
-                    if(onlineUser==null){
+                    if(onlineUser==null) {
                         return;
                     }
-                    Session receiverSession=onlineUser.getSession();
+                    Session receiver=onlineUser.getSession();
                     SendNotificationS n=new SendNotificationS();
                     List<SendNotification> data=new ArrayList<>();
                     SendNotification s=new SendNotification();
                     s.setSendUserName(sendUser.getName());
+                    s.setNoticeId(notification.getId());
                     s.setGroupName(group.getName());
                     s.setStatus(notification.getStatus());
                     s.setSendUuid(sendUser.getUuid());
@@ -1177,86 +1202,49 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                     data.add(s);
                     n.setData(data);
                     n.setOperateId(WebSocketOperateUtil.Send_Notifications);
-                    n.setStatus("success");
                     webSocket=new WebSocket(WebSocketOperateUtil.Send_Notifications,n,null);
-                    receiverSession.getBasicRemote().sendObject(webSocket);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    webSocket.clear();
-<<<<<<< HEAD
-                } catch (EncodeException e) {
-                    e.printStackTrace();
-                }
-            }else if(receiveUser.getUuid().equals(sendUser.getUuid())){
-                try {
-                    applicationGroupDataS.setOperateId(operateId);
-                    applicationGroupDataS.setStatus("fail");
-                    applicationGroupDataS.setResultCode(-1);
-                    applicationGroupDataS.setData(new Object[0]);
-                    applicationGroupDataS.setGroupId(applicationEnterGroupC.getGroupId());
-                    applicationGroupDataS.setInformation("你已是该群成员，不用在申请！");
-                    webSocket=new WebSocket(operateId,applicationGroupDataS,null);
-                    session.getBasicRemote().sendObject(webSocket);
-                } catch (IOException e) {
+                    receiver.getBasicRemote().sendObject(webSocket);
+                }catch (IOException e) {
                     e.printStackTrace();
                     webSocket.clear();
                 } catch (EncodeException e) {
                     e.printStackTrace();
                 }
-=======
-                } catch (EncodeException e) {
-                    e.printStackTrace();
-                }
-            }else if(receiveUser.getUuid().equals(sendUser.getUuid())){
-                try {
-                    applicationGroupDataS.setOperateId(operateId);
-                    applicationGroupDataS.setStatus("fail");
-                    applicationGroupDataS.setResultCode(-1);
-                    applicationGroupDataS.setData(new Object[0]);
-                    applicationGroupDataS.setGroupId(applicationEnterGroupC.getGroupId());
-                    applicationGroupDataS.setInformation("你已是该群成员，不用在申请！");
-                    webSocket=new WebSocket(operateId,applicationGroupDataS,null);
-                    session.getBasicRemote().sendObject(webSocket);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    webSocket.clear();
-                } catch (EncodeException e) {
-                    e.printStackTrace();
-                }
->>>>>>> parent of accf4a9... 首页
-                return;
-            }else{
-                try {
-                    applicationGroupDataS.setOperateId(operateId);
-                    applicationGroupDataS.setStatus("fail");
-                    applicationGroupDataS.setResultCode(-1);
-                    applicationGroupDataS.setData(new Object[0]);
-                    applicationGroupDataS.setGroupId(applicationEnterGroupC.getGroupId());
-                    applicationGroupDataS.setInformation("申请失败");
-                    webSocket=new WebSocket(operateId,applicationGroupDataS,null);
-                    session.getBasicRemote().sendObject(webSocket);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    webSocket.clear();
-                } catch (EncodeException e) {
-                    e.printStackTrace();
-                }
-                return;
             }
-            webSocket.clear();
-        }else{
-            applicationGroupDataS.setOperateId(operateId);
-            applicationGroupDataS.setStatus("success");
-            applicationGroupDataS.setResultCode(0);
-            applicationGroupDataS.setData(new Object[0]);
-            applicationGroupDataS.setGroupId(applicationEnterGroupC.getGroupId());
-            applicationGroupDataS.setInformation("发送成功，等待管理员审核");
-            webSocket=new WebSocket(operateId,applicationGroupDataS,null);
-            try {
+        }
+    }
+    /*
+          申请加群复用的代码
+       */
+    public void applicaEnterGroupRecircle(User receiveUser,User sendUser,ApplicationGroupDataS applicationGroupDataS,WebSocket webSocket){
+        Session session=webSocket.getSession();
+        int operateId=webSocket.getOperateId();
+        UserApplicationEnterGroupC applicationEnterGroupC=(UserApplicationEnterGroupC) webSocket.getIMessage();
+        System.out.println("申请加入的群号："+applicationEnterGroupC.getGroupId()+"\t申请方："+applicationEnterGroupC.getUuid());
+        Group group=groupRepository.findByUuid(applicationEnterGroupC.getGroupId());
+        if(receiveUser!=null&&sendUser!=null&&!receiveUser.getUuid().equals(sendUser.getUuid())){//这里判断接受者和发送者不能是同一个人
+            Notification notification=new Notification();
+            notification.setContent("申请加入群聊");
+            notification.setCreateTime(new Date());
+            notification.setGroupId(group);
+            notification.setResult(0);
+            notification.setStatus(0);
+            notification.setReceiveUserId(receiveUser);
+            notification.setSendUserId(sendUser);
+            notificationRepository.save(notification);
+            try{
+                applicationGroupDataS.setOperateId(operateId);
+                applicationGroupDataS.setStatus("success");
+                applicationGroupDataS.setResultCode(0);
+                applicationGroupDataS.setData(new Object[0]);
+                applicationGroupDataS.setGroupId(applicationEnterGroupC.getGroupId());
+                applicationGroupDataS.setInformation("发送成功，等待管理员审核");
+                webSocket=new WebSocket(operateId,applicationGroupDataS,null);
                 session.getBasicRemote().sendObject(webSocket);
+
                 //把这个通知即时发送给群主
                 OnlineUser onlineUser=onlineUserManager.getOnlineUserByUuid(receiveUser.getUuid());
-                if(onlineUser==null){
+                if(onlineUser==null) {
                     return;
                 }
                 Session receiverSession=onlineUser.getSession();
@@ -1264,28 +1252,63 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 List<SendNotification> data=new ArrayList<>();
                 SendNotification s=new SendNotification();
                 s.setSendUserName(sendUser.getName());
+                s.setNoticeId(notification.getId());
                 s.setGroupName(group.getName());
-                s.setStatus(notif.getStatus());
+                s.setStatus(notification.getStatus());
                 s.setSendUuid(sendUser.getUuid());
                 s.setUserUuid(receiveUser.getUuid());
                 s.setGroupId(group.getUuid());
-                s.setNoticeContent(notif.getContent());
+                s.setNoticeContent(notification.getContent());
                 s.setGroupPortrait(group.getPortarit());
-                s.setNoticeTime(notif.getCreateTime().getTime());
+                s.setNoticeTime(notification.getCreateTime().getTime());
                 data.add(s);
                 n.setData(data);
                 n.setOperateId(WebSocketOperateUtil.Send_Notifications);
-                n.setStatus("success");
                 webSocket=new WebSocket(WebSocketOperateUtil.Send_Notifications,n,null);
                 receiverSession.getBasicRemote().sendObject(webSocket);
             } catch (IOException e) {
                 e.printStackTrace();
+                webSocket.clear();
             } catch (EncodeException e) {
                 e.printStackTrace();
             }
+        }else if(receiveUser!=null&&sendUser!=null&&receiveUser.getUuid().equals(sendUser.getUuid())){
+            try {
+                applicationGroupDataS.setOperateId(operateId);
+                applicationGroupDataS.setStatus("fail");
+                applicationGroupDataS.setResultCode(-1);
+                applicationGroupDataS.setData(new Object[0]);
+                applicationGroupDataS.setGroupId(applicationEnterGroupC.getGroupId());
+                applicationGroupDataS.setInformation("你已是该群成员，不用在申请！");
+                webSocket=new WebSocket(operateId,applicationGroupDataS,null);
+                session.getBasicRemote().sendObject(webSocket);
+            } catch (IOException e) {
+                e.printStackTrace();
+                webSocket.clear();
+            } catch (EncodeException e) {
+                e.printStackTrace();
+            }
+            return;
+        }else{
+            try {
+                applicationGroupDataS.setOperateId(operateId);
+                applicationGroupDataS.setStatus("fail");
+                applicationGroupDataS.setResultCode(-1);
+                applicationGroupDataS.setData(new Object[0]);
+                applicationGroupDataS.setGroupId(applicationEnterGroupC.getGroupId());
+                applicationGroupDataS.setInformation("申请失败");
+                webSocket=new WebSocket(operateId,applicationGroupDataS,null);
+                session.getBasicRemote().sendObject(webSocket);
+            } catch (IOException e) {
+                e.printStackTrace();
+                webSocket.clear();
+            } catch (EncodeException e) {
+                e.printStackTrace();
+            }
+            return;
         }
-
     }
+
     /*
         接受用户加入群聊
      */
@@ -1293,21 +1316,21 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         UserAcceptAndRefuseEnterGroupC userAcceptEnterGroup=(UserAcceptAndRefuseEnterGroupC) webSocket.getIMessage();
         System.out.println("接受加入群聊的群号："+userAcceptEnterGroup.getGroupUuid());
         System.out.println("加入群聊的结果:"+userAcceptEnterGroup.getResult());
+        System.out.println("用户处理的通知的编码:"+userAcceptEnterGroup.getNoticeId());
         AcceptAndRefuseDataS data=new AcceptAndRefuseDataS();
         AcceptAndRefuseInfo info=new AcceptAndRefuseInfo();
         Session session=webSocket.getSession();
         int operateId=webSocket.getOperateId();
         Group group=groupRepository.findByUuid(userAcceptEnterGroup.getGroupUuid());//判断是否存在这样的一个群
         GroupUser groupRole=groupUserRepository.findByUserAndGroup(group.getCreater(),group);
-        System.out.println("groupRole="+groupRole);
-        if(groupRole.getRole()==0&&group!=null){//判断一下是否是群主,并且存在这样的一个群
-            User receiver=userRepository.findByUuid(userAcceptEnterGroup.getSendUserUuid());
-            User sender=userRepository.findByUuid(userAcceptEnterGroup.getRequestUserUuid());
-            if(userAcceptEnterGroup.getResult().equals("accept")||receiver.getUuid().equals(sender.getUuid())){ //判断一下是否同意加入群聊,并且接收方和发送方不能是同一个人
+        if(groupRole.getRole()==0&&group!=null&&userAcceptEnterGroup.getNoticeId()!=0){//判断一下是否是群主,并且存在这样的一个群
+            if(userAcceptEnterGroup.getResult().equals("accept")){ //判断一下是否同意加入群聊,并且接收方和发送方不能是同一个人
+                User receiver=userRepository.findByUuid(userAcceptEnterGroup.getSendUserUuid());
+                User sender=userRepository.findByUuid(userAcceptEnterGroup.getRequestUserUuid());
                 User user=userRepository.findByUuid(userAcceptEnterGroup.getRequestUserUuid());//判断一下是否存在这样一个用户
                 GroupUser groupUser=groupUserRepository.findByUserAndGroup(user,group);//判断一下是否已是成员
                 System.out.println("groupUser="+groupUser);
-                if(groupUser==null){//如果存在这样的一个群，且没有这个人，群主就把这个人加到这个群里面
+                if(groupUser==null&&receiver!=null&&sender!=null&&!receiver.getUuid().equals(sender.getUuid())){//如果存在这样的一个群，且没有这个人，群主就把这个人加到这个群里面
                     GroupUser newGroupUser=new GroupUser();
                     newGroupUser.setGroup(group);
                     newGroupUser.setUser(user);
@@ -1317,8 +1340,12 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                     newGroupUser.setStatus((short) 1);
                     groupUserRepository.save(newGroupUser);
 
-                    //成功加入群聊之后，改变通知表的状态，
-                    Notification notification=notificationRepository.findByReceiveUserIdAndSendUserIdAndGroupId(receiver,sender,group);
+                    //成功加入群聊之后，改变通知表的状态
+                    //Notification notification=notificationRepository.findByReceiveUserIdAndSendUserId(receiver,sender);
+                    Notification notification=notificationRepository.findById( userAcceptEnterGroup.getNoticeId()).orElse(null);
+                    if(notification==null){
+                        return;
+                    }
                     System.out.println("receiver="+receiver.getUuid()+"\tsender="+sender.getUuid()+"\tnotification="+notification);
                     notification.setStatus(1);//1表示已读
                     notification.setResult(1);//1表示同意
@@ -1330,44 +1357,23 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                     data.setOperateId(operateId);
                     data.setStatus("success");
                     data.setInformation("成功加入群聊");
-                    info.setGroupUuid(userAcceptEnterGroup.getGroupUuid());
-                    info.setRequestUserUuid(userAcceptEnterGroup.getRequestUserUuid());
+                    info.setGroup_uuid(userAcceptEnterGroup.getGroupUuid());
+                    info.setRequest_user_uuid(userAcceptEnterGroup.getRequestUserUuid());
                     data.setData(info);
                     webSocket=new WebSocket(operateId,data,null);
-
-                    sendMessageWithWebSocket(session,webSocket);
-                    //给申请加入群聊的人发送通知
-                    OnlineUser onlineUser =  onlineUserManager.getOnlineUserByUuid(userAcceptEnterGroup.getRequestUserUuid());
-                    if(onlineUser != null){
-                        AcceptNotification acceptNotification = new AcceptNotification();
-                        acceptNotification.setOperateId(operateId);
-                        acceptNotification.setGroupNumber(group.getUuid());
-                        acceptNotification.setGroupName(group.getName());
-                        //'accpetd'表示申请者已经被接受
-                        acceptNotification.setStatus("accepted");
-                        acceptNotification.setGroupPortarit(group.getPortarit());
-                        webSocket=new WebSocket(operateId,acceptNotification,null);
-                        sendMessageWithWebSocket(onlineUser.getSession(),webSocket);
+                    try {
+                        session.getBasicRemote().sendObject(webSocket);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (EncodeException e) {
+                        e.printStackTrace();
                     }
                     webSocket.clear();
-                }else{
+                }else if(groupUser!=null&&receiver!=null&&sender!=null&&!receiver.getUuid().equals(sender.getUuid())){
                     data.setOperateId(operateId);
-                    data.setStatus("success");
-                    info.setGroupUuid(userAcceptEnterGroup.getGroupUuid());
-                    info.setRequestUserUuid(userAcceptEnterGroup.getRequestUserUuid());
+                    data.setStatus("fail");
                     data.setData(info);
                     data.setInformation("你已是该成员");
-
-
-                    Notification notification=notificationRepository.findByReceiveUserIdAndSendUserIdAndGroupId(receiver,sender,group);//根据群号、发送方和接收方查找通知表
-                    System.out.println("receiver="+receiver.getUuid()+"\tsender="+sender.getUuid()+"\tnotification="+notification);
-                    notification.setStatus(1);//1表示已读
-                    notification.setResult(1);//1表示同意
-                    notification.setContent("同意加入群聊");
-                    notificationRepository.saveAndFlush(notification);
-
-
-
                     try {
                         webSocket=new WebSocket(operateId,data,null);
                         session.getBasicRemote().sendObject(webSocket);
@@ -1378,29 +1384,27 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                     }
                     webSocket.clear();
                     return;
+                }else{
+                    data.setOperateId(operateId);
+                    data.setStatus("fail");
+                    data.setData(info);
+                    data.setInformation("加入群聊失败");
+                    try {
+                        webSocket=new WebSocket(operateId,data,null);
+                        session.getBasicRemote().sendObject(webSocket);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (EncodeException e) {
+                        e.printStackTrace();
+                        webSocket.clear();
+                    }
+                    webSocket.clear();
+                    return;
                 }
-            }else{
-                data.setOperateId(operateId);
-                data.setStatus("fail");
-                data.setInformation("传入参数有误");
-                info.setGroupUuid(userAcceptEnterGroup.getGroupUuid());
-                info.setRequestUserUuid(userAcceptEnterGroup.getRequestUserUuid());
-                data.setData(info);
-                webSocket=new WebSocket(operateId,data,null);
-                try {
-                    session.getBasicRemote().sendObject(webSocket);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (EncodeException e) {
-                    e.printStackTrace();
-                }
-                webSocket.clear();
             }
         }else{
             data.setOperateId(operateId);
             data.setStatus("fail");
-            info.setGroupUuid(userAcceptEnterGroup.getGroupUuid());
-            info.setRequestUserUuid(userAcceptEnterGroup.getRequestUserUuid());
             data.setInformation("你不是群主，没有该权限，违法操作，加入群聊失败！");
             data.setData(info);
             try {
@@ -1419,35 +1423,66 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
      */
     public void refuseEnterGroup(WebSocket webSocket){
         System.out.println("拒绝加入群聊");
-        UserAcceptAndRefuseEnterGroupC acceptAndRefuseEnterGroup=(UserAcceptAndRefuseEnterGroupC) webSocket.getIMessage();
-        int operateId=acceptAndRefuseEnterGroup.getOperateId();
+        UserAcceptAndRefuseEnterGroupC refuseEnterGroup=(UserAcceptAndRefuseEnterGroupC) webSocket.getIMessage();
+        int operateId=refuseEnterGroup.getOperateId();
         Session session=webSocket.getSession();
-        String result=acceptAndRefuseEnterGroup.getResult();
+        String result=refuseEnterGroup.getResult();
         AcceptAndRefuseDataS acceptAndRefuseData=new AcceptAndRefuseDataS();
         AcceptAndRefuseInfo acceptAndRefuseInfo=new AcceptAndRefuseInfo();
-        Group group=groupRepository.findByUuid(acceptAndRefuseEnterGroup.getGroupUuid());
-        System.out.println("根据群号查看是否存在这个群："+group);
+        Group group=groupRepository.findByUuid(refuseEnterGroup.getGroupUuid());
         GroupUser groupRole=groupUserRepository.findByUserAndGroup(group.getCreater(),group);
-        System.out.println("根据群成员表查看是否存在这个人："+groupRole);
-        if(groupRole.getRole()==0&&group!=null){
-            if(result.equals("refuse")){
+        System.out.println("用户处理通知的编号："+refuseEnterGroup.getNoticeId());
+        if(groupRole.getRole()==0&&group!=null&&refuseEnterGroup.getNoticeId()!=0){
+            User receive=userRepository.findByUuid(refuseEnterGroup.getSendUserUuid());
+            User sender=userRepository.findByUuid(refuseEnterGroup.getRequestUserUuid());
+            if(result.equals("refuse")&&!receive.getUuid().equals(sender.getUuid())){//发送方与接收方不能是同一个人
                 //拒绝用户加入群之后，改变通知表的状态
-                User receive=userRepository.findByUuid(acceptAndRefuseEnterGroup.getSendUserUuid());
-                User sender=userRepository.findByUuid(acceptAndRefuseEnterGroup.getRequestUserUuid());
-                Notification notification=notificationRepository.findByReceiveUserIdAndSendUserId(receive,sender);
+
+                //Notification notification=notificationRepository.findByReceiveUserIdAndSendUserId(receive,sender);
+                Notification notification=notificationRepository.findById(refuseEnterGroup.getNoticeId()).orElse(null);
+                System.out.println("查看通知是否为空："+notification);
+                if(notification==null){
+                    return;
+                }
                 notification.setStatus(1);//已读
                 notification.setResult(2);//拒绝
                 notification.setContent("拒绝用户加入群聊");
                 notificationRepository.saveAndFlush(notification);
                 acceptAndRefuseData.setOperateId(operateId);
-                acceptAndRefuseData.setStatus("success");
                 acceptAndRefuseData.setInformation("已成功拒绝用户加入群聊");
-                acceptAndRefuseInfo.setGroupUuid(acceptAndRefuseEnterGroup.getGroupUuid());
-                acceptAndRefuseInfo.setRequestUserUuid(acceptAndRefuseEnterGroup.getRequestUserUuid());
+                acceptAndRefuseInfo.setGroup_uuid(refuseEnterGroup.getGroupUuid());
+                acceptAndRefuseInfo.setRequest_user_uuid(refuseEnterGroup.getRequestUserUuid());
                 acceptAndRefuseData.setData(acceptAndRefuseInfo);
                 webSocket=new WebSocket(operateId,acceptAndRefuseData,null);
                 try {
                     session.getBasicRemote().sendObject(webSocket);
+
+
+                    //如果群主拒绝了，申请方应该受到通知，已被群主拒绝了
+                    OnlineUser onlineUser=onlineUserManager.getOnlineUserByUuid(refuseEnterGroup.getRequestUserUuid());
+                    if (onlineUser==null){
+                        return;
+                    }
+                    Session receiverSession=onlineUser.getSession();
+                    SendNotificationS notificationS=new SendNotificationS();
+                    SendNotification n=new SendNotification();
+                    notificationS.setOperateId(operateId);
+                    notificationS.setStatus("success");
+                    List<SendNotification> data=new ArrayList<>();
+                    n.setUserUuid(onlineUser.getData().getUserName());
+                    n.setSendUuid(refuseEnterGroup.getSendUserUuid());
+                    n.setSendUserName(receive.getName());
+                    n.setNoticeContent(notification.getContent());
+                    n.setGroupName(group.getName());
+                    n.setGroupPortrait(group.getPortarit());
+                    n.setStatus(notification.getStatus());
+                    n.setGroupId(group.getUuid());
+                    n.setNoticeId(refuseEnterGroup.getNoticeId());
+                    n.setGroupId(refuseEnterGroup.getGroupUuid());
+                    data.add(n);
+                    notificationS.setData(data);
+                    webSocket=new WebSocket(operateId,notificationS,null);
+                    receiverSession.getBasicRemote().sendObject(webSocket);
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (EncodeException e) {
@@ -1458,7 +1493,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 acceptAndRefuseData.setOperateId(operateId);
                 acceptAndRefuseData.setInformation("未知性错误");
                 acceptAndRefuseData.setData(acceptAndRefuseInfo);
-                acceptAndRefuseData.setStatus("fail");
                 webSocket=new WebSocket(operateId,acceptAndRefuseData,null);
                 try {
                     session.getBasicRemote().sendObject(webSocket);
@@ -1469,21 +1503,8 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 }
                 webSocket.clear();
             }
-        }else{
-            acceptAndRefuseData.setStatus("fail");
-            acceptAndRefuseData.setInformation("你不是群主，没有该权限，存在违法操作，拒绝加入群聊失败！");
-            acceptAndRefuseData.setOperateId(operateId);
-            acceptAndRefuseData.setData(acceptAndRefuseInfo);
-            webSocket=new WebSocket(operateId,acceptAndRefuseData,null);
-            try {
-                session.getBasicRemote().sendObject(webSocket);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (EncodeException e) {
-                e.printStackTrace();
-            }
-            webSocket.clear();
         }
+
     }
     /*
         管理群成员
@@ -1499,9 +1520,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         System.out.println("group="+deleteGroupNumber.getGroup_id()+"\tuser="+user.getUuid());
         DeleteDataS deleteDataS=new DeleteDataS();
         DeleteInfo deleteInfo=new DeleteInfo();
-
-
-
         if(group!=null&&user!=null){
             GroupUser groupUser=groupUserRepository.findByUserAndGroup(user,group);
             if(groupUser.getRole()==0){//如果是群主，就把这样的一个用户删除
@@ -1972,8 +1990,8 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         notificationRepository.save(notification);
     }
     /*
-        保存用户位置信息
-     */
+       保存用户位置信息
+    */
     public void  saveUserLocationInfo(WebSocket webSocket){
         System.out.println("保存用户位置信息");
         UserLocationC userLocationC=(UserLocationC) webSocket.getIMessage();
@@ -1989,32 +2007,29 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             return;
         }
         UserGps userGps=userGpsRepository.findByUser(user);
-        UserGps gps=new UserGps();
-        if(userGps==null){
-            UserGps userGpsInfo=new UserGps();
+        UserGps userGpsInfo=new UserGps();
+        if(userGps==null){//第一次保存位置信息时
             userGpsInfo.setUser(user);
             userGpsInfo.setLatitude(userLocationC.getLatitude()+"");
             userGpsInfo.setLocationDate(new Date());
             userGpsInfo.setLonggitude(userLocationC.getLongitude()+"");
-            userGpsRepository.save(userGpsInfo);
             data.setUuid(user.getUuid());
             data.setLatitude(userLocationC.getLatitude()+"");
             data.setLongitude(userLocationC.getLongitude()+"");
-            gps.setUser(user);
-            gps.setLatitude(userLocationC.getLatitude()+"");
-            gps.setLonggitude(userLocationC.getLongitude()+"");
-        }else{
+            userGpsRepository.save(userGpsInfo);
+        }else{//其他的就是修改用户的位置信息
             userGps.setUser(user);
             userGps.setLatitude(userLocationC.getLatitude()+"");
             userGps.setLocationDate(new Date());
             userGps.setLonggitude(userLocationC.getLongitude()+"");
-            userGpsRepository.saveAndFlush(userGps);
             data.setUuid(user.getUuid());
             data.setLatitude(userLocationC.getLatitude()+"");
             data.setLongitude(userLocationC.getLongitude()+"");
-            gps.setUser(user);
-            gps.setLatitude(userLocationC.getLatitude()+"");
-            gps.setLonggitude(userLocationC.getLongitude()+"");
+            userGpsInfo.setUser(user);
+            userGpsInfo.setLatitude(userLocationC.getLatitude()+"");
+            userGpsInfo.setLocationDate(new Date());
+            userGpsInfo.setLonggitude(userLocationC.getLongitude()+"");
+            userGpsRepository.saveAndFlush(userGps);
         }
 
 
@@ -2034,9 +2049,13 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 if(currentOnlineUser==null){
                     continue;
                 }
-                System.out.println("用户是否在线："+checkUserIsOnline(currentOnlineUser.getSession().getId(),currentUuid));
-                m.put(groupUser.getGroup().getUuid(),gps);
-                currentOnlineUser.addWaitToSendUserLocation(m);
+                System.out.println("用户的群号："+groupUser.getGroup().getUuid());
+                System.out.println("当前用户："+currentUuid+"\t转发者："+userLocationC.getUuid()+"\t"+!currentUuid.equals(userLocationC.getUuid()));
+                if(!m.containsKey(group.getUuid())&&!currentUuid.equals(userLocationC.getUuid())){
+                    System.out.println("转发的用户与群号："+groupUser.getGroup().getUuid()+"\t用户"+currentOnlineUser.getData().getUuid());
+                    m.put(group.getUuid(),userGpsInfo);
+                    currentOnlineUser.addWaitToSendUserLocation(m);
+                }
             }
         }
         SendUserLocationS userLocationS=new SendUserLocationS();
@@ -2053,12 +2072,12 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
      */
     public void publicAnoun(WebSocket webSocket){
         System.out.println("发布群公告");
-        UserAnoun userAnoun=(UserAnoun) webSocket.getIMessage();
-        int operateId=userAnoun.getOperateId();
+        UserAnounC userAnounC =(UserAnounC) webSocket.getIMessage();
+        int operateId= userAnounC.getOperateId();
         Session session=webSocket.getSession();
-        System.out.println("用户uuid："+userAnoun.getUuid()+"\t群号："+userAnoun.getGroupId());
-        User user=userRepository.findById(userAnoun.getUuid()).orElse(null);
-        Group group=groupRepository.findByUuidAndCreater(userAnoun.getGroupId(),user);
+        System.out.println("用户uuid："+ userAnounC.getUuid()+"\t群号："+ userAnounC.getGroupId());
+        User user=userRepository.findById(userAnounC.getUuid()).orElse(null);
+        Group group=groupRepository.findByUuidAndCreater(userAnounC.getGroupId(),user);
         System.out.println("group="+group+"\tuser="+user);
         AnouS anouS=new AnouS();
         if(user==null||group==null){
@@ -2077,7 +2096,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             webSocket.clear();
             return;
         }
-        group.setAnoun(userAnoun.getAnoun());
+        group.setAnoun(userAnounC.getAnoun());
         groupRepository.saveAndFlush(group);
         anouS.setOperateId(operateId);
         anouS.setGroupId(group.getUuid());

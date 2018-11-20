@@ -17,8 +17,6 @@ public interface GroupRepository extends JpaRepository<Group,String>,JpaSpecific
     @Query("select g from Group g where g.uuid in (select gu.group from GroupUser gu where gu.user.uuid = ?1)")
     public List<Group> getGroupByUuid(String user);
 
-
-
     public Group findByUuid(String uuid);
 
     //根据用户给的群号模糊查找

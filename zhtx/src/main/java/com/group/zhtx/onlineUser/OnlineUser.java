@@ -53,6 +53,7 @@ public class OnlineUser implements IAsyncCycle{
 
     //群存储库
     private GroupRepository groupRepository;
+
     /*
         在线用户所在的线程和优先级
      */
@@ -62,12 +63,10 @@ public class OnlineUser implements IAsyncCycle{
 
     private ArrayList<Message> currentsendMessages = new ArrayList<>();
 
-
     //等待发送位置信息
     private LinkedBlockingDeque<Map<String,UserGps>>waitToSendLocationInfo=new LinkedBlockingDeque<>();
     //当前要发送的位置信息
-    private ArrayList<Map<String,UserGps>>currentSendLocationInfo=new ArrayList<>();
-
+    private ArrayList<Map<String, UserGps>>currentSendLocationInfo=new ArrayList<>();
 
     private OnlineUserManager onlineUserManager;
 
@@ -104,24 +103,28 @@ public class OnlineUser implements IAsyncCycle{
         }
 
         //发送组消息
-       // sendGroupMessage(groupsMessage);
+        sendGroupMessage(groupsMessage);
 
         List<Notification> notifications = notificationRepository.findUnReceiveNotificationByReceiveUser(userUuid);
         SendNotificationS sendNotificationS = new SendNotificationS();
-        sendNotificationS.setOperateId(100);
+        sendNotificationS.setOperateId(WebSocketOperateUtil.Send_Notifications);
         if(notifications.size() >0){
             sendNotificationS.setStatus("发送通知成功");
             for(Notification n : notifications){
                 User user = n.getSendUserId();
                 if(user != null){
                     SendNotification sendNotification = new SendNotification();
-                    sendNotification.setNoticeContent(n.content);
-                    sendNotification.setGroupId(n.groupId.getUuid());
-                    sendNotification.setGroupName(n.groupId.getName());
-                    sendNotification.setSendUserName(n.sendUserId.getName());
+
                     sendNotification.setUserUuid(n.receiveUserId.getUuid());
-                    sendNotification.setStatus(n.status);
                     sendNotification.setSendUuid(n.sendUserId.getUuid());
+                    sendNotification.setSendUserName(n.getSendUserId().getName());
+                    sendNotification.setNoticeContent(n.content);
+                    sendNotification.setNoticeTime(n.getCreateTime().getTime());
+                    sendNotification.setGroupName(n.getGroupId().getName());
+                    sendNotification.setStatus(n.getStatus());
+                    sendNotification.setGroupId(n.getGroupId().getUuid());
+                    sendNotification.setNoticeId(n.getId());
+                    sendNotification.setGroupId(n.groupId.getUuid());
                     sendNotification.setGroupPortrait(n.getSendUserId().getPortrait());
                     sendNotificationS.addNotification(sendNotification);
                 }
@@ -130,12 +133,8 @@ public class OnlineUser implements IAsyncCycle{
             sendNotificationS.setStatus("没任何通知");
         }
         //发送通知
-        WebSocket webSocket = new WebSocket(100, sendNotificationS,null);
+        WebSocket webSocket = new WebSocket(WebSocketOperateUtil.Send_Notifications, sendNotificationS,null);
         sendMessage(webSocket);
-
-
-        //转发用户的位置信息给其他人
-
     }
 
     @Override
@@ -150,8 +149,6 @@ public class OnlineUser implements IAsyncCycle{
             //发送群消息
             sendGroupMessage(groupMessages);
         }
-
-
         //获取当前要发送的位置信息
         ArrayList<Map<String,UserGps>>gps=getCurrentSendLocationInfo();
         if(gps.size()!=0){
@@ -159,8 +156,10 @@ public class OnlineUser implements IAsyncCycle{
             System.out.println("转发位置信息的长度："+gps.size());
             Map<String,UserGps>groupLocation=getSendGroupLocationMap(gps);
             System.out.println(groupLocation.keySet().toArray());
+            System.out.println("keySet="+groupLocation.keySet());
             sendGroupLocation(groupLocation);
         }
+
     }
 
     @Override
@@ -193,8 +192,8 @@ public class OnlineUser implements IAsyncCycle{
     }
 
     /*
-        添加等待发送用户的位置信息
-     */
+          添加等待发送用户的位置信息
+       */
     public boolean addWaitToSendUserLocation(Map<String,UserGps> userGps){
         try {
             waitToSendLocationInfo.put(userGps);
@@ -204,6 +203,7 @@ public class OnlineUser implements IAsyncCycle{
         }
         return false;
     }
+
     /*
         获取需要发送的消息
      */
@@ -215,8 +215,8 @@ public class OnlineUser implements IAsyncCycle{
     }
 
     /*
-        获取需要发送的位置信息
-     */
+           获取需要发送的位置信息
+        */
     public ArrayList<Map<String,UserGps>>getCurrentSendLocationInfo(){
         currentSendLocationInfo.clear();
         waitToSendLocationInfo.drainTo(currentSendLocationInfo);
@@ -263,7 +263,6 @@ public class OnlineUser implements IAsyncCycle{
         }
     }
 
-
     /*
         转发位置信息
      */
@@ -289,11 +288,12 @@ public class OnlineUser implements IAsyncCycle{
      */
     public void sendGroupGps(SendGroupLocationS groupLocationS,int groupId,UserGps gps){
         SendGroupLocationData sendGroupLocationData=new SendGroupLocationData();
-        sendGroupLocationData.setGroupId(groupId);
         sendGroupLocationData.setLatitude(gps.getLatitude());
+        sendGroupLocationData.setGroupId(groupId);
         sendGroupLocationData.setLongitude(gps.getLonggitude());
         sendGroupLocationData.setUserName(gps.getUser().getName());
-        groupLocationS.setData(sendGroupLocationData);
+        sendGroupLocationData.setUserId(gps.getUser().getUuid());
+        groupLocationS.addSendData(sendGroupLocationData);
     }
 
     /*
@@ -313,6 +313,7 @@ public class OnlineUser implements IAsyncCycle{
             e.printStackTrace();
         }
     }
+
     /*
         分类发给群组的消息集合
         key:GroupId
@@ -337,27 +338,20 @@ public class OnlineUser implements IAsyncCycle{
         }
         return messageMap;
     }
-
     /*
-        分类发给群组的位置信息集合
-     */
+            分类发给群组的位置信息集合
+         */
     public Map<String ,UserGps>getSendGroupLocationMap(ArrayList<Map<String,UserGps>> gps){
         Map <String,UserGps> gpsMap=new HashMap<>();
-        Map <String,UserGps> g=gps.get(0);
-        Object [] keys=g.keySet().toArray();
-        for(Object key:keys){
-           List<Group> groups=groupRepository.getGroupByUuid(gps.get(0).get(key).getUser().getUuid());
-           for(int i=0; i<groups.size();i++){
-               String groupId=groups.get(i).getUuid();
-               if(!gpsMap.containsKey(groupId)){
-                   UserGps gpsList=new UserGps();
-                   //gpsMap.put(groupId,gps.get(0));
-                   //gpsList.add(userGps);
-                   continue;
-               }
-               UserGps userGpsList=gpsMap.get(groupId);
-               //userGpsList.add(userGps);
-           }
+        for(Map <String,UserGps> key:gps) {
+            Object[] b = key.keySet().toArray();
+            System.out.println("key.keySet()=" + key.keySet());
+            for (Object obj : b) {
+                if (!gpsMap.containsKey(obj)) {
+                    gpsMap.put((String) obj, key.get(obj));
+                    continue;
+                }
+            }
         }
         return gpsMap;
     }

@@ -27,7 +27,7 @@ public interface GroupUserRepository extends JpaRepository<GroupUser,Long> {
     @Query("select gu.group from GroupUser gu where gu.user.uuid =?1")
     public List<Group> getGroupsByUserUuid(String userUuid);
 
-    public List<GroupUser>findGroupUsersByUser(User user);
+
     /*
         根据用户uuid查找所拥有的群，并排序
      */

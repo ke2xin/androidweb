@@ -8,7 +8,6 @@ public class DeleteDataS implements  IMessage {
     private int operateId;
     private String status;
     private DeleteInfo data;
-    private String uuid;
     private String information;
 
     public int getOperateId() {
@@ -33,14 +32,6 @@ public class DeleteDataS implements  IMessage {
 
     public void setData(DeleteInfo data) {
         this.data = data;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     public String getInformation() {

@@ -1,30 +1,16 @@
 package com.group.zhtx.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class IndexController {
-
-    @GetMapping("/index")
+    @RequestMapping("/t")
     public String toIndex(){
-        return "chatIndex";
+        return "index";
     }
-    @GetMapping("/register")
+    @RequestMapping("/i")
     public String toRegister(){
-        return "register";
+        return "testRegister";
     }
-<<<<<<< HEAD
-
-    @GetMapping("/login")
-    public String toLogin(){
-        return "login";
-    }
-
-    @GetMapping("/updataPassword")
-    public String toUpdataPassword(){
-        return "updataPassword";
-    }
-=======
->>>>>>> parent of accf4a9... 首页
 }

@@ -6,18 +6,14 @@ import java.io.Serializable;
 
 public class UserLocationInfoC implements Serializable, IMessage {
     private int operateId;
-    private String group_id;
+    private String groupId;
 
     public UserLocationInfoC() {
     }
 
-<<<<<<< HEAD
     public UserLocationInfoC(int operateId, String groupId) {
-=======
-    public UserLocationInfoC(int operateId, String group_id) {
->>>>>>> parent of accf4a9... 首页
         this.operateId = operateId;
-        this.group_id = group_id;
+        this.groupId = groupId;
     }
 
     public int getOperateId() {
@@ -28,11 +24,11 @@ public class UserLocationInfoC implements Serializable, IMessage {
         this.operateId = operateId;
     }
 
-    public String getGroup_id() {
-        return group_id;
+    public String getGroupId() {
+        return groupId;
     }
 
-    public void setGroup_id(String group_id) {
-        this.group_id = group_id;
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 }

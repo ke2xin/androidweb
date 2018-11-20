@@ -7,20 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserLocationS implements IMessage {
-    private String operateId;
+    private int operateId;
     private String status;
     private List<UserLocationGroup>data=new ArrayList<>();
-<<<<<<< HEAD
-    private String information;
 
     public int getOperateId() {
-=======
-    public String getOperateId() {
->>>>>>> parent of accf4a9... 首页
         return operateId;
     }
 
-    public void setOperateId(String operateId) {
+    public void setOperateId(int operateId) {
         this.operateId = operateId;
     }
 
@@ -38,13 +33,5 @@ public class UserLocationS implements IMessage {
 
     public void setData(List<UserLocationGroup> data) {
         this.data = data;
-    }
-
-    public String getInformation() {
-        return information;
-    }
-
-    public void setInformation(String information) {
-        this.information = information;
     }
 }
