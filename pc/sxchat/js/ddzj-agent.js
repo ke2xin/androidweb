@@ -229,7 +229,7 @@
 			obj.userQianming = qianming;
 			obj.userPhone = phone;
 			obj.userEmail = email;
-
+			
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);
 		}

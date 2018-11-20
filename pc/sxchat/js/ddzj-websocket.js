@@ -97,15 +97,17 @@
 		}
 		
 		
-		this.onClose = function(event){
+		this.onClose = function(e){
 			this.isconnected = false;
 			//分发消息
+			console.log(e);
 			this.dispatchEventWith(webSocketConfig.CLOSE);
 		}
 		
 		
-		this.onError = function(event){
-			
+		this.onError = function(e){
+			console.log("异常关闭");
+			console.log(e);
 		}
 		
 		

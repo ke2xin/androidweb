@@ -18,6 +18,7 @@
 		this.nowChatGroupObj = null;
 		//自己的数据
 		this.owner = null;
+		this.currentFile = null;
 		this.webSocketAgent = null;
 		//时间截集合
 		this.timeStamp = [];
@@ -96,7 +97,49 @@
 			$("body").on("click","#chatClose",function(){
 				$("#chatWindow").attr("style","display: none;");
 			});
+			
+			this.onChangeImageClickListener(this,this.onChangeImage);
 		}
+		
+		this.onChangeImageClickListener = function(obj,cal){
+			var func = function(event){
+				cal.call(obj,event);
+			}
+			$("body").on("click",".changeImage",func);
+		}
+		
+		this.onChangeImage = function(){
+			var fileInput = $(document.createElement("input"));
+			this.currentFile = fileInput;
+			fileInput.attr("type","file");
+			fileInput.css("display","none");
+			fileInput.click();
+			fileInput.on("change",function(){
+				var currentImage = this.files[0];
+				var imgSizeBlock = 1024 * 1024 * 4;
+				
+				var imageType = /^image\//;
+				
+				if (!imageType.test(currentImage.type)) {
+			        alert('请选择图片');
+			        return;
+			    }
+				
+				var unUsed = currentImage.size > imgSizeBlock;
+				if(unUsed){
+					alert("图片大于4M无法上传.");
+					return;
+				}
+				
+				var reader = new FileReader();
+				reader.onload = function(e){
+					$(".changeImage").attr("src",e.target.result);
+				}
+				
+				reader.readAsDataURL(currentImage);
+			});
+		}
+
 		
 		//连接操作
 		this.toConnect = function(event){
@@ -110,7 +153,7 @@
 			alert("连接服务器失败了啊");
 			this.webSocketClient = null;
 			this.isConnect =false;
-			window.location = "login.html";
+			//window.location = "login.html";
 		}
 
 
@@ -496,7 +539,9 @@
 		this.onMessageByLookOwnData = function(event){
 			var data = event.data;
 			var status = $.trim(data.status);
-			console.log(data);
+			//设置头像为空
+			this.currentFile = null;
+			
 			if(status == "" || status === undefined || status === null || status == "fail"){
 				alert("获取我的资料失败");
 				
@@ -560,9 +605,20 @@
 			}
 
 			var userId = window.user.userName;
-			this.webSocketAgent.onSaveOwnData(userId,"",name,sign,phone,email);
-			$("input#dataISave").attr("disabled",true);
-			$("input#dataISave").attr("value","修改中...");
+			var reader = new FileReader();
+			var filee = this.currentFile.context.files[0]
+			reader.readAsBinaryString(filee);
+			var binaryString;
+			var agent = this.webSocketAgent;
+			var ws = this.webSocketClient;
+			reader.onload=function(event){
+				binaryString = event.target.result;
+				
+				agent.onSaveOwnData(userId,binaryString,name,sign,phone,email);
+				$("input#dataISave").attr("disabled",true);
+				$("input#dataISave").attr("value","修改中...");
+			}
+			
 		}
 		
 		

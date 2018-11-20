@@ -26,8 +26,12 @@ public class WebSocketService {
     @OnMessage
     public void onMessage(Session session,WebSocket webSocket){
 
+        if(webSocket == null){
+            logger.error("WebSocket为null");
+            return;
+        }
         if (webSocket.getIMessage() == null){
-            logger.error("WebSocket消息包中Message为null");
+
             return;
         }
 

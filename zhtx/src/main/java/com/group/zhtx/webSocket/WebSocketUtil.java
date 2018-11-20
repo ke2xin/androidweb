@@ -27,7 +27,6 @@ public class WebSocketUtil {
             Charset charset = Charset.forName("utf-8");
             CharsetDecoder decoder = charset.newDecoder();
             CharBuffer charBuffer = decoder.decode(buffer);
-
             return decodeJson(charBuffer);
         } catch (CharacterCodingException e) {
             e.printStackTrace();
