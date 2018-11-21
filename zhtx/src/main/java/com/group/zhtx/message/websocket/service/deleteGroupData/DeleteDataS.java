@@ -7,6 +7,7 @@ import com.group.zhtx.message.IMessage;
 public class DeleteDataS implements  IMessage {
     private int operateId;
     private String status;
+    private String delUuid;
     private DeleteInfo data;
     private String information;
 
@@ -40,5 +41,13 @@ public class DeleteDataS implements  IMessage {
 
     public void setInformation(String information) {
         this.information = information;
+    }
+
+    public String getDelUuid() {
+        return delUuid;
+    }
+
+    public void setDelUuid(String delUuid) {
+        this.delUuid = delUuid;
     }
 }

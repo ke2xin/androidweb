@@ -1,15 +1,13 @@
-package com.group.zhtx.message.websocket.client;
+package com.group.zhtx.message.websocket.service.response;
 
 import com.group.zhtx.message.IMessage;
 
-public class UserSaveGroupDataC implements IMessage {
-
+public class AcceptResponseS implements IMessage {
     private int operateId;
-    private String groupId;
+    private String groupNumber;
     private String groupName;
-    private String groupHobby;
-    private String groupDec;
     private String groupPortrait;
+    private String status;
 
     public int getOperateId() {
         return operateId;
@@ -19,12 +17,12 @@ public class UserSaveGroupDataC implements IMessage {
         this.operateId = operateId;
     }
 
-    public String getGroupId() {
-        return groupId;
+    public String getGroupNumber() {
+        return groupNumber;
     }
 
-    public void setGroupId(String groupId) {
-        this.groupId = groupId;
+    public void setGroupNumber(String groupNumber) {
+        this.groupNumber = groupNumber;
     }
 
     public String getGroupName() {
@@ -35,27 +33,19 @@ public class UserSaveGroupDataC implements IMessage {
         this.groupName = groupName;
     }
 
-    public String getGroupHobby() {
-        return groupHobby;
-    }
-
-    public void setGroupHobby(String groupHobby) {
-        this.groupHobby = groupHobby;
-    }
-
-    public String getGroupDec() {
-        return groupDec;
-    }
-
-    public void setGroupDec(String groupDec) {
-        this.groupDec = groupDec;
-    }
-
     public String getGroupPortrait() {
         return groupPortrait;
     }
 
     public void setGroupPortrait(String groupPortrait) {
         this.groupPortrait = groupPortrait;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

@@ -1,6 +1,6 @@
 package com.group.zhtx.message.websocket.service.telephoneBook;
 
-import com.group.zhtx.util.common.WebSocketOperateUtil;
+
 
 public class RelativeInfo {
     private String userName;

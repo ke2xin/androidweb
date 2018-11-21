@@ -1,6 +1,6 @@
 package com.group.zhtx.message.websocket.service.groupNumberInfo;
 
-import com.group.zhtx.util.common.WebSocketOperateUtil;
+
 
 public class GroupNumberInfo {
     private String userName;
@@ -22,7 +22,7 @@ public class GroupNumberInfo {
     }
 
     public void setUserPortarit(String userPortarit) {
-        this.userPortarit = WebSocketOperateUtil.Portrait_Url+userPortarit;
+        this.userPortarit = userPortarit;
     }
 
     public String getUserEmail() {

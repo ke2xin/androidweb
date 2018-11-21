@@ -1,6 +1,6 @@
 package com.group.zhtx.message.websocket.service.loginMessage;
 
-import com.group.zhtx.util.common.WebSocketOperateUtil;
+
 
 public class UserLoginDataSingal {
 
@@ -16,7 +16,7 @@ public class UserLoginDataSingal {
     }
 
     public void setUserPortrait(String userPortrait) {
-        this.userPortrait = WebSocketOperateUtil.Portrait_Url + userPortrait;
+        this.userPortrait = userPortrait;
     }
 
     public String getUserName() {

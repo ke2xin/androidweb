@@ -46,7 +46,7 @@ public class WebSocketUtil {
         JSONObject jsonObject = JSONObject.fromObject(stringResult);
         int operateId = jsonObject.getInt("operateId");
         IMessage IMessage = MessageFactory.newMessageByOperateCode(operateId,stringResult);
-
+        System.out.println("客户端发来的参数："+stringResult);
         WebSocket webSocket = new WebSocket(operateId, IMessage);
         return webSocket;
     }

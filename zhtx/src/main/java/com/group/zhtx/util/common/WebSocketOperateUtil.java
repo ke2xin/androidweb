@@ -1,8 +1,10 @@
 package com.group.zhtx.util.common;
 
 public class WebSocketOperateUtil {
-
-    public final static String Portrait_Url = "F:\\zhtx\\";
+    //图片的地址
+    public final static String Portrait_Url = "http://172.17.145.24:8080/userPortrait/";
+    //图片的后缀
+    public final static String Portrait_Suffix = ".png";
     //用户登录
     public final static int User_Login_C = 1;
     //用户首页
@@ -29,7 +31,7 @@ public class WebSocketOperateUtil {
 
     public final static int User_Refuse_Enter_Group_C = 12;
 
-    public final static int User_Delete_Group_Number_C = 6666;
+    public final static int User_Delete_Group_Number_C = 13;
 
     //搜索群
     public final static int User_Search_Group_C =14;

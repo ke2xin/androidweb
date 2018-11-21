@@ -1,33 +1,33 @@
 package com.group.zhtx.message.websocket.service.myData;
 
-import com.group.zhtx.util.common.WebSocketOperateUtil;
+
 
 public class MyDataInfo {
-    private String user_portrait;
-    private String user_name;
-    private String user_sign;
+    private String userPortrait;
+    private String userName;
+    private String userSign;
 
-    public String getUser_portrait() {
-        return user_portrait;
+    public String getUserPortrait() {
+        return userPortrait;
     }
 
-    public void setUser_portrait(String user_portrait) {
-        this.user_portrait = WebSocketOperateUtil.Portrait_Url+user_portrait;
+    public void setUserPortrait(String userPortrait) {
+        this.userPortrait = userPortrait;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public String getUser_sign() {
-        return user_sign;
+    public String getUserSign() {
+        return userSign;
     }
 
-    public void setUser_sign(String user_sign) {
-        this.user_sign = user_sign;
+    public void setUserSign(String userSign) {
+        this.userSign = userSign;
     }
 }
