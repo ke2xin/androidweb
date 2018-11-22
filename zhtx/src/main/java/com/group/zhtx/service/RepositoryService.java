@@ -303,6 +303,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         用户登陆
      */
     public void userLogin(WebSocket webSocket){
+        System.out.println("用户登录");
         UserLoginC registerC = (UserLoginC) webSocket.getIMessage();
         Session session = webSocket.getSession();
         String uuid = registerC.getUuid();
@@ -390,16 +391,16 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
 
 
         if(user.getPortrait()==null||user.getPortrait().equals("")){
-            signal.setUserPortrait(user.getPortrait()+"0");
+            signal.setUserPortrait(WebSocketOperateUtil.Portrait_Image);
         }else{
             signal.setUserPortrait(WebSocketOperateUtil.Portrait_Url+user.getPortrait()+WebSocketOperateUtil.Portrait_Suffix);
         }
-        if(user.getSign()==null||user.getPortrait().equals("")){
+        if(user.getSign()==null||user.getSign().equals("")){
             signal.setUserSign(user.getSign()+"0");
         }else{
             signal.setUserSign(user.getSign());
         }
-        if(user.getEmail()==null||user.getPortrait().equals("")){
+        if(user.getEmail()==null||user.getEmail().equals("")){
             signal.setUserEmail(user.getEmail()+"0");
         }else{
             signal.setUserEmail(user.getEmail());
@@ -449,7 +450,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
 
             //设置用户头像
             if(group.getPortarit()==null||group.getPortarit().equals("")){
-                loginGroup.setGroupPortrait(group.getPortarit()+"0");
+                loginGroup.setGroupPortrait(WebSocketOperateUtil.Portrait_Image);
             }else{
                 loginGroup.setGroupPortrait(WebSocketOperateUtil.Portrait_Url+group.getPortarit()+WebSocketOperateUtil.Portrait_Suffix);
             }
@@ -486,7 +487,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         System.out.println("创建群");
 
         //检测用户是否登录
-        if(!checkUserIsOnline(session.getId(),userUuid))return;
+        //if(!checkUserIsOnline(session.getId(),userUuid))return;
 
         //如果申请创建群的用户不存在，直接返回
         User user = userRepository.findById(userUuid).orElse(null);
@@ -544,7 +545,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                     createGroup.setGroupId(group.getUuid());
                     createGroup.setGroupName(group.getName());
                     if(group.getPortarit()==null||group.getPortarit().equals("")){
-                        createGroup.setGroupPortrait(group.getPortarit()+"0");
+                        createGroup.setGroupPortrait(WebSocketOperateUtil.Portrait_Image);
                     }else{
                         createGroup.setGroupPortrait(WebSocketOperateUtil.Portrait_Url+group.getPortarit()+WebSocketOperateUtil.Portrait_Suffix);
                     }
@@ -560,7 +561,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 createGroup.setGroupName(group1.getName());
                 createGroup.setGroupId(group1.getUuid());
                 if(group1.getPortarit()==null||group1.getPortarit().equals("")){
-                    createGroup.setGroupPortrait(group1.getPortarit());
+                    createGroup.setGroupPortrait(WebSocketOperateUtil.Portrait_Image);
                 }else{
                     createGroup.setGroupPortrait(WebSocketOperateUtil.Portrait_Url+group1.getPortarit()+WebSocketOperateUtil.Portrait_Suffix);
                 }
@@ -645,7 +646,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             EnterDataInfo info=new EnterDataInfo();
             System.out.println("user="+user);
             if(user.getPortrait()==null||user.getPortrait().equals("")){
-                info.setUserPortrait(user.getPortrait()+"");
+                info.setUserPortrait(WebSocketOperateUtil.Portrait_Image);
             }else{
                 info.setUserPortrait(WebSocketOperateUtil.Portrait_Url+user.getPortrait()+WebSocketOperateUtil.Portrait_Suffix);
             }
@@ -681,7 +682,8 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         if(!checkUserIsOnline(session.getId(),null))return;
 
         Group group = groupRepository.findById(groupUuid).orElse(null);
-
+        System.out.println("用户的群号："+groupUuid);
+        System.out.println("群号："+group);
         //发给前端的数据实体类
         UserGetGroupDataS data = new UserGetGroupDataS();
 
@@ -702,15 +704,17 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             } catch (EncodeException e) {
                 e.printStackTrace();
             }
-
+            return;
         }
 
 
         data.setOperateId(operateId);
+        System.out.println("群号："+group.getUuid());
+        System.out.println("群名称："+group.getName());
         data.setGroupName(group.getName());
         data.setGroupNumber(group.getUuid());
         if(group.getPortarit()==null||group.getPortarit().equals("")){
-            data.setGroupPortrait(group.getPortarit()+"0");
+            data.setGroupPortrait(WebSocketOperateUtil.Portrait_Image);//给群号给一张默认的图片路径
         }else{
             data.setGroupPortrait(WebSocketOperateUtil.Portrait_Url+group.getPortarit()+WebSocketOperateUtil.Portrait_Suffix);
         }
@@ -723,9 +727,9 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             member.setGroupUserName(u.getName());
             String portrait=u.getPortrait();
             if(portrait==null||portrait.equals("")){
-                member.setGroupUserPortrait(portrait+"0");
+                member.setGroupUserPortrait(WebSocketOperateUtil.Portrait_Image);
             }else{
-                member.setGroupUserPortrait(portrait);
+                member.setGroupUserPortrait(WebSocketOperateUtil.Portrait_Url+portrait+WebSocketOperateUtil.Portrait_Suffix);
             }
             member.setGroupUserUuid(u.getUuid());
             data.addMember(member);
@@ -787,6 +791,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             }
             groupUserRepository.delete(groupUser);//删除该群的成员
             quitDataS.setOperateId(operateId);
+            quitDataS.setGroupId(userQuitGroupC.getGroupId());
             quitDataS.setStatus("success");
             quitDataS.setInformation("成功退出群聊");
             List<Group>groups=groupRepository.getGroupByUuid(userQuitGroupC.getUserUuid());
@@ -796,7 +801,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 groupData.setGroupName(group.getName());
                 groupData.setGroupId(group.getUuid());
                 if(group.getPortarit()==null||group.getPortarit().equals("")){
-                    groupData.setGroupPortrait(group.getPortarit());
+                    groupData.setGroupPortrait(WebSocketOperateUtil.Portrait_Image);
                 }else{
                     groupData.setGroupPortrait(WebSocketOperateUtil.Portrait_Url+group.getPortarit()+WebSocketOperateUtil.Portrait_Suffix);
                 }
@@ -900,10 +905,23 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
 
 
         //保存图片
-        String portrait=userSaveGroupDataC.getGroupPortrait().substring(userSaveGroupDataC.getGroupPortrait().indexOf(",")+1);
-        savePortrait(gp,portrait);
-
-
+        String sourcePortrait=userSaveGroupDataC.getGroupPortrait();
+        if(sourcePortrait!=null&&!sourcePortrait.equals("")){
+            System.out.println("有传入群头像时");
+            String portrait=userSaveGroupDataC.getGroupPortrait().substring(userSaveGroupDataC.getGroupPortrait().indexOf(",")+1);
+            savePortrait(gp,portrait);
+            modifyImage(group,userSaveGroupDataC,webSocket);
+        }else{
+            System.out.println("没有传入群头像时");
+            modifyImage(group,userSaveGroupDataC,webSocket);
+        }
+    }
+    /*
+        群里修改图片公用代码
+     */
+    public void modifyImage(Group group,UserSaveGroupDataC userSaveGroupDataC,WebSocket webSocket){
+        int operateId=userSaveGroupDataC.getOperateId();
+        Session session=webSocket.getSession();
         //保存修改的群资料，并刷新缓存
         groupRepository.saveAndFlush(group);
 
@@ -927,7 +945,6 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             webSocket.clear();
         }
     }
-
     /*
         群里发送消息
      */
@@ -946,6 +963,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         }
 
         String groupId = sendGroupMessageC.getGroupUuid();
+        System.out.println("传过来的群号："+groupId);
         String userId = sendGroupMessageC.getUserUuid();
 
         Group group = groupRepository.findById(groupId).orElse(null);
@@ -1089,7 +1107,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                     userLocationGroupS.setUserName(user.getName());
                     System.out.println("用户名："+user.getName()+"\t用户给头像路径："+user.getPortrait());
                     if(user.getPortrait()==null||user.getPortrait().equals("")){
-                        userLocationGroupS.setUserPortrait(user.getPortrait()+"0");
+                        userLocationGroupS.setUserPortrait(WebSocketOperateUtil.Portrait_Image);
                     }else{
                         userLocationGroupS.setUserPortrait(WebSocketOperateUtil.Portrait_Url+user.getPortrait()+WebSocketOperateUtil.Portrait_Suffix);
                     }
@@ -1122,7 +1140,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         UserRelativNumberC userRelativNumber=(UserRelativNumberC) webSocket.getIMessage();
         Session session=webSocket.getSession();
         System.out.println("我是电话联系成员"+session);
-        Group group=groupRepository.findById(userRelativNumber.getGroup_id()).orElse(null);
+        Group group=groupRepository.findById(userRelativNumber.getGroupId()).orElse(null);
         int operateId=userRelativNumber.getOperateId();
         RelativeBookS relativeBookS=new RelativeBookS();
         if(group==null){
@@ -1154,7 +1172,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             relativeInfoS.setUserName(user.getName());
             relativeInfoS.setUuid(user.getUuid());
             if(user.getPortrait()==null||user.getPortrait().equals("")){
-                relativeInfoS.setUserPortrait(user.getPortrait()+"0");
+                relativeInfoS.setUserPortrait(WebSocketOperateUtil.Portrait_Image);
             }else{
                 relativeInfoS.setUserPortrait(WebSocketOperateUtil.Portrait_Url+user.getPortrait()+WebSocketOperateUtil.Portrait_Suffix);
             }
@@ -1315,7 +1333,9 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 n.setData(data);
                 n.setOperateId(WebSocketOperateUtil.Send_Notifications);
                 webSocket=new WebSocket(WebSocketOperateUtil.Send_Notifications,n,null);
-                receiverSession.getBasicRemote().sendObject(webSocket);
+                if(receiverSession.isOpen()){
+                    receiverSession.getBasicRemote().sendObject(webSocket);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
                 webSocket.clear();
@@ -1373,6 +1393,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         int operateId=webSocket.getOperateId();
         Group group=groupRepository.findByUuid(userAcceptEnterGroup.getGroupUuid());//判断是否存在这样的一个群
         GroupUser groupRole=groupUserRepository.findByUserAndGroup(group.getCreater(),group);
+        System.out.println("群角色，如果为0，就是群主："+groupRole.getRole());
         if(groupRole.getRole()==0&&group!=null&&userAcceptEnterGroup.getNoticeId()!=0){//判断一下是否是群主,并且存在这样的一个群
             if(userAcceptEnterGroup.getResult().equals("accept")){ //判断一下是否同意加入群聊,并且接收方和发送方不能是同一个人
                 User receiver=userRepository.findByUuid(userAcceptEnterGroup.getSendUserUuid());
@@ -1424,7 +1445,11 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                         acceptResponseS.setOperateId(operateId);
                         acceptResponseS.setGroupNumber(userAcceptEnterGroup.getGroupUuid());
                         acceptResponseS.setGroupName(group.getName());
-                        acceptResponseS.setGroupPortrait(group.getPortarit());
+                        if(group.getPortarit()==null||group.getPortarit().equals("")){
+                            acceptResponseS.setGroupPortrait(WebSocketOperateUtil.Portrait_Image);
+                        }else{
+                            acceptResponseS.setGroupPortrait(WebSocketOperateUtil.Portrait_Url+group.getPortarit()+WebSocketOperateUtil.Portrait_Suffix);
+                        }
                         acceptResponseS.setStatus("accepted");
                         webSocket=new WebSocket(operateId,acceptResponseS,null);
                         requestSession.getBasicRemote().sendObject(webSocket);
@@ -1584,6 +1609,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         Group group=groupRepository.findByUuid(deleteGroupNumber.getGroupId());
         User user=userRepository.findByUuid(deleteGroupNumber.getUuid());
         System.out.println("group="+group+"\tuser="+user);
+        System.out.println("删除的用户delUuid="+deleteGroupNumber.getUuid());
         System.out.println("group="+deleteGroupNumber.getGroupId()+"\tuser="+user.getUuid());
         DeleteDataS deleteDataS=new DeleteDataS();
         DeleteInfo deleteInfo=new DeleteInfo();
@@ -1594,11 +1620,31 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 GroupUser deleteGroupUser=groupUserRepository.findByUserAndGroup(deleteUser,group);
                 if(deleteGroupUser!=null){
                     groupUserRepository.delete(deleteGroupUser);
+                    //删除群成员之后，返回该群的剩余的群成员
+                    List<GroupUser>groupUsers=groupUserRepository.findByGroup(group);
+                    if(groupUsers.size()!=0){
+                        for(int i=0;i<groupUsers.size();i++){
+                            User number=groupUsers.get(i).getUser();
+                            if(number!=null){
+                                UserGetGroupDataMember getGroupDataMember=new UserGetGroupDataMember();
+                                getGroupDataMember.setGroupUserUuid(number.getUuid());
+                                if(number.getPortrait()==null||number.getPortrait().equals("")){
+                                    getGroupDataMember.setGroupUserPortrait(WebSocketOperateUtil.Portrait_Image);
+                                }else {
+                                    getGroupDataMember.setGroupUserPortrait(WebSocketOperateUtil.Portrait_Url+number.getPortrait()+WebSocketOperateUtil.Portrait_Suffix);
+                                }
+                                getGroupDataMember.setGroupUserName(number.getName());
+                                deleteDataS.addNumber(getGroupDataMember);
+                            }else{
+                                continue;
+                            }
+
+                        }
+                    }
                     deleteDataS.setOperateId(operateId);
                     deleteDataS.setInformation("删除成功");
                     deleteDataS.setStatus("success");
                     deleteDataS.setDelUuid(deleteGroupNumber.getDelUuid());
-                    deleteDataS.setData(deleteInfo);
                     webSocket=new WebSocket(operateId,deleteDataS,null);
                     try {
                         session.getBasicRemote().sendObject(webSocket);
@@ -1613,7 +1659,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                     deleteDataS.setOperateId(operateId);
                     deleteDataS.setInformation("没有该成员要删除的");
                     deleteDataS.setStatus("fail");
-                    deleteDataS.setData(deleteInfo);
+
                     webSocket=new WebSocket(operateId,deleteDataS,null);
                     try {
                         session.getBasicRemote().sendObject(webSocket);
@@ -1628,7 +1674,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 deleteDataS.setOperateId(operateId);
                 deleteDataS.setInformation("没有权限删除该成员");
                 deleteDataS.setStatus("fail");
-                deleteDataS.setData(deleteInfo);
+                //deleteDataS.setData(deleteInfo);
                 webSocket=new WebSocket(operateId,deleteDataS,null);
                 try {
                     session.getBasicRemote().sendObject(webSocket);
@@ -1643,7 +1689,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             deleteDataS.setOperateId(operateId);
             deleteDataS.setInformation("删除失败");
             deleteDataS.setStatus("fail");
-            deleteDataS.setData(deleteInfo);
+            //deleteDataS.setData(deleteInfo);
             webSocket=new WebSocket(operateId,deleteDataS,null);
             try {
                 session.getBasicRemote().sendObject(webSocket);
@@ -1674,7 +1720,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 searchDataInfo.setGroupUuid(group.getUuid());
                 searchDataInfo.setGroupDesc(group.getHobby());
                 if(group.getPortarit()==null||group.getPortarit().equals("")){
-                    searchDataInfo.setGroupPortarit(group.getPortarit()+"0");
+                    searchDataInfo.setGroupPortarit(WebSocketOperateUtil.Portrait_Image);
                 }else{
                     searchDataInfo.setGroupPortarit(WebSocketOperateUtil.Portrait_Url+group.getPortarit()+WebSocketOperateUtil.Portrait_Suffix);
                 }
@@ -1740,9 +1786,9 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         groupNumberDataS.setStatus("success");
         groupNumberInfo.setUserName(user.getName());
         if(user.getPortrait()==null||user.getPortrait().equals("")){
-            groupNumberInfo.setUserPortarit(user.getPortrait()+"0");
+            groupNumberInfo.setUserPortrait(WebSocketOperateUtil.Portrait_Image);
         }else{
-            groupNumberInfo.setUserPortarit(WebSocketOperateUtil.Portrait_Url+user.getPortrait()+WebSocketOperateUtil.Portrait_Suffix);
+            groupNumberInfo.setUserPortrait(WebSocketOperateUtil.Portrait_Url+user.getPortrait()+WebSocketOperateUtil.Portrait_Suffix);
         }
         groupNumberInfo.setUserSign(user.getSign());
         groupNumberInfo.setUserPhone(user.getPhone());
@@ -1788,7 +1834,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         myDataS.setOperateId(operateId);
         myDataS.setStatus("success");
         myDataInfo.setUserName(me.getName());
-        myDataInfo.setUserSign("个性签名"+me.getSign());
+        myDataInfo.setUserSign(me.getSign());
         if(me.getPortrait()==null||me.getPortrait().equals("")){
             myDataInfo.setUserPortrait(me.getPortrait()+"0");
         }else{
@@ -1843,41 +1889,34 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         }
         System.out.println("邮箱:"+userPersonalInfoC.getUserEmail());
         //将用户的图片的字符串
-        String portrait=userPersonalInfoC.getUuidPic().substring(userPersonalInfoC.getUuidPic().indexOf(',')+1);
-        System.out.println("字符图片:"+portrait);
-       if(portrait!=null){
-            savePortrait(filePortraitName,portrait);
-            String name=userPersonalInfoC.getUserName();
-            String sign=userPersonalInfoC.getUserQianming();
-            String phone=userPersonalInfoC.getUserPhone();
-            String email=userPersonalInfoC.getUserEmail();
-            if(phone.length()<11||phone.length()>11){
-                savePersonalDataS.setOperateId(operateId);
-                savePersonalDataS.setInformation("保存失败,电话号码不正确，或者长度不够！");
-                savePersonalDataS.setStatus("fail");
-                savePersonalDataS.setData(savePersonalInfo);
-                webSocket=new WebSocket(operateId,savePersonalDataS,null);
-                try {
-                    session.getBasicRemote().sendObject(webSocket);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (EncodeException e) {
-                    e.printStackTrace();
-                }
-                webSocket.clear();
-                return;
-            }
-            user.setPortrait(filePortraitName);
-            user.setName(name);
-            user.setSign(sign);
-            user.setPhone(phone);
-            user.setEmail(email);
-            user.setModifyTime(new Date());
-            userRepository.saveAndFlush(user);
+        System.out.println("客户端发来的字符图片:"+userPersonalInfoC.getUuidPic());
+        String sourcePortrait=userPersonalInfoC.getUuidPic();
+       if(sourcePortrait!=null&&!sourcePortrait.equals("")){
+           String portrait=userPersonalInfoC.getUuidPic().substring(userPersonalInfoC.getUuidPic().indexOf(',')+1);
+           savePortrait(filePortraitName,portrait);
+           modifyImage(user,userPersonalInfoC,savePersonalDataS,savePersonalInfo,webSocket,0,filePortraitName);
+        }else{
+           modifyImage(user,userPersonalInfoC,savePersonalDataS,savePersonalInfo,webSocket,1,filePortraitName);
+       }
+    }
+    /*
+        客户端没有修改头像时公用代码
+     */
+    public void modifyImage(User user,UserPersonalInfoC userPersonalInfoC,SavePersonalDataS savePersonalDataS,SavePersonalInfo savePersonalInfo,WebSocket webSocket,int code,String filePortraitName){
+
+        Session session=webSocket.getSession();
+        int operateId=userPersonalInfoC.getOperateId();
+
+
+        String name=userPersonalInfoC.getUserName();
+        String sign=userPersonalInfoC.getUserQianming();
+        String phone=userPersonalInfoC.getUserPhone();
+        String email=userPersonalInfoC.getUserEmail();
+        if(phone.length()<11||phone.length()>11){
             savePersonalDataS.setOperateId(operateId);
-            savePersonalDataS.setInformation("保存成功");
+            savePersonalDataS.setInformation("保存失败,电话号码不正确，或者长度不够！");
+            savePersonalDataS.setStatus("fail");
             savePersonalDataS.setData(savePersonalInfo);
-            savePersonalDataS.setStatus("success");
             webSocket=new WebSocket(operateId,savePersonalDataS,null);
             try {
                 session.getBasicRemote().sendObject(webSocket);
@@ -1887,7 +1926,32 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
                 e.printStackTrace();
             }
             webSocket.clear();
+            return;
         }
+        if(code==0){
+            user.setPortrait(filePortraitName);
+        }else{
+            user.setPortrait("");
+        }
+        user.setName(name);
+        user.setSign(sign);
+        user.setPhone(phone);
+        user.setEmail(email);
+        user.setModifyTime(new Date());
+        userRepository.saveAndFlush(user);
+        savePersonalDataS.setOperateId(operateId);
+        savePersonalDataS.setInformation("保存成功");
+        savePersonalDataS.setData(savePersonalInfo);
+        savePersonalDataS.setStatus("success");
+        webSocket=new WebSocket(operateId,savePersonalDataS,null);
+        try {
+            session.getBasicRemote().sendObject(webSocket);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (EncodeException e) {
+            e.printStackTrace();
+        }
+        webSocket.clear();
     }
     /*
         用户注销
@@ -2031,6 +2095,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
         System.out.println(group.getName());
         dissolutionDataS.setOperateId(operateId);
         dissolutionDataS.setStatus("success");
+        dissolutionDataS.setGroupId(userDissolutionGroupC.getGroupId());
         List<Group>groups=groupRepository.getGroupByUuid(userDissolutionGroupC.getUuid());
         for(int i=0;i<groups.size();i++){
             Group group1=groups.get(i);

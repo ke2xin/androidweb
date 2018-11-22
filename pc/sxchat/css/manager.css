@@ -5,6 +5,7 @@
 body{
 	width: 100%;
 	height: 100%;
+
 }
 .main{
 	width: 100%;
@@ -379,4 +380,10 @@ body{
 	position: relative;
 	left: 500px;
 	top: -180px;
+}
+.main .container #paging{
+	width: 800px;
+	height: 100px;
+	margin: auto;
+	clear: both;
 }

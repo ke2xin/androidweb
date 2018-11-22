@@ -10,7 +10,8 @@ public class QuitDataS implements IMessage {
     private int operateId;
     private String status;
     private String information;
-    private List<UserCreateGroup>grouops=new ArrayList();
+    private String groupId;
+    private List<UserCreateGroup>groups=new ArrayList();
     public int getOperateId() {
         return operateId;
     }
@@ -35,6 +36,14 @@ public class QuitDataS implements IMessage {
         this.information = information;
     }
     public void addGroups(UserCreateGroup group){
-        grouops.add(group);
+        groups.add(group);
+    }
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
     }
 }

@@ -17,7 +17,7 @@ public class GroupUser implements Serializable{
     @JoinColumn(name = "groupUser_gid",referencedColumnName = "group_uuid",foreignKey = @ForeignKey(name = "FK_GROUPUSER_GROUP"))
     private Group group;
 
-    @ManyToOne(fetch = FetchType.LAZY,targetEntity = User.class)
+    @ManyToOne(fetch = FetchType.EAGER,targetEntity = User.class)
     @JoinColumn(name = "groupUser_uid",referencedColumnName = "user_uuid",foreignKey = @ForeignKey(name = "FK_GROUPUSER__USER"))
     private User user;
 

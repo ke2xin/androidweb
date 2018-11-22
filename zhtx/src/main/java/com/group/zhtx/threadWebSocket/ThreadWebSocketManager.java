@@ -56,6 +56,7 @@ public class ThreadWebSocketManager {
            return false;
        }
        Object instance = WebSocketManager.getInstaceByMethod(method);
+        System.out.println("即将进入反射的方法");
        if(instance == null){
            return false;
        }
