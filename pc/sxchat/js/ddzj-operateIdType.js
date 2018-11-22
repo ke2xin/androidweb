@@ -10,26 +10,14 @@
 		//进入群
 	    this.User_Enter_Group_C = 3;
 	
-		
-	
-		
-	
-		
-	
 		//获取用户电话
 	    this.User_Phone_Relative_C = 8;
-	
-		
-	
-		
-
 	
 		//查找群
 	    this.User_Search_Group_C =13;
 	
 		//查找群信息
 	    this.User_Search_Group_Number_Info_C = 14;
-	
 	
 		//查看群成员和个人信息
 	    this.User_Data_Info = 16;

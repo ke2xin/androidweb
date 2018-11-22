@@ -76,6 +76,8 @@
 			this.webSocketClient.addEventDispatchListener(operateIdTpye.Manager_GroupUser,this.onMessageByDeleteMember,this);
 			//响应获取群位置信息
 			this.webSocketClient.addEventDispatchListener(operateIdTpye.User_Group_Number_Location_C,this.onMessageByLocation,this);
+			//解散群
+			this.webSocketClient.addEventDispatchListener(operateIdTpye.User_Delete_Group_Number_C,this.onMessageByDeleteGroup,this);
 			
 			this.webSocketClient.addEventDispatchListener(wsConfig.CONNECT,this.toConnect,this);
 			this.webSocketClient.addEventDispatchListener(wsConfig.CLOSE,this.toClose,this);
@@ -94,21 +96,30 @@
 			this.onSaveGroupDataListener(this,this.onSaveGroupData);
 			this.onLocationListener(this,this.onLocation);
 			this.checkGroupRoleListener(this,this.checkGroupRole);
+			this.onDeleteGroupClickListener(this,this.onDeleteGroup);
 			$("body").on("click","#chatClose",function(){
 				$("#chatWindow").attr("style","display: none;");
 			});
 			
-			this.onChangeImageClickListener(this,this.onChangeImage);
+			this.onChangeOwnImageClickListener(this,this.onChangeOwnImage);
+			this.onChangeGroupImageClickListener(this,this.onChangeGroupImage);
 		}
 		
-		this.onChangeImageClickListener = function(obj,cal){
+		this.onChangeOwnImageClickListener = function(obj,cal){
 			var func = function(event){
 				cal.call(obj,event);
 			}
 			$("body").on("click",".changeImage",func);
 		}
 		
-		this.onChangeImage = function(){
+		this.onChangeGroupImageClickListener = function(obj,cal){
+			var func = function(event){
+				cal.call(obj,event);
+			}
+			$("body").on("click",".groupReplaceImage",func);
+		}
+		
+		this.onChangeOwnImage = function(){
 			var fileInput = $(document.createElement("input"));
 			this.currentFile = fileInput;
 			fileInput.attr("type","file");
@@ -141,6 +152,39 @@
 		}
 
 		
+		this.onChangeGroupImage = function(){
+			var fileInput = $(document.createElement("input"));
+			this.currentFile = fileInput;
+			fileInput.attr("type","file");
+			fileInput.css("display","none");
+			fileInput.click();
+			fileInput.on("change",function(){
+				var currentImage = this.files[0];
+				var imgSizeBlock = 1024 * 1024 * 4;
+				
+				var imageType = /^image\//;
+				
+				if (!imageType.test(currentImage.type)) {
+			        alert('请选择图片');
+			        return;
+			    }
+				
+				var unUsed = currentImage.size > imgSizeBlock;
+				if(unUsed){
+					alert("图片大于4M无法上传.");
+					return;
+				}
+				
+				var reader = new FileReader();
+				reader.onload = function(e){
+					$(".groupReplaceImage").attr("src",e.target.result);
+				}
+				
+				reader.readAsDataURL(currentImage);
+			});
+		}
+		
+		
 		//连接操作
 		this.toConnect = function(event){
 			var user = window.user;
@@ -161,7 +205,6 @@
 
 		//登陆成功
 		this.onLoginSuccess = function(event){
-			console.log(event.data);
 			var data = event.data.data;
 			if(event.data.status == "fail"){
 				alert("登陆失败");
@@ -176,6 +219,8 @@
 			//存储自己的数据
 			this.owner = data.singal;
 			var groups = data.groups;
+			$("#IPortrait").attr("src",this.owner.userPortrait);
+			$(".iImage").attr("src",this.owner.userPortrait);
 			$(".nickName").text(this.owner.userName);
 			$(".sign").text(this.owner.userSign);
 			//设置头像地址
@@ -233,7 +278,6 @@
 			this.nowChatGroupObj.getView().addClass("toPick");
 			this.nowChatGroupObj.getView().children("span.groupLastMessage").text("");
 			//发送获取群资料请求
-			console.log(this.nowChatGroupObj);
 			this.webSocketAgent.onGetGroupData(event.target.group.groupNumber);
 		}
 		
@@ -261,9 +305,9 @@
 				var li;
 				//返回的消息发送的对象和发送的对象的ID相同则right
 				if(chat.messageUserId == window.user.userName){
-					li = this.getOtherMessageView("right", chat.messageUserName, chat.messageContent);
+					li = this.getOtherMessageView("right", chat.messageUserName, chat.messageContent, chat.userPortrait);
 				}else{
-					li = this.getOtherMessageView("left", chat.messageUserName, chat.messageContent);
+					li = this.getOtherMessageView("left", chat.messageUserName, chat.messageContent, chat.userPortrait);
 				}
 				$("#groupMessage").append(li);
 				//滚动到底部
@@ -350,6 +394,7 @@
 			var data = event.data;
 			var groups = data.groups;
 			var newGroup = groups[0];
+			console.log(newGroup);
 			if(newGroup === undefined)return;
 			//添加群
 			this.addGroupToMonitor(newGroup,"prepend");
@@ -436,7 +481,7 @@
 			if(data.status == "fail"){
 				if(this.searchGroup[data.groupId]){
 					
-					console.log(this.searchGroup[data.groupId].getView().children("input.searchApplication").attr("value","已加入"));
+					this.searchGroup[data.groupId].getView().children("input.searchApplication").attr("value","已加入");
 				}
 			}
 			alert(data.information);
@@ -446,16 +491,15 @@
 		//接收到群通知
 		this.onMessageByNotification = function(event){
 			var datas = event.data.data;
-			console.log(datas);
 			if(datas.length > 0){
 				for(var i = 0; i < datas.length; ++i){
 					var data = datas[i];
 					var notif = new Notification();
-					this.notificationMap[data.groupId] = notif;
+					this.notificationMap[data.noticeId] = notif;
 					notif.init(data);
 					notif.addEventDispatchListener(operateIdTpye.Refuse_Notification, this.onRefuseNotification, this);
 					notif.addEventDispatchListener(operateIdTpye.Receive_Notification, this.onReceiveNotification, this);
-					$("#notificationMessage").append(notif.getView());
+					$("#notificationMessage").prepend(notif.getView());
 				}
 			}
 		}
@@ -467,7 +511,8 @@
 			var sendUserUuid = window.user.userName;
 			var requsetUserUuid = notif.sendUuid;
 			var groupUuid = notif.groupId;
-			this.webSocketAgent.onUserHandleNotification(sendUserUuid, requsetUserUuid, groupUuid, "accept", 0);
+			var noticeId = notif.noticeId;
+			this.webSocketAgent.onUserHandleNotification(sendUserUuid, requsetUserUuid, groupUuid, "accept", noticeId, 0);
 		}
 		
 		//拒绝通知
@@ -477,7 +522,8 @@
 			var sendUserUuid = window.user.userName;
 			var requsetUserUuid = notif.sendUuid;
 			var groupUuid = notif.groupId;
-			this.webSocketAgent.onUserHandleNotification(sendUserUuid, requsetUserUuid, groupUuid, "refuse", 1);
+			var noticeId = notif.noticeId;
+			this.webSocketAgent.onUserHandleNotification(sendUserUuid, requsetUserUuid, groupUuid, "refuse", noticeId, 1);
 		}
 
 		//接受通知响应
@@ -485,7 +531,7 @@
 			var data =event.data;
 			console.log(event.data);
 			if(data.status == "accpet" || data.status == "success"){
-				var infor = this.notificationMap[data.data.groupUuid];
+				var infor = this.notificationMap[data.data.noticeId];
 				if(infor){
 					infor.getView().append('<span class="agree">' + '已同意加入' + '</span>');
 					infor.getView().children("input").remove();
@@ -510,7 +556,7 @@
 			var data = event.data;
 			console.log(data);
 			if(data.status == "success"){
-				var infor = this.notificationMap[data.data.groupUuid];
+				var infor = this.notificationMap[data.data.noticeId];
 				if(infor){
 					infor.getView().append('<span class="agree">' + '已拒绝加入' + '</span>');
 					infor.getView().children("input").remove();
@@ -548,6 +594,7 @@
 			}else if(status == "success"){
 				var inputs = $("input.dataInfoDatile");
 				if(inputs.length === 4){
+					$(".changeImage").attr("src",data.data.userPortrait);
 					inputs.eq(0).val(data.data.userName);
 					inputs.eq(1).val(data.data.userSign);
 					inputs.eq(2).val(data.data.userPhone);
@@ -605,12 +652,24 @@
 			}
 
 			var userId = window.user.userName;
-			var reader = new FileReader();
-			var filee = this.currentFile.context.files[0]
-			reader.readAsBinaryString(filee);
-			var binaryString;
+			
 			var agent = this.webSocketAgent;
-			var ws = this.webSocketClient;
+			if(this.currentFile === undefined || this.currentFile === null){
+				agent.onSaveOwnData(userId,null,name,sign,phone,email);
+				$("input#dataISave").attr("disabled",true);
+				$("input#dataISave").attr("value","修改中...");
+				return;
+			}
+			var filee = this.currentFile.context.files[0];
+			if(filee === undefined || filee === null){
+				agent.onSaveOwnData(userId,null,name,sign,phone,email);
+				$("input#dataISave").attr("disabled",true);
+				$("input#dataISave").attr("value","修改中...");
+				return;
+			}
+			var reader = new FileReader();
+			reader.readAsDataURL(filee);
+			var binaryString;
 			reader.onload=function(event){
 				binaryString = event.target.result;
 				
@@ -642,7 +701,9 @@
 					$(".nickName").text(name);
 					$(".sign").text(sign);
 				}
-				
+				var srcContent = $(".changeImage").attr("src");
+				$("#IPortrait").attr("src",srcContent);
+				$(".iImage").attr("src",srcContent);
 			}
 			$("input#dataISave").attr("value","保存修改");
 			$("input#dataISave").attr("disabled",false);
@@ -666,6 +727,7 @@
 				window.user = undefined;
 				this.TalkMonitor = undefined;
 				window.localStorage.clear();
+				alert("退出登陆成功");
 				window.location = "login.html";
 			}
 		}
@@ -690,7 +752,8 @@
 			var group = this.nowChatGroupObj.group;
 			var groupId = group.groupNumber;
 			var groupName = group.groupName;
-			var groupDec = $(".anoun").val();
+			var groupDec = $(".groupAnountion").val();
+			console.log(groupDec);
 			this.webSocketAgent.onSendGroupAnnoun(window.user.userName,groupId,groupDec);
 			
 			$("#publicAnoun").attr("value","发送中...");
@@ -702,7 +765,8 @@
 			console.log(event.data);
 			$("#publicAnoun").attr("value","发布");
 			if(event.data.status == "success"){
-				var content = $(".anoun").val();
+				var content = $(".groupAnountion").val();
+				console.log(content);
 				$(".chatGroupNotification").text(content);
 				$("#publicAnoun").attr("disabled",false);
 				alert("发布成功");
@@ -734,9 +798,9 @@
 		}
 		
 		//响应查看群资料
-		this.onMessageByGetGroupData = function(event){			
+		this.onMessageByGetGroupData = function(event){		
 			//群管理
-			//$("#groupTile").children("img").attr("src","event.data.groupPortrait");
+			$("#groupTile").children("img").attr("src",event.data.groupPortrait);
 			$(".groupManagerGroupName").text(event.data.groupName);
 			$(".groupManagerGroupId").text(event.data.groupNumber);
 			var members = event.data.members;
@@ -767,7 +831,7 @@
 			}
 			
 			//查看群资料
-			//$(".groupReplaceImage").attr("src",event.data.groupPortrait);
+			$(".groupReplaceImage").attr("src",event.data.groupPortrait);
 			$(".groupDataSaveName").attr("value",event.data.groupName);
 			
 			//管理群成员
@@ -777,7 +841,7 @@
 		//创建群资料成员名片
 		this.onNewGroupUserInformation = function(groupUserPortrait,groupUserName){
 			var newLi = document.createElement("li");														
-			newLi.innerHTML = '<img src=' + "img/p1.jpg" + '/>' + '<span>' + groupUserName + '</span>';
+			newLi.innerHTML = '<img src="' + groupUserPortrait + '" />' + '<span>' + groupUserName + '</span>';
 			var newLi = $(newLi);
 			newLi.addClass("groupNumberList");
 			$(".groupNumberInfo").prepend(newLi);
@@ -801,7 +865,7 @@
 		//响应删除用户
 		this.onMessageByDeleteMember = function(event){
 			var data = event.data;
-			var userId = data.uuid;
+			var userId = data.delUuid;
 			console.log(event.data);
 			console.log(this.groupMember);
 			if(this.groupMember[userId]){
@@ -834,14 +898,17 @@
 		this.onMessageByonExitGroup = function(event){
 			var data  = event.data;
 			var groupId = data.groupId;
-			console.log(groupId);
 			if(groupId){
 				var currentGroup = this.groupMap[groupId];
 				if(currentGroup){
 					var currentView = currentGroup.getView();
 					currentView.remove();
-					console.log(this.groupMap);
-					this.groupMap.splice(currentGroup,1);
+					$("#chatClose").click();
+					//移除元素
+					var index = this.groupMap.indexOf(currentGroup);
+					if(index){
+						this.groupMap.splice(index,1);
+					}
 				}
 			}
 		}
@@ -863,19 +930,100 @@
 			}
 			
 			$("body").on("click","#chatBoxLocation",func);
+			$("body").on("click","#black",function(){
+				$("#chatWindowInfo").attr("style","display: block;");
+				$("#chatWindowMap").attr("style","display: none;");
+			});
+			
 		}
 		
 		//定位信息
 		this.onLocation = function(event){
-			
 			var groupId = this.nowChatGroupObj.group.groupNumber;
 			if(groupId){
 				this.webSocketAgent.onGetGroupUserLocations(groupId);
 			}
 		}
 		
+		
+		//定位信息返回
 		this.onMessageByLocation = function(event){
-			console.log(event.data);
+
+		//	this.openView("chatWindowMap");
+			var data = event.data.data;
+			//清空用户头像
+			$(".mapNumbersInfo").empty();
+			if(data.length){
+				var currentMap;
+				var points;
+				
+				for(var i = 0; i < data.length; ++i){
+					var currentData = data[i];
+					var userName = currentData.userName;
+					var userPortrait = currentData.userPortrait;
+					var userLocationLatitude = currentData.userLocationLatitude;
+					var userLocationLongitude = currentData.userLocationLongitude;
+					
+					//添加用户头像
+					var currentLi = document.createElement("li");
+					currentLi.innerHTML = '<img src="' + userPortrait + '">';
+					$(".mapNumbersInfo").append(currentLi);
+					
+					if(points === undefined || points === null)points = [];
+
+					var bitMapPoint = new BMap.Point(userLocationLongitude,userLocationLatitude);
+		//			var bitMapPoint = new BMap.Point(113.037936,23.166192);
+					points.push(bitMapPoint);
+					
+					if(i == 0){
+						currentMap = new BMap.Map("map");
+						currentMap.enableScrollWheelZoom();
+						currentMap.enableKeyboard();
+						currentMap.enableDragging();
+						currentMap.enableDoubleClickZoom();
+						currentMap.centerAndZoom(new BMap.Point(userLocationLongitude, userLocationLatitude), 15);
+		//				currentMap.centerAndZoom(new BMap.Point(113.037936,23.166192), 15);
+					}
+				}
+				
+				//坐标转换完之后的回调函数
+				translateCallback = function(data){
+					if(data.status === 0) {
+				        for (var i = 0; i < data.points.length; i++) {
+				            currentMap.addOverlay(new BMap.Marker(data.points[i]));
+				            currentMap.setCenter(data.points[i]);
+				            
+					//		var pt = new BMap.Point(113.037936,23.166192);
+					//		var myIcon = new BMap.Icon("http://lbsyun.baidu.com/jsdemo/img/fox.gif", new BMap.Size(200,150));
+					//		var marker2 = new BMap.Marker(data.points[i],{icon:myIcon});  // 创建标注
+					//		currentMap.addOverlay(marker2);
+							
+							var opts = {
+							  position : data.points[i],// 指定文本标注所在的地理位置
+							  offset   : new BMap.Size(-25, 0) 
+							}
+							var label = new BMap.Label(userName, opts);  // 创建文本标注对象
+								label.setStyle({
+										 color : "red",
+										 fontSize : "1px",
+										 height : "12px",
+										 lineHeight : "12px",
+										 fontFamily:"微软雅黑"
+									});
+							currentMap.addOverlay(label);
+							currentMap.setCenter(data.points[i]);
+				        }
+				    }
+				}
+				
+				setTimeout(function(){
+					var convertor = new BMap.Convertor();
+        			convertor.translate(points, 1, 5, translateCallback);
+        			console.log(this);
+				},1000);
+				//打开地图窗口
+				this.openView("chatWindowMap");
+			}
 		}
 		
 		//保存群资料
@@ -884,31 +1032,79 @@
 			var groupName = $(".groupDataSaveName").val();
 			var groupId = this.nowChatGroupObj.group.groupNumber;
 			var groupAnoun = $(".chatGroupNotification").text();
-			console.log(groupAnoun);
-			this.webSocketAgent.onSaveGroupData(groupId,groupName,groupAnoun);
+			
+			var reader = new FileReader();
+			var filee = this.currentFile.context.files[0];
+			reader.readAsDataURL(filee);
+			var binaryString;
+			var agent = this.webSocketAgent;
+			reader.onload=function(event){
+				binaryString = event.target.result;
+				
+				agent.onSaveGroupData(groupId,binaryString,groupName);
+			}
 		}
 		
 		//响应保存群资料
 		this.onMessageBySaveGroupData = function(event)
 		{
 			var status = event.data.status;
+			console.log(event.data);
 			if(status == "success"){
 				alert("修改群资料成功");
 				var groupName = $(".groupDataSaveName").val();
+				var srcContent = $('.groupReplaceImage').attr("src");
+				this.nowChatGroupObj.group.groupPortrait = srcContent;
+				$(".toPick").children("img").attr("src",srcContent);
 				$(".chatGroupName").text(groupName);
 				this.nowChatGroupObj.group.groupName = groupName;
 				$(".toPick").children("span.groupName").text(groupName);
 			}
 		}
 		
+		//解散群点击  
+		this.onDeleteGroupClickListener = function(obj,cal){
+			var func = function(event){
+				cal.call(obj,event);
+			}
+			$("body").on("click",".groupDissolution",func);
+		}
+		
+		//解散群
+		this.onDeleteGroup = function(event){
+			var userId = window.user.userName;
+			var groupId = this.nowChatGroupObj.group.groupNumber;
+			
+			this.webSocketAgent.onDeleteGroup(userId,groupId);
+		}
+		
+		//解散群消息响应
+		this.onMessageByDeleteGroup = function(event){
+			var groupId = event.data.groupId;
+
+			if(groupId){
+				var groupObj = this.groupMap[groupId];
+				if(groupObj){
+					groupObj.getView().remove();
+					var index = this.groupMap.indexOf(groupObj);
+					if(index){
+						this.groupMap.splice(index,1);
+					}
+					console.log(this.groupMap);
+					$("#chatClose").click();
+					alert("解散群成功");
+				}
+			}
+		}
+		
 		//获取消息View
-		this.getOtherMessageView = function(type,userName,userContent){
+		this.getOtherMessageView = function(type,userName,userContent,userPortrait){
 			var li = document.createElement("li");
 			
 			$(li).addClass(type);
 			
 			li.innerHTML = '<div class="chat-sender">'+
-								'<div class="nickeNamePortrait"><img src="img/p4.jpg" /></div>'+
+								'<div class="nickeNamePortrait"><img src="' + userPortrait + '" /></div>'+
 								'<div class="nickName" >' + userName + '</div>'+
 									'<div class="chatBackgroung">'+
 										'<div class="chatMessageDatile">'+
@@ -940,9 +1136,9 @@
 							var li;
 							//返回的消息发送的对象和发送的对象的ID相同则right
 							if(m.messageUserId == window.user.userName){
-								li = this.getOtherMessageView("right", m.messageUserName, m.messageContent);
+								li = this.getOtherMessageView("right", m.messageUserName, m.messageContent, m.userPortrait);
 							}else{
-								li = this.getOtherMessageView("left", m.messageUserName, m.messageContent);
+								li = this.getOtherMessageView("left", m.messageUserName, m.messageContent, m.userPortrait);
 							}
 							
 							if(timeStamp === undefined){
@@ -963,7 +1159,6 @@
 							var content = messages[messages.length-1].messagecontent;
 							groupObj.getView().children("span.groupLastMessage").text(sender + ' : ' + content);
 							
-							console.log(messages[messages.length-1]);
 							for(var j = 0; j < messages.length; ++j){
 								groupObj.chatList.push(messages[j]);
 
@@ -994,7 +1189,7 @@
 		this.getReceiveTime = function(event){
 			var data = event.data;
 			var groupId = data.groupId;
-			console.log(data);
+			
 			if(this.timeStamp[groupId]){
 				if(this.timeStamp[groupId] > data.timeStamp){
 					this.timeStamp[groupId] = data.timeStamp;
@@ -1047,6 +1242,7 @@
 			$("#createGroup").attr("style","display: none;");
 			$("#searchGroup").attr("style","display: none;");
 			$("#dataI").attr("style","display: none;");
+			$("#chatWindowMap").attr("style","display: none;");
 		}
 		
 		this.openView = function(type){
@@ -1059,6 +1255,10 @@
 				$("#chatWindow").attr("style","display: none;");
 			}else if(type === "dataI"){
 				$("#dataI").attr("style","display: block;");
+			}else if(type === "chatWindowMap"){
+				$("#chatWindow").attr("style","display: block;");
+				$("#chatWindowInfo").attr("style","display: none;");
+				$("#chatWindowMap").attr("style","display: block;");
 			}
 		}
 		
@@ -1084,6 +1284,7 @@
 		
 		this.checkGroupRole = function(){
 			var role = this.nowChatGroupObj.group.groupRole;
+			
 			if(role == undefined || role == null)return;
 			
 			if(role == 0){
@@ -1092,7 +1293,8 @@
 				$("#groupDataSure").css("display","inline-block");
 				$(".exitGroup").css("display","none");
 				$(".groupDissolution").css("display","block");
-			}else if(role == 1){
+			}else{
+				console.log(role);
 				$(".anoun").css("display","none");
 				$(".groupNumber").css("display","none");
 				$("#groupDataSure").css("display","none");

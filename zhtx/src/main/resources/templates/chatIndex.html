@@ -7,33 +7,31 @@
 		<script type="text/javascript" src="js/jquery-1.11.0.min.js" ></script>
 		<link rel="stylesheet" href="css/index.css" />
 		<script type="text/javascript" src="js/index.js"></script>
-		<script type="text/javascript" src="js/ddzj-operateIdType.js" ></script>
-		<script type="text/javascript" src="js/ddzj-tool.js"></script>
-		<script type="text/javascript" src="js/ddzj-event.js" ></script>
-		<script type="text/javascript" src="js/ddzj-websocket.js" ></script>
-		<script type="text/javascript" src="js/ddzj-agent.js" ></script>
 		<script type="text/javascript" src="js/getscript.js"></script>
-		<script type="text/javascript" src="js/ddzj-chatGroupObj.js" ></script>
-		<script type="text/javascript" src="js/ddzj-serachGroup.js"></script>
-		<script type="text/javascript" src="js/ddzj-Notification.js"></script>
-		<script type="text/javascript" src="js/ddzj-groupMember.js"></script>
-		<script type="text/javascript" src="js/ddzj-talkMonitor.js" ></script>
+		<script type="text/javascript" src="js/SimleChat.js" ></script>
 	</head>
 
 	<body>
 		<script type="text/javascript">
 			
-			
-					var TalkMonitor = window.ddzj.TalkMonitor;
-					var wsClient = window.ddzj.WsClient;
-					var User = function(userName,password){
-						this.userName = userName;
-						this.password = password;
-					}
-					window.user = new User(251,251);
-					var talkMonitor = new TalkMonitor();
-					talkMonitor.init("ws://localhost:8080/ws");
+			$(document).ready(function(){
+				var TalkMonitor = window.ddzj.TalkMonitor;
+				var wsClient = window.ddzj.WsClient;
+				var User = function(userName,password){
+					this.userName = userName;
+					this.password = password;
+				}
+				
+				window.user = new User(sessionStorage.getItem("userName"),sessionStorage.getItem("userPassword"));
+				window.adressAndHost = "localhost:8080";
+				var talkMonitor = new TalkMonitor();
+				talkMonitor.init("ws://" + window.adressAndHost + "/ws");
+			});
 		</script>
+		
+		<div style="position: absolute;left: 0;top: 0;z-index: 9999999999999; background: black; width: 100%;height: 100%;" class="forwardGround">
+			<div style="position:absolute;top: 30%;left: 45%; display: inline-block; font-size: 30px; color: white;">加载中...</div>
+		</div>
 		<div class="main">
 			<div class="container">
 				<div class="head">
@@ -65,7 +63,7 @@
 						<div id="middleI">
 							<ul id="I">
 								<li>
-									<img src="img/IPortrait.jpg" />
+									<img class="iImage" src="img/IPortrait.jpg" />
 									<span class="nickName">帅过吴彦祖</span>
 									<span class="sign">不服，你就来战!!!!</span>
 								</li>
@@ -127,7 +125,7 @@
 									<div id="chatWindowManager">
 										<div id="groupAnoun">
 											<form>
-												<textarea class="anoun" placeholder="请输入你要发布的公告"></textarea>
+												<textarea class="anoun groupAnountion" placeholder="请输入你要发布的公告"></textarea>
 												<input type="button" value="发布" id="publicAnoun"/>
 											</form>
 										</div>
@@ -440,7 +438,7 @@
 							<table>
 								<tr>
 									<td>点击更换头像</td>
-									<td><img src="img/IPortrait.jpg"/></td>
+									<td><img src="img/IPortrait.jpg" class="changeImage"/></td>
 								</tr>
 								<tr>
 									<td>昵称</td>

@@ -15,7 +15,7 @@
 
 		this.createView = function(){
 			var newView = document.createElement("li");			
-			newView.innerHTML = '<img src="img/p4.jpg" />' + '<span>' + this.member.groupUserName  + '</span>' + '<input type="button" value="删除" class="deleteNumber"/>';
+			newView.innerHTML = '<img src="' + this.member.groupUserPortrait + '" />' + '<span>' + this.member.groupUserName  + '</span>' + '<input type="button" value="删除" class="deleteNumber"/>';
 			
 			this.view = $(newView);
 			this.addEvenListeners();

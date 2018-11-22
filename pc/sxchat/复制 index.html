@@ -8,7 +8,6 @@
 		<link rel="stylesheet" href="css/index.css" />
 		<script type="text/javascript" src="js/index.js"></script>
 		<script type="text/javascript" src="js/getscript.js"></script>
-		<!--
 		<script type="text/javascript" src="js/ddzj-operateIdType.js" ></script>
 		<script type="text/javascript" src="js/ddzj-tool.js"></script>
 		<script type="text/javascript" src="js/ddzj-event.js" ></script>
@@ -18,8 +17,7 @@
 		<script type="text/javascript" src="js/ddzj-serachGroup.js"></script>
 		<script type="text/javascript" src="js/ddzj-Notification.js"></script>
 		<script type="text/javascript" src="js/ddzj-groupMember.js"></script>
-		<script type="text/javascript" src="js/ddzj-talkMonitor.js" ></script>-->
-		<script type="text/javascript" src="js/SimleChat.js" ></script>
+		<script type="text/javascript" src="js/ddzj-talkMonitor.js" ></script>
 	</head>
 
 	<body>
@@ -33,16 +31,17 @@
 					this.password = password;
 				}
 				
-				window.user = new User(sessionStorage.getItem("userName"),sessionStorage.getItem("userPassword"));
-				window.adressAndHost = "http://172.17.146.126:8080";
+				//window.user = new User(sessionStorage.getItem("userName"),sessionStorage.getItem("userPassword"));
+				window.user = new User("1234","1234");
+				console.log(window.user);
 				var talkMonitor = new TalkMonitor();
 				talkMonitor.init("ws://172.17.146.126:8080/ws");
 			});
 		</script>
 		
-		<<div style="position: absolute;left: 0;top: 0;z-index: 9999999999999; background: black; width: 100%;height: 100%;" class="forwardGround">
+		<!--<div style="position: absolute;left: 0;top: 0;z-index: 9999999999999; background: black; width: 100%;height: 100%;" class="forwardGround">
 			<div style="position:absolute;top: 30%;left: 45%; display: inline-block; font-size: 30px; color: white;">加载中...</div>
-		</div>>
+		</div>-->
 		<div class="main">
 			<div class="container">
 				<div class="head">

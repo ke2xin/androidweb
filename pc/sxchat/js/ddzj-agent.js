@@ -47,6 +47,19 @@
 			this.wsClinet.sendMessage(jsonData);
 		}
 		
+		//保存修改群资料
+		this.onSaveGroupData = function(groupId, groupPortrait, groupName, groupDec){
+			var obj = new Object();
+			obj.operateId = operateIdType.User_Save_GroupData_C;
+			obj.groupId = groupId;
+			obj.groupPortrait = groupPortrait;
+			obj.groupName = groupName;
+			obj.groupDec = groupDec;
+		
+			var jsonData = tool.toJson(obj);
+			this.wsClinet.sendMessage(jsonData);
+		}
+		
 		this.sendMessage = function(obj){
 			
 			var jsondata = tool.toJson(obj);
@@ -58,9 +71,9 @@
 		this.onUserToSendMessage = function(userId,groupId,content){
 			var obj = new Object();
 			obj.operateId = operateIdType.User_Send_GroupMessage;
-			obj.uuid = userId;
-			obj.groupId = groupId;
-			obj.groupMessage = content;
+			obj.userUuid = userId;
+			obj.groupUuid = groupId;
+			obj.content = content;
 
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);
@@ -147,13 +160,13 @@
 		}
 		
 		//处理通知
-		this.onUserHandleNotification = function(sendId, receiveId, groupId, result, type){
+		this.onUserHandleNotification = function(sendId, receiveId, groupId, result, noticeId , type){
 			var obj = new Object();
 			obj.requestUserUuid = receiveId;
 			obj.sendUserUuid = sendId;
 			obj.groupUuid = groupId;
 			obj.result = result;
-			
+			obj.noticeId = noticeId;
 			if(type === 0){
 				obj.operateId = operateIdType.User_Accept_Enter_Group_C;
 			}else if(type === 1){
@@ -250,7 +263,7 @@
 			var obj = new Object();
 			obj.operateId = operateIdType.User_Delete_Group_Number_C;
 			obj.uuid = userId;
-			obj.group_id = groupId;
+			obj.groupId = groupId;
 			
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);

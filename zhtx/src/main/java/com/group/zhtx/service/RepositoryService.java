@@ -74,6 +74,7 @@ import javax.transaction.Transactional;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.*;
 
 /*
@@ -1771,7 +1772,7 @@ public class RepositoryService implements IRepositoryService,IWebSocketListener 
             webSocket.clear();
             return;
         }
-        user.setPortrait(portrait);
+        //user.setPortrait(portrait);
         user.setName(name);
         user.setSign(sign);
         user.setPhone(phone);

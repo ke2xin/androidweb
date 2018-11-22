@@ -118,7 +118,11 @@
 				return;
 			}
 			//移除对应方法实体
-			this.EventFunction.splice(listener,1);
+			var index = this.EventFunction.indexOf(listener);
+			if(index > -1){
+				this.EventFunction.splice(index,1);
+			}
+			
 			
 		}
 		
