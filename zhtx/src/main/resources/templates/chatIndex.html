@@ -23,9 +23,9 @@
 				}
 				
 				window.user = new User(sessionStorage.getItem("userName"),sessionStorage.getItem("userPassword"));
-				window.adressAndHost = "localhost:8080";
+
 				var talkMonitor = new TalkMonitor();
-				talkMonitor.init("ws://" + window.adressAndHost + "/ws");
+				talkMonitor.init("ws://" + "172.17.146.126:8080" + "/ws");
 			});
 		</script>
 		
