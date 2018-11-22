@@ -45,7 +45,7 @@ public class UserLoginDataGroup {
     }
 
     public void setGroupPortrait(String groupPortrait) {
-        this.groupPortrait = WebSocketOperateUtil.Portrait_Url + groupPortrait;
+        this.groupPortrait = groupPortrait;
     }
 
     public String getLastestGroupUser() {

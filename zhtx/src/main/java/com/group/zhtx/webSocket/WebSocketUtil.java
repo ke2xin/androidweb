@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.group.zhtx.message.IMessage;
 import com.group.zhtx.message.MessageFactory;
 import com.group.zhtx.model.Message;
+import com.group.zhtx.util.common.WebSocketOperateUtil;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import org.slf4j.Logger;
@@ -46,7 +47,7 @@ public class WebSocketUtil {
         JSONObject jsonObject = JSONObject.fromObject(stringResult);
         int operateId = jsonObject.getInt("operateId");
         IMessage IMessage = MessageFactory.newMessageByOperateCode(operateId,stringResult);
-
+        System.out.println("客户端发来的参数："+stringResult);
         WebSocket webSocket = new WebSocket(operateId, IMessage);
         return webSocket;
     }
@@ -75,7 +76,7 @@ public class WebSocketUtil {
                                          JsonSerializationContext context) {
                 JsonObject o=new JsonObject();
                 o.addProperty("messageGroupId",  src.getGroup().getUuid());
-                o.addProperty("userPortrait",src.getUser().getPortrait());
+                o.addProperty("userPortrait", WebSocketOperateUtil.Portrait_Url+src.getUser().getPortrait()+WebSocketOperateUtil.Portrait_Suffix);
                 o.addProperty("messageUserName",src.getUser().getName());
                 o.addProperty("messageUserId",src.getUser().getUuid());
                 o.addProperty("messageContent",src.getContent());

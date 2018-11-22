@@ -1,15 +1,16 @@
 package com.group.zhtx.message.controller.register;
 
 public class PasswordC {
-    private String new_password;
+    private String newPassword;
     private String telephone;
 
-    public String getNew_password() {
-        return new_password;
+
+    public String getNewPassword() {
+        return newPassword;
     }
 
-    public void setNew_password(String new_password) {
-        this.new_password = new_password;
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 
     public String getTelephone() {

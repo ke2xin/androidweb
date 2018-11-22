@@ -1,6 +1,6 @@
 package com.group.zhtx.message.websocket.service.enterGroup;
 
-import com.group.zhtx.util.common.WebSocketOperateUtil;
+
 
 public class EnterDataInfo {
     private String userPortrait;
@@ -13,7 +13,7 @@ public class EnterDataInfo {
     }
 
     public void setUserPortrait(String userPortrait) {
-        this.userPortrait = WebSocketOperateUtil.Portrait_Url+userPortrait;
+        this.userPortrait = userPortrait;
     }
 
     public String getUsername() {

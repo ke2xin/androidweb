@@ -12,9 +12,14 @@ function addListener(){
 	console.log(groupManagerList);
 	var userFlag=false;
 	var managerFlag=false;
+	var userManagerListLis=userManagerList.getElementsByTagName('li');
+	var groupManagerListLis=groupManagerList.getElementsByTagName('li');
+	var fb=null;
 	userManager.onclick=function(){
 		if(!userFlag){
 			userManagerList.style.display='block';
+			fb=userManagerListLis[0];
+			fb.style.background='rgba(0,0,0,0.1)';
 			userFlag=true;
 		}else{
 			userManagerList.style.display='none';
@@ -30,10 +35,14 @@ function addListener(){
 			managerFlag=false;
 		}
 	}
-	var userManagerListLis=userManagerList.getElementsByTagName('li');
-	var groupManagerListLis=groupManagerList.getElementsByTagName('li');
+	
 	for(var i=0;i<userManagerListLis.length;i++){
 		userManagerListLis[i].onclick=function(){
+			if(fb!=null){
+				fb.style.background='none';
+			}
+			fb=this;
+			this.style.background='rgba(0,0,0,0.1)';
 			var name=this.getAttribute('name');
 			if(name=="forbidUser"){
 				forbidUser.style.display='block';
@@ -50,6 +59,11 @@ function addListener(){
 	}
 	for(var i=0;i<groupManagerListLis.length;i++){
 		groupManagerListLis[i].onclick=function(){
+			if(fb!=null){
+				fb.style.background='none';
+			}
+			fb=this;
+			this.style.background='rgba(0,0,0,0.1)';
 			var name=this.getAttribute('name');
 			if(name=="forbidGroup"){
 				forbidUser.style.display='none';
