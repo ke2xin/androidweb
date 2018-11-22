@@ -384,6 +384,6 @@ body{
 .main .container #paging{
 	width: 800px;
 	height: 100px;
-	margin: auto;
+	margin-left: 560px;
 	clear: both;
 }
