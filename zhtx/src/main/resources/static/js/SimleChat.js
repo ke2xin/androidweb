@@ -1136,7 +1136,7 @@
 			alert("连接服务器失败了啊");
 			this.webSocketClient = null;
 			this.isConnect =false;
-			//window.location = "login.html";
+			window.location = "/login";
 		}
 
 
@@ -1147,7 +1147,7 @@
 			var data = event.data.data;
 			if(event.data.status == "fail"){
 				alert("登陆失败");
-				window.location = "login.html";
+				window.location = "/login";
 				return;
 			}
 			//登陆成功后倒计时去除
@@ -1667,7 +1667,7 @@
 				this.TalkMonitor = undefined;
 				window.localStorage.clear();
 				alert("退出登陆成功");
-				window.location = "login.html";
+				window.location = "/login";
 			}
 		}
 		

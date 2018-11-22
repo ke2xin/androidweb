@@ -21,15 +21,15 @@ $(document).ready(function(){
 				
 				sessionStorage.setItem('userName',userName);
 				sessionStorage.setItem('userPassword',userPassword);
-				window.location = "http://localhost:8080/index";
+				window.location = "/index";
 			}
 		}
 
 		$(".loginLeftText").click(function(){
-			window.location = "http://localhost:8080/register";
+			window.location = "/register";
 		});
 		$(".loginRightText").click(function(){
-			window.location = "http://localhost:8080/updataPassword";
+			window.location = "/updataPassword";
 		});
 	window.onload = this.init();
 
@@ -77,7 +77,7 @@ $(document).ready(function(){
         var data = $(".register").serializeJson();
         $.ajax({
             type:"post",
-            url:"http://localhost:8080/register/post",
+            url:"/register/post",
             async:true,
             data:data,
             contentType:"application/json",
@@ -108,9 +108,9 @@ $(document).ready(function(){
     };
 
     $(".RegisterLeftText").click(function(){
-        window.location = "http://localhost:8080/login";
+        window.location = "/login";
     });
     $(".RegisterRightText").click(function(){
-        window.location = "http://localhost:8080/updataPassword";
+        window.location = "/updataPassword";
     });
 });
