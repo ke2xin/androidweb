@@ -21,7 +21,7 @@ public class WebSocketUtil {
 
     private static Logger logger = LoggerFactory.getLogger(WebSocketUtil.class);
 
-    public static WebSocket decodeJosn(ByteBuffer buffer){
+    public static WebSocket decodeJosn(ByteBuffer buffer) {
 
 
         try {
@@ -36,62 +36,66 @@ public class WebSocketUtil {
         return null;
     }
 
-    public static WebSocket decodeJson(CharBuffer buffer){
+    public static WebSocket decodeJson(CharBuffer buffer) {
 
         String stringResult = buffer.toString();
 
-        if(!validOperateIdIsExit(stringResult)){
-            return new WebSocket(null,null);
+        if (!validOperateIdIsExit(stringResult)) {
+            return new WebSocket(null, null);
         }
 
         JSONObject jsonObject = JSONObject.fromObject(stringResult);
         int operateId = jsonObject.getInt("operateId");
-        IMessage IMessage = MessageFactory.newMessageByOperateCode(operateId,stringResult);
-        System.out.println("客户端发来的参数："+stringResult);
+        IMessage IMessage = MessageFactory.newMessageByOperateCode(operateId, stringResult);
+        System.out.println("客户端发来的参数：" + stringResult);
         WebSocket webSocket = new WebSocket(operateId, IMessage);
         return webSocket;
     }
 
 
-    public static WebSocket decodeJson(String text){
+    public static WebSocket decodeJson(String text) {
 
         //String stringResult = buffer.toString();
-        if(!validOperateIdIsExit(text)){
-            return new WebSocket(null,null);
+        if (!validOperateIdIsExit(text)) {
+            return new WebSocket(null, null);
         }
 
         JSONObject jsonObject = JSONObject.fromObject(text);
         int operateId = jsonObject.getInt("operateId");
-        IMessage IMessage = MessageFactory.newMessageByOperateCode(operateId,text);
+        IMessage IMessage = MessageFactory.newMessageByOperateCode(operateId, text);
 
         WebSocket webSocket = new WebSocket(operateId, IMessage);
         return webSocket;
 
     }
 
-    public static String encodeJson(WebSocket webSocket){
-        Gson gson=new GsonBuilder().registerTypeAdapter(Message.class, new JsonSerializer<Message>() {
+    public static String encodeJson(WebSocket webSocket) {
+        Gson gson = new GsonBuilder().registerTypeAdapter(Message.class, new JsonSerializer<Message>() {
             @Override
             public JsonElement serialize(Message src, Type typeOfSrc,
                                          JsonSerializationContext context) {
-                JsonObject o=new JsonObject();
-                o.addProperty("messageGroupId",  src.getGroup().getUuid());
-                o.addProperty("userPortrait", WebSocketOperateUtil.Portrait_Url+src.getUser().getPortrait()+WebSocketOperateUtil.Portrait_Suffix);
-                o.addProperty("messageUserName",src.getUser().getName());
-                o.addProperty("messageUserId",src.getUser().getUuid());
-                o.addProperty("messageContent",src.getContent());
-                o.addProperty("messageTime",src.getSendTime().getTime());
+                JsonObject o = new JsonObject();
+                o.addProperty("messageGroupId", src.getGroup().getUuid());
+                if (src.getUser().getPortrait() == null || src.getUser().getPortrait().equals("")) {
+                    o.addProperty("userPortrait", WebSocketOperateUtil.Portrait_Image);
+                } else {
+                    o.addProperty("userPortrait", WebSocketOperateUtil.Portrait_Url + src.getUser().getPortrait() + WebSocketOperateUtil.Portrait_Suffix);
+                }
+                o.addProperty("messageUserName", src.getUser().getName());
+                o.addProperty("messageUserId", src.getUser().getUuid());
+                o.addProperty("messageContent", src.getContent());
+                o.addProperty("messageTime", src.getSendTime().getTime());
                 return o;
             }
         }).create();
-        String s=gson.toJson(webSocket.getIMessage());
-        System.out.println("这是我编码返回给客户端的信息："+s);
+        String s = gson.toJson(webSocket.getIMessage());
+        System.out.println("这是我编码返回给客户端的信息：" + s);
         return s;
     }
 
-    public static boolean validOperateIdIsExit(String text){
+    public static boolean validOperateIdIsExit(String text) {
         int operateIdOfIndex = text.indexOf("operateId");
-        if(operateIdOfIndex < 0){
+        if (operateIdOfIndex < 0) {
             return false;
         }
         return true;

@@ -2,15 +2,17 @@ package com.group.zhtx.util.common;
 
 public class WebSocketOperateUtil {
     //图片的地址
-    public final static String Portrait_Url = "http://172.17.146.126:8080/userPortrait/";
+    public final static String Portrait_Url = "http://172.17.146.80:8080/userPortrait/";
     //图片的后缀
     public final static String Portrait_Suffix = ".png";
-    //默认的头像
-    public final static String Portrait_Image = "http://172.17.146.126:8080/userPortrait/12345678.png";
+    //默认用户的头像
+    public final static String Portrait_Image = "http://172.17.146.80:8080/userPortrait/123456654321.png";
+    //默认群头像
+    public final static String Portrait_Image_Group ="http://172.17.146.80:8080/userPortrait/123321.png";
     //用户登录
     public final static int User_Login_C = 1;
     //用户首页
-    public final static int User_Home_C= 2;
+    public final static int User_Home_C = 2;
     //创建群
     public final static int User_CreateGroup_C = 3;
     //进入群聊
@@ -36,7 +38,7 @@ public class WebSocketOperateUtil {
     public final static int User_Delete_Group_Number_C = 13;
 
     //搜索群
-    public final static int User_Search_Group_C =14;
+    public final static int User_Search_Group_C = 14;
 
     public final static int User_Search_Group_Number_Info_C = 15;
 
@@ -68,7 +70,7 @@ public class WebSocketOperateUtil {
     //用户发送时间截
     public final static int User_Send_TimeStamp = 99;
     //保存用户位置信息
-    public final static int User_Location_C = 24 ;
+    public final static int User_Location_C = 24;
 
     //发布群公告
     public final static int User_Anoun = 25;

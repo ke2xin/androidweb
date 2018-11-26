@@ -63,7 +63,7 @@ public class UserGetGroupDataS implements IMessage {
         this.members = members;
     }
 
-    public void addMember(UserGetGroupDataMember member){
+    public void addMember(UserGetGroupDataMember member) {
         this.members.add(member);
     }
 

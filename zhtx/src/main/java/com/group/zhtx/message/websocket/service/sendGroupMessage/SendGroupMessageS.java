@@ -2,7 +2,7 @@ package com.group.zhtx.message.websocket.service.sendGroupMessage;
 
 import com.group.zhtx.message.IMessage;
 
-public class SendGroupMessageS implements IMessage{
+public class SendGroupMessageS implements IMessage {
 
     private int operateId;
     private String status;

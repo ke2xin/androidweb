@@ -29,7 +29,7 @@ public class AsyncPriorityHandleData {
     /*
         辅助
      */
-    private ArrayList<IAsyncCycle> addCycles  = new ArrayList<>();
+    private ArrayList<IAsyncCycle> addCycles = new ArrayList<>();
 
     /*
         等待移除循环处理的对象
@@ -42,14 +42,14 @@ public class AsyncPriorityHandleData {
     private ArrayList<IAsyncCycle> removeCycles = new ArrayList<>();
 
 
-    public ArrayList<IAsyncHandle> getCurrentHandles(){
+    public ArrayList<IAsyncHandle> getCurrentHandles() {
 
         currentHandles.clear();
         waitToAddHandles.drainTo(currentHandles);
         return currentHandles;
     }
 
-    public ArrayList<IAsyncCycle> getCurrentCycles(){
+    public ArrayList<IAsyncCycle> getCurrentCycles() {
 
         return currentCycles;
     }
@@ -68,15 +68,15 @@ public class AsyncPriorityHandleData {
         return removeCycles;
     }
 
-    public void addCycle(IAsyncCycle cycle) throws Exception{
-        if(cycle == null) throw new Exception("添加Cycle失败");
+    public void addCycle(IAsyncCycle cycle) throws Exception {
+        if (cycle == null) throw new Exception("添加Cycle失败");
         cycle.onAdd();
         currentCycles.add(cycle);
 
     }
 
-    public void removeCycle(IAsyncCycle cycle) throws Exception{
-        if(cycle == null) throw new Exception("移除Cycle失败");
+    public void removeCycle(IAsyncCycle cycle) throws Exception {
+        if (cycle == null) throw new Exception("移除Cycle失败");
         cycle.onRemove();
         currentCycles.remove(cycle);
 

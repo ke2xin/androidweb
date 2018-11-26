@@ -9,7 +9,7 @@ import java.util.List;
 public class UserLocationS implements IMessage {
     private int operateId;
     private String status;
-    private List<UserLocationGroup>data=new ArrayList<>();
+    private List<UserLocationGroup> data = new ArrayList<>();
 
     public int getOperateId() {
         return operateId;

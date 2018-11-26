@@ -8,27 +8,27 @@ public class MessageFactory {
 
     private static Gson gson = new Gson();
 
-    public static IMessage newMessageByOperateCode(int opercode, String data){
+    public static IMessage newMessageByOperateCode(int opercode, String data) {
 
-        switch (opercode){
+        switch (opercode) {
             case WebSocketOperateUtil.User_Login_C:
                 return gson.fromJson(data, UserLoginC.class);
             case WebSocketOperateUtil.User_Home_C:
-                return gson.fromJson(data,UserHomeC.class);
+                return gson.fromJson(data, UserHomeC.class);
             case WebSocketOperateUtil.User_CreateGroup_C:
-                 return gson.fromJson(data, UserCreateGroupC.class);
+                return gson.fromJson(data, UserCreateGroupC.class);
             case WebSocketOperateUtil.User_Enter_Group_C:
-                 return gson.fromJson(data,UserEnterGroupC.class);
+                return gson.fromJson(data, UserEnterGroupC.class);
             case WebSocketOperateUtil.User_Get_Group_Data_C:
-                 return gson.fromJson(data, UserGetGroupDataC.class);
+                return gson.fromJson(data, UserGetGroupDataC.class);
             case WebSocketOperateUtil.User_Quit_Group_C:
-                return gson.fromJson(data,UserQuitGroupC.class);
+                return gson.fromJson(data, UserQuitGroupC.class);
             case WebSocketOperateUtil.User_Save_GroupData_C:
                 return gson.fromJson(data, UserSaveGroupDataC.class);
             case WebSocketOperateUtil.User_Get_CallGroupUserPhone_C:
                 return gson.fromJson(data, UserCallGroupUserByPhoneC.class);
             case WebSocketOperateUtil.User_Send_GroupMessage_C:
-                return gson.fromJson(data,SendGroupMessageC.class);
+                return gson.fromJson(data, SendGroupMessageC.class);
             case WebSocketOperateUtil.User_Group_Number_Location_C:
                 return gson.fromJson(data, UserLocationInfoC.class);
             case WebSocketOperateUtil.User_Phone_Relative_C:
@@ -42,31 +42,30 @@ public class MessageFactory {
             case WebSocketOperateUtil.User_Delete_Group_Number_C:
                 return gson.fromJson(data, UserDeleteGroupNumberC.class);
             case WebSocketOperateUtil.User_Search_Group_C:
-                return gson.fromJson(data,UserSearchGroupC.class);
+                return gson.fromJson(data, UserSearchGroupC.class);
             case WebSocketOperateUtil.User_Search_Group_Number_Info_C:
-                return gson.fromJson(data,UserGroupNumberInfoC.class);
+                return gson.fromJson(data, UserGroupNumberInfoC.class);
             case WebSocketOperateUtil.User_For_Me_C:
-                return gson.fromJson(data,UserForMeC.class);
+                return gson.fromJson(data, UserForMeC.class);
             case WebSocketOperateUtil.User_Data_Info:
-                return gson.fromJson(data,UserGroupNumberInfoC.class);
+                return gson.fromJson(data, UserGroupNumberInfoC.class);
             case WebSocketOperateUtil.User_Save_Personal_Info:
-                return gson.fromJson(data,UserPersonalInfoC.class);
+                return gson.fromJson(data, UserPersonalInfoC.class);
             case WebSocketOperateUtil.User_Exit:
-                return gson.fromJson(data,UserExitC.class);
+                return gson.fromJson(data, UserExitC.class);
             case WebSocketOperateUtil.User_Dissolution_Group:
-                return gson.fromJson(data,UserDissolutionGroupC.class);
+                return gson.fromJson(data, UserDissolutionGroupC.class);
             case WebSocketOperateUtil.User_Send_TimeStamp:
-                return gson.fromJson(data,UserSendTimeStampC.class);
+                return gson.fromJson(data, UserSendTimeStampC.class);
             case WebSocketOperateUtil.User_Location_C:
-                return gson.fromJson(data,UserLocationC.class);
+                return gson.fromJson(data, UserLocationC.class);
             case WebSocketOperateUtil.User_Anoun:
-                return gson.fromJson(data,UserAnounC.class);
+                return gson.fromJson(data, UserAnounC.class);
             default:
                 return null;
         }
 
     }
-
 
 
 }

@@ -1,7 +1,6 @@
 package com.group.zhtx.message.websocket.service.telephoneBook;
 
 
-
 public class RelativeInfo {
     private String userName;
     private String uuid;

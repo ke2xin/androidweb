@@ -2,7 +2,7 @@ package com.group.zhtx.message.websocket.client;
 
 import com.group.zhtx.message.IMessage;
 
-public class UserCreateGroupC implements IMessage{
+public class UserCreateGroupC implements IMessage {
 
     private int operateId;
     private String uuid;

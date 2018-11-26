@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchDataS implements IMessage {
-   private int operateId;
-   private String status;
-   private List<SearchDataInfo> data=new ArrayList<>();
-   private String information;
+    private int operateId;
+    private String status;
+    private List<SearchDataInfo> data = new ArrayList<>();
+    private String information;
 
     public int getOperateId() {
         return operateId;

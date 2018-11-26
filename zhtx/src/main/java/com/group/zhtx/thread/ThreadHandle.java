@@ -2,7 +2,7 @@ package com.group.zhtx.thread;
 
 import java.lang.reflect.Method;
 
-public class ThreadHandle implements IAsyncHandle{
+public class ThreadHandle implements IAsyncHandle {
 
 
     /*
@@ -20,7 +20,7 @@ public class ThreadHandle implements IAsyncHandle{
     private Object instance;
 
 
-    public ThreadHandle(Object packet, Method method, Object instance){
+    public ThreadHandle(Object packet, Method method, Object instance) {
         this.packet = packet;
         this.method = method;
         this.instance = instance;

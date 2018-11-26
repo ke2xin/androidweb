@@ -1,111 +1,110 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title></title>
-		<link type="text/css" rel="stylesheet" href="css/default.css"/>
-		<script type="text/javascript" src="js/jquery-1.11.0.min.js" ></script>
-		
-		<script type="text/javascript">
-			
-			$(document).ready(function(){
-				
-				$(".RegisterButton").click(function(event){
-					var inputs = $(".RegisterRowRight");
-					if(inputs.length === 5){
-						
-						var uuid = inputs.eq(0).val();
-						if(!uuid.match(/^[a-zA-Z0-9_]{0,}$/)){
-							alert("用户名不能含有中文");
-							return;
-						}
-					
-						var password = inputs.eq(1).val();
-						var repassword = inputs.eq(2).val();
-						
-						//匹配中文字符
-						if(!password.match(/^[a-zA-Z0-9_]{0,}$/)){
-							alert("密码异常，请重新输入");
-							return;
-						}
-						
-						if( password == "" || repassword == "" || password !== repassword){
-							alert("密码不一致,请检查");
-							return;
-						}
-						
-						var email = inputs.eq(3).val();
-						if(email == "" || !email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)){
-							alert("邮箱格式不正确"); 
-							return; 
-						}
-						
-						var phone = inputs.eq(4).val();
-						if(!phone.match(/^1[34578]\d{9}$/)){
-							alert("手机号码格式不正确！"); 
-							return;
-						}
-					}
-				});
-			});
-			
-			$.fn.serializeJson = function()   
-			{   
-			   var o = {};   
-			   var a = this.serializeArray();   
-			   $.each(a, function() {   
-			       if (o[this.name]) { 
-			           if (!o[this.name].push) {   
-			               o[this.name] = [o[this.name]];   
-			           }   
-			           o[this.name].push(this.value || '');   
-			       } else {   
-			           o[this.name] = this.value || '';   
-			       }
-			   });
-			   return JSON.stringify(o);   
-			};
-		</script>
-	</head>
-	<body>
-		<div class="container">
-			<div class="mark"></div>
-			<div class="RegisterDialog">
-				<div class="Registertitle">用户注册</div>
-				<form class="register">
-					<div class="RegisterRow">
-					<div class="RegisterRowLeft">用户名:</div>
-					<input type="text" class="RegisterRowRight" name="uuid"></input>
-					</div>
-					<div class="RegisterRow">
-						<div class="RegisterRowLeft">密码:</div>
-						<input type="password" class="RegisterRowRight" name="password" ></input>
-					</div>
-					<div class="RegisterRow">
-						<div class="RegisterRowLeft">确认密码:</div>
-						<input type="password" class="RegisterRowRight"></input>
-					</div>
-					<div class="RegisterRow">
-						<div class="RegisterRowLeft">邮箱:</div>
-						<input type="text" class="RegisterRowRight" name="email"></input>
-					</div>
-					<div class="RegisterRow">
-						<div class="RegisterRowLeft">手机号:</div>
-						<input type="text" class="RegisterRowRight" name="phone"></input>
-					</div>
-					
-					<div class="RegisterRow">
-						<input type="button" class="RegisterButton" value="登陆"/>
-					</div>
-				</form>
-				
-				
-				<div class="RegisterRow">
-					<div class="RegisterLeftText">登陆</div>
-					<div class="RegisterCenterText"> |</div>
-					<div class="RegisterRightText">找回密码</div>
-				</div>
-			</div>
-		</div>
-	</body>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <link type="text/css" rel="stylesheet" href="css/default.css"/>
+    <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $(".RegisterButton").click(function (event) {
+                var inputs = $(".RegisterRowRight");
+                if (inputs.length === 5) {
+
+                    var uuid = inputs.eq(0).val();
+                    if (!uuid.match(/^[a-zA-Z0-9_]{0,}$/)) {
+                        alert("用户名不能含有中文");
+                        return;
+                    }
+
+                    var password = inputs.eq(1).val();
+                    var repassword = inputs.eq(2).val();
+
+                    //匹配中文字符
+                    if (!password.match(/^[a-zA-Z0-9_]{0,}$/)) {
+                        alert("密码异常，请重新输入");
+                        return;
+                    }
+
+                    if (password == "" || repassword == "" || password !== repassword) {
+                        alert("密码不一致,请检查");
+                        return;
+                    }
+
+                    var email = inputs.eq(3).val();
+                    if (email == "" || !email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)) {
+                        alert("邮箱格式不正确");
+                        return;
+                    }
+
+                    var phone = inputs.eq(4).val();
+                    if (!phone.match(/^1[34578]\d{9}$/)) {
+                        alert("手机号码格式不正确！");
+                        return;
+                    }
+                }
+            });
+        });
+
+        $.fn.serializeJson = function () {
+            var o = {};
+            var a = this.serializeArray();
+            $.each(a, function () {
+                if (o[this.name]) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return JSON.stringify(o);
+        };
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="mark"></div>
+    <div class="RegisterDialog">
+        <div class="Registertitle">用户注册</div>
+        <form class="register">
+            <div class="RegisterRow">
+                <div class="RegisterRowLeft">用户名:</div>
+                <input type="text" class="RegisterRowRight" name="uuid"></input>
+            </div>
+            <div class="RegisterRow">
+                <div class="RegisterRowLeft">密码:</div>
+                <input type="password" class="RegisterRowRight" name="password"></input>
+            </div>
+            <div class="RegisterRow">
+                <div class="RegisterRowLeft">确认密码:</div>
+                <input type="password" class="RegisterRowRight"></input>
+            </div>
+            <div class="RegisterRow">
+                <div class="RegisterRowLeft">邮箱:</div>
+                <input type="text" class="RegisterRowRight" name="email"></input>
+            </div>
+            <div class="RegisterRow">
+                <div class="RegisterRowLeft">手机号:</div>
+                <input type="text" class="RegisterRowRight" name="phone"></input>
+            </div>
+
+            <div class="RegisterRow">
+                <input type="button" class="RegisterButton" value="登陆"/>
+            </div>
+        </form>
+
+
+        <div class="RegisterRow">
+            <div class="RegisterLeftText">登陆</div>
+            <div class="RegisterCenterText"> |</div>
+            <div class="RegisterRightText">找回密码</div>
+        </div>
+    </div>
+</div>
+</body>
 </html>

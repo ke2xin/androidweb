@@ -6,177 +6,203 @@
     <link rel="stylesheet" th:href="@{css/manager.css}">
     <script type="text/javascript" th:src="@{js/jquery-1.11.0.min.js}"></script>
     <script type="text/javascript" th:src="@{js/manager.js}"></script>
+    <script type="text/javascript" th:src="@{js/ajax.js}"></script>
 </head>
 <body>
-<div class="main">
-    <div class="container">
-        <div id="head">
-            <div id="headTitle">
-                <h3>后台管理系统</h3>
-            </div>
-            <img src="img/myAbout.png" id="headLogo"/>
-            <span id="headName">点滴之间</span>
-            <div id="headInfo">
-                <img src="img/p4.jpg"/>
-                <span id="managerNick">我是管理员</span>
-                <input type="button" value="首页" id="managerHome"/>
-                <input type="button" value="退出登录" id="managerExit"/>
-            </div>
-        </div>
-        <div id="left">
-            <div class="manager">
-                <span id="userManager">用户管理</span>
-                <ul id="userManagerList">
-                    <li name="forbidUser">禁用用户</li>
-                    <li name="startUser">开启用户</li>
-                </ul>
-                <span id="groupManager">群管理</span>
-                <ul id="groupManagerList">
-                    <li name="forbidGroup">禁用群</li>
-                    <li name="startGroup">开启群</li>
-                </ul>
-            </div>
-        </div>
-        <div id="right">
-            <div id="search">
-                <div id="searchBox">
-                    <img src="img/search.png"/>
-                    <input type="text" id="searchText"/>
-                    <input type="button" value="搜索" id="searchButton"/>
+    <div class="main">
+        <div class="container">
+            <div id="head">
+                <div id="headTitle">
+                    <h3>后台管理系统</h3>
+                </div>
+                <img src="img/myAbout.png" id="headLogo"/>
+                <span id="headName">点滴之间</span>
+                <div id="headInfo">
+                    <img src="img/p4.jpg"/>
+                    <span id="managerNick">我是管理员</span>
+                    <input type="button" value="首页" id="managerHome"/>
+                    <input type="button" value="退出登录" id="managerExit"/>
                 </div>
             </div>
-            <div id="forbidUser">
-                <ul>
-                    <li>
-                        <img src="img/p2.jpg"/>
-                        <span class="userName">神盾局</span>
-                        <span class="userId">541256</span>
-                        <input type="button" value="禁用" class="forbidButton"/>
-                    </li>
-                    <li>
-                        <img src="img/p1.jpg"/>
-                        <span class="userName">求贝特fdafd</span>
-                        <span class="userId">7891fdasf654</span>
-                        <input type="button" value="禁用" class="forbidButton"/>
-                    </li>
-                    <li>
-                        <img src="img/p3.jpg"/>
-                        <span class="userName">恶狗器转</span>
-                        <span class="userId">789756154</span>
-                        <input type="button" value="禁用" class="forbidButton"/>
-                    </li>
-                    <li>
-                        <img src="img/p4.jpg"/>
-                        <span class="userName">你最好</span>
-                        <span class="userId">77812891654</span>
-                        <input type="button" value="禁用" class="forbidButton"/>
-                    </li>
-                    <li>
-                        <img src="img/p4.jpg"/>
-                        <span class="userName">你最好</span>
-                        <span class="userId">77812891654</span>
-                        <input type="button" value="禁用" class="forbidButton"/>
-                    </li>
-                </ul>
+            <div id="left">
+                <div class="manager">
+                    <span id="userManager">用户管理</span>
+                    <ul id="userManagerList">
+                        <li name="forbidUser">禁用用户</li>
+                        <li name="startUser">开启用户</li>
+                    </ul>
+                    <span id="groupManager">群管理</span>
+                    <ul id="groupManagerList">
+                        <li name="forbidGroup">禁用群</li>
+                        <li name="startGroup">开启群</li>
+                    </ul>
+                </div>
             </div>
-            <div id="startUser">
-                <ul>
-                    <li>
-                        <img src="img/p1.jpg"/>
-                        <span class="userName">求贝特fdafd</span>
-                        <span class="userId">7891fdasf654</span>
-                        <input type="button" value="开启" class="startButton"/>
-                    </li>
-                    <li>
-                        <img src="img/p3.jpg"/>
-                        <span class="userName">求贝特fdafd</span>
-                        <span class="userId">7891fdasf654</span>
-                        <input type="button" value="开启" class="startButton"/>
-                    </li>
-                    <li>
-                        <img src="img/p4.jpg"/>
-                        <span class="userName">求贝特fdafd</span>
-                        <span class="userId">7891fdasf654</span>
-                        <input type="button" value="开启" class="startButton"/>
-                    </li>
-                    <li>
-                        <img src="img/p2.jpg"/>
-                        <span class="userName">求贝特fdafd</span>
-                        <span class="userId">7891fdasf654</span>
-                        <input type="button" value="开启" class="startButton"/>
-                    </li>
-                </ul>
-            </div>
-            <div id="forbidGroup">
-                <ul>
-                    <li>
-                        <img src="img/group1.png"/>
-                        <span class="userName">大傻</span>
-                        <span class="userId">78761454</span>
-                        <input type="button" value="禁用" class="forbidButton"/>
-                    </li>
-                    <li>
-                        <img src="img/group2.png"/>
-                        <span class="userName">大傻</span>
-                        <span class="userId">78761454</span>
-                        <input type="button" value="禁用" class="forbidButton"/>
-                    </li>
-                    <li>
-                        <img src="img/group6.png"/>
-                        <span class="userName">大傻</span>
-                        <span class="userId">78761454</span>
-                        <input type="button" value="禁用" class="forbidButton"/>
-                    </li>
-                    <li>
-                        <img src="img/group5.png"/>
-                        <span class="userName">大傻</span>
-                        <span class="userId">78761454</span>
-                        <input type="button" value="禁用" class="forbidButton"/>
-                    </li>
-                    <li>
-                        <img src="img/group3.png"/>
-                        <span class="userName">大傻</span>
-                        <span class="userId">78761454</span>
-                        <input type="button" value="禁用" class="forbidButton"/>
-                    </li>
-                </ul>
-            </div>
-            <div id="startGroup">
-                <ul>
-                    <li>
-                        <img src="img/group8.png"/>
-                        <span class="userName">大傻</span>
-                        <span class="userId">78761454</span>
-                        <input type="button" value="启用" class="startButton"/>
-                    </li>
-                    <li>
-                        <img src="img/group7.png"/>
-                        <span class="userName">大傻</span>
-                        <span class="userId">78761454</span>
-                        <input type="button" value="启用" class="startButton"/>
-                    </li>
-                    <li>
-                        <img src="img/group4.png"/>
-                        <span class="userName">大傻</span>
-                        <span class="userId">78761454</span>
-                        <input type="button" value="启用" class="startButton"/>
-                    </li>
-                    <li>
-                        <img src="img/group1.png"/>
-                        <span class="userName">大傻</span>
-                        <span class="userId">78761454</span>
-                        <input type="button" value="启用" class="startButton"/>
-                    </li>
-                    <li>
-                        <img src="img/group5.png"/>
-                        <span class="userName">大傻</span>
-                        <span class="userId">78761454</span>
-                        <input type="button" value="启用" class="startButton"/>
-                    </li>
-                </ul>
+            <div id="right">
+                <div id="search">
+                    <div id="searchBox">
+                        <img src="img/search.png"/>
+                        <input type="text" id="searchText" placeholder="请输入关键词直接搜索"/>
+                        <input type="button" value="搜索" id="searchButton"/>
+                    </div>
+                    <div class="search_suggest" id="gov_search_suggest">
+                        <ul>
+
+                        </ul>
+                    </div>
+                </div>
+                <div id="forbidUser">
+                    <ul id="forbidUserUl">
+                        <li>
+                            <img src="img/p2.jpg"/>
+                            <span class="userName">神盾局</span>
+                            <span class="userId">541256</span>
+                            <input type="button" value="禁用" class="forbidButton"/>
+                        </li>
+                        <li>
+                            <img src="img/p1.jpg"/>
+                            <span class="userName">求贝特fdafd</span>
+                            <span class="userId">7891fdasf654</span>
+                            <input type="button" value="禁用" class="forbidButton"/>
+                        </li>
+                        <li>
+                            <img src="img/p3.jpg"/>
+                            <span class="userName">恶狗器转</span>
+                            <span class="userId">789756154</span>
+                            <input type="button" value="禁用" class="forbidButton"/>
+                        </li>
+                        <li>
+                            <img src="img/p4.jpg"/>
+                            <span class="userName">你最好</span>
+                            <span class="userId">77812891654</span>
+                            <input type="button" value="禁用" class="forbidButton"/>
+                        </li>
+                        <li>
+                            <img src="img/p4.jpg"/>
+                            <span class="userName">你最好</span>
+                            <span class="userId">77812891654</span>
+                            <input type="button" value="禁用" class="forbidButton"/>
+                        </li>
+                    </ul>
+                    <ul id="getPage" class="page">
+
+                    </ul>
+                </div>
+                <div id="startUser">
+                    <ul id="startUserUl">
+                        <li>
+                            <img src="img/p1.jpg"/>
+                            <span class="userName">求贝特fdafd</span>
+                            <span class="userId">7891fdasf654</span>
+                            <input type="button" value="开启" class="startButton"/>
+                        </li>
+                        <li>
+                            <img src="img/p3.jpg"/>
+                            <span class="userName">求贝特fdafd</span>
+                            <span class="userId">7891fdasf654</span>
+                            <input type="button" value="开启" class="startButton"/>
+                        </li>
+                        <li>
+                            <img src="img/p4.jpg"/>
+                            <span class="userName">求贝特fdafd</span>
+                            <span class="userId">7891fdasf654</span>
+                            <input type="button" value="开启" class="startButton"/>
+                        </li>
+                        <li>
+                            <img src="img/p2.jpg"/>
+                            <span class="userName">求贝特fdafd</span>
+                            <span class="userId">7891fdasf654</span>
+                            <input type="button" value="开启" class="startButton"/>
+                        </li>
+                    </ul>
+                    <ul id="getStartUser" class="page">
+
+                    </ul>
+                </div>
+                <div id="forbidGroup">
+                    <ul id="forbidGroupUl">
+                        <li>
+                            <img src="img/group1.png"/>
+                            <span class="userName">大傻</span>
+                            <span class="userId">78761454</span>
+                            <input type="button" value="禁用" class="forbidButton"/>
+                        </li>
+                        <li>
+                            <img src="img/group2.png"/>
+                            <span class="userName">大傻</span>
+                            <span class="userId">78761454</span>
+                            <input type="button" value="禁用" class="forbidButton"/>
+                        </li>
+                        <li>
+                            <img src="img/group6.png"/>
+                            <span class="userName">大傻</span>
+                            <span class="userId">78761454</span>
+                            <input type="button" value="禁用" class="forbidButton"/>
+                        </li>
+                        <li>
+                            <img src="img/group5.png"/>
+                            <span class="userName">大傻</span>
+                            <span class="userId">78761454</span>
+                            <input type="button" value="禁用" class="forbidButton"/>
+                        </li>
+                        <li>
+                            <img src="img/group3.png"/>
+                            <span class="userName">大傻</span>
+                            <span class="userId">78761454</span>
+                            <input type="button" value="禁用" class="forbidButton"/>
+                        </li>
+                    </ul>
+                    <ul id="getForbidGroup" class="page">
+
+                    </ul>
+                </div>
+                <div id="startGroup">
+                    <ul id="startGroupUl">
+                        <li>
+                            <img src="img/group8.png"/>
+                            <span class="userName">大傻</span>
+                            <span class="userId">78761454</span>
+                            <input type="button" value="启用" class="startButton"/>
+                        </li>
+                        <li>
+                            <img src="img/group7.png"/>
+                            <span class="userName">大傻</span>
+                            <span class="userId">78761454</span>
+                            <input type="button" value="启用" class="startButton"/>
+                        </li>
+                        <li>
+                            <img src="img/group4.png"/>
+                            <span class="userName">大傻</span>
+                            <span class="userId">78761454</span>
+                            <input type="button" value="启用" class="startButton"/>
+                        </li>
+                        <li>
+                            <img src="img/group1.png"/>
+                            <span class="userName">大傻</span>
+                            <span class="userId">78761454</span>
+                            <input type="button" value="启用" class="startButton"/>
+                        </li>
+                        <li>
+                            <img src="img/group5.png"/>
+                            <span class="userName">大傻</span>
+                            <span class="userId">78761454</span>
+                            <input type="button" value="启用" class="startButton"/>
+                        </li>
+                    </ul>
+                    <ul id="getStartGroup" class="page">
+
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <div class="box">
+        <div class="box1">
+            <a href="javascript:;" onclick="jQuery('.box').hide()" class="close">关闭</a>
+            <div class="box2">
+                <input type="button" value="确认退出登录" id="exit">
+            </div>
+        </div>
+    </div>
 </body>
 </html>

@@ -1,7 +1,6 @@
 package com.group.zhtx.message.websocket.service.enterGroup;
 
 
-
 public class EnterDataInfo {
     private String userPortrait;
     private String username;

@@ -15,27 +15,27 @@ public class AsyncThread extends Thread {
     public Map<Integer, AsyncPriorityHandleData> handleDataMap = new HashMap<>();
 
 
-    public AsyncThread(int intervalTime, int threadPriorityNum){
+    public AsyncThread(int intervalTime, int threadPriorityNum) {
         this.intervalTime = intervalTime;
 
-        for (int i = 0; i < threadPriorityNum ; ++i){
+        for (int i = 0; i < threadPriorityNum; ++i) {
             AsyncPriorityHandleData handleData = new AsyncPriorityHandleData();
-            handleDataMap.put(i,handleData);
+            handleDataMap.put(i, handleData);
         }
     }
 
     @Override
-    public void run(){
+    public void run() {
 
-        while (true){
+        while (true) {
             long startTime = System.currentTimeMillis();
 
-            for (int i = 0; i <handleDataMap.size(); ++i){
+            for (int i = 0; i < handleDataMap.size(); ++i) {
                 AsyncPriorityHandleData handleData = handleDataMap.get(i);
 
                 //处理当前队列的循环
                 ArrayList<IAsyncCycle> cycles = handleData.getCurrentCycles();
-                for(int l = 0; l <cycles.size(); ++l){
+                for (int l = 0; l < cycles.size(); ++l) {
                     IAsyncCycle cycle = cycles.get(l);
                     try {
                         cycle.onCycle();
@@ -47,13 +47,13 @@ public class AsyncThread extends Thread {
 
                 //处理当前队列消息
                 ArrayList<IAsyncHandle> handles = handleData.getCurrentHandles();
-                for (int l = 0; l < handles.size(); ++l){
+                for (int l = 0; l < handles.size(); ++l) {
                     IAsyncHandle handle = handles.get(l);
 
                     Method method = handle.getMethod();
                     WebSocket webSocket = (WebSocket) handle.getPacket();
                     try {
-                        method.invoke(handle.getInstance(),webSocket);
+                        method.invoke(handle.getInstance(), webSocket);
                         webSocket.clear();
                     } catch (Exception e) {
                         System.out.println(l + "Method产生异常");
@@ -62,10 +62,9 @@ public class AsyncThread extends Thread {
                 }
 
 
-
                 //将Cycle添加循环队列
                 ArrayList<IAsyncCycle> addCycles = handleData.getAddCycles();
-                for(int l = 0; l < addCycles.size(); l++){
+                for (int l = 0; l < addCycles.size(); l++) {
 
                     IAsyncCycle cycle = addCycles.get(l);
 
@@ -79,7 +78,7 @@ public class AsyncThread extends Thread {
 
                 //将Cycle移除出队列
                 ArrayList<IAsyncCycle> removeCycles = handleData.getRemoveCycles();
-                for(int l = 0; l < removeCycles.size(); l++){
+                for (int l = 0; l < removeCycles.size(); l++) {
 
                     IAsyncCycle cycle = removeCycles.get(l);
 
@@ -93,8 +92,8 @@ public class AsyncThread extends Thread {
 
             long endTime = System.currentTimeMillis();
 
-            if((endTime - startTime) < intervalTime){
-                long times = intervalTime - (endTime-startTime);
+            if ((endTime - startTime) < intervalTime) {
+                long times = intervalTime - (endTime - startTime);
                 try {
                     Thread.sleep(times);
                 } catch (InterruptedException e) {

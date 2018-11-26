@@ -8,15 +8,16 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 @Configuration
-public class WebSocketConfig  implements WebSocketConfigurer {
+public class WebSocketConfig implements WebSocketConfigurer {
 
     private static Integer BufferSize = 4200000;
+
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
     }
 
     @Bean
-    public ServerEndpointExporter serverEndpointExporter(){
+    public ServerEndpointExporter serverEndpointExporter() {
         return new ServerEndpointExporter();
     }
 

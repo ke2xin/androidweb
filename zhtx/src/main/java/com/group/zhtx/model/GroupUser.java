@@ -6,19 +6,19 @@ import java.util.Date;
 
 @Entity
 @Table(name = "chat_group_user")
-public class GroupUser implements Serializable{
+public class GroupUser implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY,targetEntity = Group.class)
-    @JoinColumn(name = "groupUser_gid",referencedColumnName = "group_uuid",foreignKey = @ForeignKey(name = "FK_GROUPUSER_GROUP"))
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Group.class)
+    @JoinColumn(name = "groupUser_gid", referencedColumnName = "group_uuid", foreignKey = @ForeignKey(name = "FK_GROUPUSER_GROUP"))
     private Group group;
 
-    @ManyToOne(fetch = FetchType.EAGER,targetEntity = User.class)
-    @JoinColumn(name = "groupUser_uid",referencedColumnName = "user_uuid",foreignKey = @ForeignKey(name = "FK_GROUPUSER__USER"))
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = User.class)
+    @JoinColumn(name = "groupUser_uid", referencedColumnName = "user_uuid", foreignKey = @ForeignKey(name = "FK_GROUPUSER__USER"))
     private User user;
 
     @Column(name = "groupUser_status")

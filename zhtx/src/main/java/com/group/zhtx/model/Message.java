@@ -6,7 +6,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "chat_message")
-public class Message implements Serializable{
+public class Message implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,7 +26,7 @@ public class Message implements Serializable{
     @Column(name = "message_time")
     private Date sendTime;
 
-    @Column(name = "message_content",length = 500)
+    @Column(name = "message_content", length = 500)
     private String content;
 
     @Column(name = "message_status")

@@ -1,78 +1,89 @@
-*{
+* {
     margin: 0;
     padding: 0;
 }
-body{
+
+body {
     width: 100%;
     height: 100%;
 }
-.main{
+
+.main {
     width: 100%;
     height: 100%;
     min-width: 1600px;
     min-height: 900px;
     position: fixed;
 }
-.main .container{
+
+.main .container {
     width: 100%;
     min-width: 1200px;
     height: 900px;
     margin: auto;
 }
-.main .container #head{
+
+.main .container #head {
     width: 100%;
     height: 200px;
     margin: auto;
-    background: rgb(0,0,0,0.1);
+    background: rgba(0, 0, 0, 0.1);
     position: relative;
 }
-.main .container #head #headTitle{
+
+.main .container #head #headTitle {
     width: 1000px;
     height: 50px;
     margin: auto;
 }
-.main .container #head #headTitle h3{
+
+.main .container #head #headTitle h3 {
     text-align: center;
     padding-top: 10px;
     color: transparent;
     -webkit-text-stroke: 1px darkgrey;
     font-size: 25px;
 }
-.main .container #head img#headLogo{
+
+.main .container #head img#headLogo {
     width: 200px;
     height: 120px;
 }
-.main .container #head #headName{
+
+.main .container #head #headName {
     width: 300px;
     height: 50px;
     position: absolute;
     left: 230px;
     top: 120px;
-    font-family:cursive;
+    font-family: cursive;
     font-size: 30px;
-    background-image: -webkit-linear-gradient(left,blue,#66ffff 10%,#cc00ff 20%,#CC00CC 30%, #CCCCFF 40%, #00FFFF 50%,#CCCCFF 60%,#CC00CC 70%,#CC00FF 80%,#66FFFF 90%,blue 100%);
-    -webkit-text-fill-color: transparent;/* 将字体设置成透明色 */
-    -webkit-background-clip: text;/* 裁剪背景图，使文字作为裁剪区域向外裁剪 */
+    background-image: -webkit-linear-gradient(left, blue, #66ffff 10%, #cc00ff 20%, #CC00CC 30%, #CCCCFF 40%, #00FFFF 50%, #CCCCFF 60%, #CC00CC 70%, #CC00FF 80%, #66FFFF 90%, blue 100%);
+    -webkit-text-fill-color: transparent; /* 将字体设置成透明色 */
+    -webkit-background-clip: text; /* 裁剪背景图，使文字作为裁剪区域向外裁剪 */
     -webkit-background-size: 200% 100%;
     -webkit-animation: masked-animation 4s linear infinite;
 }
+
 /*文字动画*/
 @keyframes masked-animation {
     0% {
-        background-position: 0  0;
+        background-position: 0 0;
     }
     100% {
-        background-position: -100%  0;
+        background-position: -100% 0;
     }
 }
-.main .container #head #headInfo{
+
+.main .container #head #headInfo {
     width: 500px;
     height: 150px;
     position: absolute;
     right: 0;
     top: 50px;
 }
-.main .container #head #headInfo #managerNick{
+
+.main .container #head #headInfo #managerNick {
     width: 200px;
     height: 50px;
     position: relative;
@@ -80,7 +91,8 @@ body{
     top: -80px;
     display: block;
 }
-.main .container #head #headInfo #managerHome{
+
+.main .container #head #headInfo #managerHome {
     position: relative;
     left: -70px;
     top: -50px;
@@ -90,7 +102,8 @@ body{
     border-radius: 10px;
     background: white;
 }
-.main .container #head #headInfo #managerExit{
+
+.main .container #head #headInfo #managerExit {
     position: relative;
     left: 70px;
     top: -50px;
@@ -101,20 +114,22 @@ body{
     background: white;
 }
 
-.main .container #left{
+.main .container #left {
     width: 35%;
-    height: 600px;
+    height: 650px;
     margin-top: 50px;
     float: left;
 }
-.main .container #left .manager{
+
+.main .container #left .manager {
     width: 300px;
-    height: 600px;
+    height: 650px;
     border: 1px solid darkgrey;
     margin-left: 20px;
     border-radius: 15px;
 }
-.main .container #left .manager span{
+
+.main .container #left .manager span {
     width: 295px;
     height: 50px;
     line-height: 50px;
@@ -122,42 +137,48 @@ body{
     padding-left: 5px;
     border-bottom: 1px solid darkgray;
 }
-.main .container #left .manager ul#userManagerList{
+
+.main .container #left .manager ul#userManagerList {
     width: 300px;
     height: 100px;
     list-style: none;
     display: none;
 }
-.main .container #left .manager ul#groupManagerList{
+
+.main .container #left .manager ul#groupManagerList {
     width: 300px;
     height: 100px;
     list-style: none;
     display: none;
 }
-.main .container #left .manager ul li{
+
+.main .container #left .manager ul li {
     width: 300px;
     height: 50px;
     line-height: 50px;
     text-align: center;
     border-bottom: 1px solid darkgray;
 }
-.main .container #right{
+
+.main .container #right {
     width: 50%;
-    height: 600px;
+    height: 650px;
     margin-top: 50px;
     float: left;
     border: 1px solid darkgrey;
 }
-.main .container #right #search{
+
+.main .container #right #search {
     width: 100%;
     height: 100px;
-    background: rgba(175,238,238,0.5);
+    background: rgba(175, 238, 238, 0.5);
     border-bottom-left-radius: 20px;
     border-bottom-right-radius: 20px;
     position: relative;
 }
-.main .container #right #search #searchBox{
-    width: 400px;
+
+.main .container #right #search #searchBox {
+    width: 640px;
     height: 50px;
     background: white;
     margin: auto;
@@ -167,8 +188,9 @@ body{
     bottom: 0;
     right: 0;
 }
-.main .container #right #search #searchBox:before{
-    width: 410px;
+
+.main .container #right #search #searchBox:before {
+    width: 650px;
     height: 60px;
     display: block;
     content: "";
@@ -178,48 +200,92 @@ body{
     top: -5px;
     z-index: -1;
 }
-.main .container #right #search #searchBox img{
+
+.main .container #right #search #searchBox img {
     width: 40px;
     height: 40px;
 }
-.main .container #right #search #searchBox input#searchText{
-    width: 160px;
+
+.main .container #right #search #searchBox input#searchText {
+    width: 478px;
     height: 40px;
     position: relative;
-    left: 20px;
+    left: 0px;
     top: -11px;
 }
-.main .container #right #search #searchBox input#searchButton{
+
+.main .container #right #search #searchBox input#searchButton {
     width: 80px;
     height: 40px;
     position: relative;
-    left: 50px;
+    left: 30px;
     top: -11px;
 }
-.main .container #right #forbidUser{
-    width: 650px;
-    height: 498px;
+
+/*搜索框样式*/
+.main .container #right #search .search_suggest{
+    position: absolute;
+    z-index: 10;
+    width: 648px;
+    background: #00FFFF;
     margin: auto;
-    border: 1px solid darkgrey;
+    top: 100px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border: 1px solid #ccc;
+    border-top: none;
+    color: #004080;
+}
+.main .container #right #search .search_suggest li{
+    height: 24px;
+    overflow: hidden;
+    padding-left: 3px;
+    line-height: 24px;
+    background: #fff;
+    cursor: default;
+}
+.main .container #right #search .search_suggest li.hover{
+    background: #ddd;
+}
+
+.num_right {
+    float: right;
+    text-align: right;
+    line-height: 24px;
+    padding-right: 10px
+}
+
+
+
+.main .container #right #forbidUser {
+    width: 650px;
+    height: 550px;
+    margin: auto;
     display: block;
 }
-.main .container #right #forbidUser ul{
+
+.main .container #right #forbidUser ul#forbidUserUl {
     width: 650px;
-    height: 490px;
+    height: 470px;
+    border: 1px solid darkgrey;
     list-style: none;
     overflow-y: auto;
 }
-.main .container #right #forbidUser ul li{
+
+.main .container #right #forbidUser ul#forbidUserUl li {
     width: 100%;
     height: 100px;
     border-bottom: 1px solid darkgrey;
 }
-.main .container #right #forbidUser ul li img{
+
+.main .container #right #forbidUser #forbidUserUl li img {
     width: 80px;
     height: 80px;
     margin: 10px;
 }
-.main .container #right #forbidUser ul li span.userName{
+
+.main .container #right #forbidUser ul#forbidUserUl li span.userName {
     width: 200px;
     height: 50px;
     position: relative;
@@ -227,7 +293,8 @@ body{
     left: 120px;
     top: -90px;
 }
-.main .container #right #forbidUser ul li span.userId{
+
+.main .container #right #forbidUser ul#forbidUserUl li span.userId {
     width: 200px;
     height: 50px;
     position: relative;
@@ -235,83 +302,82 @@ body{
     left: 120px;
     top: -80px;
 }
-.main .container #right #forbidUser ul li .forbidButton{
+
+.main .container #right #forbidUser ul#forbidUserUl li .forbidButton {
     width: 100px;
     height: 30px;
     position: relative;
     left: 500px;
     top: -180px;
 }
-.main .container #right #startUser{
+.main .container #right #forbidUser ul#getPage{
     width: 650px;
-    height: 498px;
-    margin: auto;
-    border: 1px solid darkgrey;
+    height: 80px;
+    text-align: center;
+    list-style-type: none;
+}
+
+
+
+/*退出登录弹出框样式*/
+.box{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.2);
     display: none;
 }
-.main .container #right #startUser ul{
-    width: 650px;
-    height: 490px;
-    list-style: none;
-    overflow-y: auto;
+.box1{
+    width: 500px;
+    height: 650px;
+    position: fixed;left: 60%; top: 26%;
+    margin-left: -250px;
+    background: #66ffff;
+    /*border: 1px solid #000000;*/
 }
-.main .container #right #startUser ul li{
-    width: 100%;
-    height: 100px;
-    border-bottom: 1px solid darkgrey;
-}
-.main .container #right #startUser ul li img{
-    width: 80px;
-    height: 80px;
-    margin: 10px;
-}
-.main .container #right #startUser ul li span.userName{
-    width: 200px;
-    height: 50px;
-    position: relative;
-    display: block;
-    left: 120px;
-    top: -90px;
-}
-.main .container #right #startUser ul li span.userId{
-    width: 200px;
-    height: 50px;
-    position: relative;
-    display: block;
-    left: 120px;
-    top: -80px;
-}
-.main .container #right #startUser ul li .startButton{
-    width: 100px;
-    height: 30px;
-    position: relative;
-    left: 500px;
-    top: -180px;
-}
-.main .container #right #forbidGroup{
-    width: 650px;
-    height: 498px;
+.box1 .box2 {
+    width: 500px;
+    height: 600px;
     margin: auto;
-    border: 1px solid darkgrey;
+    text-align: center;
+    line-height: 600px;
+}
+.box1 .box2 input#exit{
+    width: 300px;
+    height: 50px;
+    border-radius: 25px;
+    background: orange;
+    border: none;
+}
+
+.main .container #right #startUser {
+    width: 650px;
+    height: 550px;
+    margin: auto;
     display: none;
 }
-.main .container #right #forbidGroup ul{
+
+.main .container #right #startUser ul#startUserUl {
     width: 650px;
-    height: 490px;
+    height: 470px;
+    border: 1px solid darkgrey;
     list-style: none;
     overflow-y: auto;
 }
-.main .container #right #forbidGroup ul li{
+
+.main .container #right #startUser ul#startUserUl li {
     width: 100%;
     height: 100px;
     border-bottom: 1px solid darkgrey;
 }
-.main .container #right #forbidGroup ul li img{
+
+.main .container #right #startUser ul#startUserUl li img {
     width: 80px;
     height: 80px;
     margin: 10px;
 }
-.main .container #right #forbidGroup ul li span.userName{
+
+.main .container #right #startUser ul#startUserUl li span.userName {
     width: 200px;
     height: 50px;
     position: relative;
@@ -319,7 +385,8 @@ body{
     left: 120px;
     top: -90px;
 }
-.main .container #right #forbidGroup ul li span.userId{
+
+.main .container #right #startUser ul#startUserUl li span.userId {
     width: 200px;
     height: 50px;
     position: relative;
@@ -327,37 +394,50 @@ body{
     left: 120px;
     top: -80px;
 }
-.main .container #right #forbidGroup ul li .forbidButton{
+
+.main .container #right #startUser ul#startUserUl li .startButton {
     width: 100px;
     height: 30px;
     position: relative;
     left: 500px;
     top: -180px;
 }
-.main .container #right #startGroup{
+
+.main .container #right #startUser ul#getStartUser{
     width: 650px;
-    height: 498px;
+    height: 80px;
+    text-align: center;
+    list-style-type: none;
+}
+
+.main .container #right #forbidGroup {
+    width: 650px;
+    height: 550px;
     margin: auto;
-    border: 1px solid darkgrey;
     display: none;
 }
-.main .container #right #startGroup ul{
+
+.main .container #right #forbidGroup ul#forbidGroupUl {
     width: 650px;
-    height: 490px;
+    height: 470px;
+    border: 1px solid darkgrey;
     list-style: none;
     overflow-y: auto;
 }
-.main .container #right #startGroup ul li{
+
+.main .container #right #forbidGroup ul#forbidGroupUl li {
     width: 100%;
     height: 100px;
     border-bottom: 1px solid darkgrey;
 }
-.main .container #right #startGroup ul li img{
+
+.main .container #right #forbidGroup ul#forbidGroupUl li img {
     width: 80px;
     height: 80px;
     margin: 10px;
 }
-.main .container #right #startGroup ul li span.userName{
+
+.main .container #right #forbidGroup ul#forbidGroupUl li span.userName {
     width: 200px;
     height: 50px;
     position: relative;
@@ -365,7 +445,8 @@ body{
     left: 120px;
     top: -90px;
 }
-.main .container #right #startGroup ul li span.userId{
+
+.main .container #right #forbidGroup ul#forbidGroupUl li span.userId {
     width: 200px;
     height: 50px;
     position: relative;
@@ -373,10 +454,112 @@ body{
     left: 120px;
     top: -80px;
 }
-.main .container #right #startGroup ul li .startButton{
+
+.main .container #right #forbidGroup ul#forbidGroupUl li .forbidButton {
     width: 100px;
     height: 30px;
     position: relative;
     left: 500px;
     top: -180px;
+}
+
+.main .container #right #forbidGroup ul#getForbidGroup{
+    width: 650px;
+    height: 80px;
+    text-align: center;
+    list-style-type: none;
+}
+
+.main .container #right #startGroup {
+    width: 650px;
+    height: 550px;
+    margin: auto;
+    display: none;
+}
+
+.main .container #right #startGroup ul#startGroupUl {
+    width: 650px;
+    height: 470px;
+    border: 1px solid darkgrey;
+    list-style: none;
+    overflow-y: auto;
+}
+
+.main .container #right #startGroup ul#startGroupUl li {
+    width: 100%;
+    height: 100px;
+    border-bottom: 1px solid darkgrey;
+}
+
+.main .container #right #startGroup ul#startGroupUl li img {
+    width: 80px;
+    height: 80px;
+    margin: 10px;
+}
+
+.main .container #right #startGroup ul#startGroupUl li span.userName {
+    width: 200px;
+    height: 50px;
+    position: relative;
+    display: block;
+    left: 120px;
+    top: -90px;
+}
+
+.main .container #right #startGroup ul#startGroupUl li span.userId {
+    width: 200px;
+    height: 50px;
+    position: relative;
+    display: block;
+    left: 120px;
+    top: -80px;
+}
+
+.main .container #right #startGroup ul#startGroupUl li .startButton {
+    width: 100px;
+    height: 30px;
+    position: relative;
+    left: 500px;
+    top: -180px;
+}
+
+.main .container #right #startGroup ul#getStartGroup{
+    width: 650px;
+    height: 80px;
+    text-align: center;
+    list-style-type: none;
+}
+
+/*分页的样式*/
+.page{
+    list-style: none;
+}
+.page>li {
+    float: left;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.page .pageItem {
+    border: solid thin #DDDDDD;
+    margin: 5px;
+}
+
+.page .pageItemActive {
+    border: solid thin #0099FF;
+    margin: 5px;
+    background-color: #0099FF;
+    color: white;
+}
+
+.page .pageItem:hover {
+    border: solid thin #0099FF;
+    background-color: #0099FF;
+    color: white;
+}
+
+.page .pageItemDisable {
+    border: solid thin #DDDDDD;
+    margin: 5px;
+    background-color: #DDDDDD;
 }

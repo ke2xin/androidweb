@@ -9,7 +9,7 @@ import java.util.List;
 public class RelativeBookS implements Serializable, IMessage {
     private String operateId;
     private String status;
-    private List<RelativeInfo> data=new ArrayList<>();
+    private List<RelativeInfo> data = new ArrayList<>();
 
     public String getOperateId() {
         return operateId;

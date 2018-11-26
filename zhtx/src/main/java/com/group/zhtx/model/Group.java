@@ -10,27 +10,27 @@ import java.util.Date;
 public class Group implements Serializable {
 
     @Id
-    @Column(name = "group_uuid",length = 30)
+    @Column(name = "group_uuid", length = 30)
     private String uuid;
 
-    @Column(name = "group_name",nullable = false,length = 30)
+    @Column(name = "group_name", nullable = false, length = 30)
     private String name;
 
-    @Column(name = "group_hobby",length = 200)
+    @Column(name = "group_hobby", length = 200)
     private String hobby;
 
-    @Column(name = "group_anoun",length = 400)
+    @Column(name = "group_anoun", length = 400)
     private String anoun;
 
-    @ManyToOne(fetch = FetchType.LAZY,targetEntity = User.class)
-    @JoinColumn(name = "group_creatorId",referencedColumnName = "user_uuid",foreignKey = @ForeignKey(name = "FK_GROP_CREATOR"))
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+    @JoinColumn(name = "group_creatorId", referencedColumnName = "user_uuid", foreignKey = @ForeignKey(name = "FK_GROP_CREATOR"))
     private User creater;
 
     @Column(name = "group_status")
     private short status = 1;
 
-    @Column(name = "group_portarit",length = 100)
-    private String portarit ="";
+    @Column(name = "group_portarit", length = 100)
+    private String portarit = "";
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "group_createTime")

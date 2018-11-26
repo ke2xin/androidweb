@@ -9,29 +9,32 @@ import org.springframework.web.bind.annotation.*;
 public class IndexController {
 
     @GetMapping("/index")
-    public String toIndex(){
-       return "chatIndex";
+    public String toIndex() {
+        return "chatIndex";
     }
+
     @GetMapping("/register")
-    public String toRegister(){
+    public String toRegister() {
         return "register";
     }
 
     @GetMapping("/login")
-    public String toLogin(){
+    public String toLogin() {
         return "login";
     }
 
     @GetMapping("/updataPassword")
-    public String toUpdataPassword(){
+    public String toUpdataPassword() {
         return "updataPassword";
     }
+
     @RequestMapping("/managerLogin")
-    public String toManagerLogin(){
+    public String toManagerLogin() {
         return "managerLogin";
     }
+
     @RequestMapping("/manager")
-    public String toManager(){
+    public String toManager() {
         return "manager";
     }
 }

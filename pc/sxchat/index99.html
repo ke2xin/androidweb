@@ -1,473 +1,475 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
-		<meta charset="utf-8" />
-		<title></title>
-		<script type="text/javascript" src="js/jquery-1.11.0.min.js" ></script>
-		<link rel="stylesheet" href="css/index.css" />
-		<script type="text/javascript" src="js/index.js"></script>
-		<script type="text/javascript" src="js/ddzj-operateIdType.js" ></script>
-		<script type="text/javascript" src="js/ddzj-tool.js"></script>
-		<script type="text/javascript" src="js/ddzj-event.js" ></script>
-		<script type="text/javascript" src="js/ddzj-websocket.js" ></script>
-		<script type="text/javascript" src="js/ddzj-agent.js" ></script>
-		<script type="text/javascript" src="js/getscript.js"></script>
-		<script type="text/javascript" src="js/ddzj-chatGroupObj.js" ></script>
-		<script type="text/javascript" src="js/ddzj-serachGroup.js"></script>
-		<script type="text/javascript" src="js/ddzj-Notification.js"></script>
-		<script type="text/javascript" src="js/ddzj-talkMonitor.js" ></script>
-		
-	</head>
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+    <script type="text/javascript" src="js/jquery-1.11.0.min.js"></script>
+    <link rel="stylesheet" href="css/index.css"/>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script type="text/javascript" src="js/ddzj-operateIdType.js"></script>
+    <script type="text/javascript" src="js/ddzj-tool.js"></script>
+    <script type="text/javascript" src="js/ddzj-event.js"></script>
+    <script type="text/javascript" src="js/ddzj-websocket.js"></script>
+    <script type="text/javascript" src="js/ddzj-agent.js"></script>
+    <script type="text/javascript" src="js/getscript.js"></script>
+    <script type="text/javascript" src="js/ddzj-chatGroupObj.js"></script>
+    <script type="text/javascript" src="js/ddzj-serachGroup.js"></script>
+    <script type="text/javascript" src="js/ddzj-Notification.js"></script>
+    <script type="text/javascript" src="js/ddzj-talkMonitor.js"></script>
 
-	<body>
-		<script type="text/javascript">
-			
-			
-					var TalkMonitor = window.ddzj.TalkMonitor;
-					var User = function(userName,password){
-						this.userName = userName;
-						this.password = password;
-					}
-					window.user = new User(123,123);
-					
-					var talkMonitor = new TalkMonitor();
-					talkMonitor.init("ws://172.17.146.44:8080/ws");
-					//talkMonitor.init("ws://localhost:8080/ws");
-		</script>
-		<div class="main">
-			<div class="container">
-				<div class="head">
-					<img id="IPortrait" src="img/IPortrait.jpg" />
-					<h5 class="nickName">帅过吴彦祖</h5>
-					<p class="sign">不服，你就来战!!!!</p>
-				</div>
-				<div id="left">
-					<div id="top">
-						<span id="title">群聊</span>
-						<span id="functionButton">＋</span>
-						<div id="subMune">
-							<ul class="createAndSearch">
-								<li name="createGroup">创建群</li>
-								<li id="divisionLine"></li>
-								<li name="searchGroup">搜索群</li>
-							</ul>
-						</div>
-					</div>
-					<div id="middle">
-						<div id="middleGroupChat">
-							<ul id="groupChat">
-							</ul>
-						</div>
-						<div id="middleNotificationMessage">
-							<ul id="notificationMessage">
-							</ul>
-						</div>
-						<div id="middleI">
-							<ul id="I">
-								<li>
-									<img src="img/IPortrait.jpg" />
-									<span class="nickName">帅过吴彦祖</span>
-									<span class="sign">不服，你就来战!!!!</span>
-								</li>
-								<li name="myData">
-									<img src="img/myData.png" />
-									<span class="myData">我的资料</span>
-								</li>
-								<li>
-									<img src="img/myPhoto.png" />
-									<span class="myData">我的相册</span>
-								</li>
-								<li>
-									<img src="img/myAbout.png" />
-									<span class="myData">关于我们</span>
-								</li>
-								<li class="exit">
-									<span>退出登录</span>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div id="bottom">
-						<ul class="bottomMenu">
-							<li name="groupChat">
-								<img src="img/group_chat2.png" id="groupChatImg"/>
-								<span id="groupChatSpan">群聊</span>
-							</li>
-							<li name="notificaitonMessage">
-								<img src="img/message_notification1.png" id="notificationImg"/>
-								<span id="notificationSpan">消息</span>
-							</li>
-							<li name="IData">
-								<img src="img/i_data1.png" id="IDataImg"/>
-								<span id="IDataSpan">我</span>
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div id="right">
-					<div id="chatWindow">
-						<div id="chatWindowInfo">
-						<div id="chatWindowTitle">
-								<input type="image" src="img/chatListButton.png" id="chatLIistButton" />
-								<input type="button" value="返回" id="chatBlack"/>
-								<div id="chatGroupInfo">
-									<h4 class="chatGroupName">极恋之光</h4>
-									<span>公告：</span>
-									<span class="chatGroupNotification">你我的倾城时光，快点啊，知否知否，应是环肥燕瘦，哈哈哈哈哈哈</span>
-								</div>
-								<input type="button" value="关闭" id="chatClose"/>
-								
-								<div id="chatGroupListFunc">
-									<ul class="groupListFunc">
-										<li name="anoun">公告</li>
-										<li name="manager">群管理</li>
-										<li name="deleteMessage">清空消息</li>
-										<li class="exitGroup" name="exitGroup">退出群</li>
-									</ul>
-									<div id="chatWindowManager">
-										<div id="groupAnoun">
-											<form>
-												<textarea class="anoun" placeholder="请输入你要发布的公告"></textarea>
-												<input type="submit" value="发布" id="publicAnoun"/>
-											</form>
-										</div>
-										<div id="groupManager">
-											<div id="groupTile">
-												<img src="img/group3.png" />
-												<span  class="groupManagerGroupName">极光之恋</span>
-												<span class="groupManagerGroupId">12346798</span>
-											</div>
-											<div id="groupDataNumber">
-												<ul class="groupNumberInfo">
-													<li class="groupNumberList">
-														<img src="img/p1.jpg" />
-														<span>大笨</span>
-													</li>
-													<li class="groupNumberList">
-														<img src="img/p2.jpg" />
-														<span>小笨</span>
-													</li>
-												</ul>
-											</div>
-											<div id="groupMangerFunc">
-												<ul class="groupMangerFuncList">
-													<li name="groupAnoun">
-														群公告
-													</li>
-													<li name="groupNumber">
-														管理群成员
-													</li>
-													<li name="groupData">
-														查看群资料
-													</li>
-													<li name="groupDissolution">
-														解散群
-													</li>
-												</ul>
-											</div>
-										</div>
-										<div id="groupAnounPanel">
-											<span id="gapClose">&times;</span>
-											<div id="anounList">
-												<ul class="AnounNotice">
-													<li>
-														<h4>开班会啦</h4>
-														<span class="anounContent">快点啦，开班回家啦</span>
-														<span class="edit">编辑</span>
-														<span class="deleteAnoun">删除</span>
-													</li>
-													<li>
-														<h4>通知</h4>
-														<span class="anounContent">
+</head>
+
+<body>
+<script type="text/javascript">
+
+
+    var TalkMonitor = window.ddzj.TalkMonitor;
+    var User = function (userName, password) {
+        this.userName = userName;
+        this.password = password;
+    }
+    window.user = new User(123, 123);
+
+    var talkMonitor = new TalkMonitor();
+    talkMonitor.init("ws://172.17.146.44:8080/ws");
+    //talkMonitor.init("ws://localhost:8080/ws");
+</script>
+<div class="main">
+    <div class="container">
+        <div class="head">
+            <img id="IPortrait" src="img/IPortrait.jpg"/>
+            <h5 class="nickName">帅过吴彦祖</h5>
+            <p class="sign">不服，你就来战!!!!</p>
+        </div>
+        <div id="left">
+            <div id="top">
+                <span id="title">群聊</span>
+                <span id="functionButton">＋</span>
+                <div id="subMune">
+                    <ul class="createAndSearch">
+                        <li name="createGroup">创建群</li>
+                        <li id="divisionLine"></li>
+                        <li name="searchGroup">搜索群</li>
+                    </ul>
+                </div>
+            </div>
+            <div id="middle">
+                <div id="middleGroupChat">
+                    <ul id="groupChat">
+                    </ul>
+                </div>
+                <div id="middleNotificationMessage">
+                    <ul id="notificationMessage">
+                    </ul>
+                </div>
+                <div id="middleI">
+                    <ul id="I">
+                        <li>
+                            <img src="img/IPortrait.jpg"/>
+                            <span class="nickName">帅过吴彦祖</span>
+                            <span class="sign">不服，你就来战!!!!</span>
+                        </li>
+                        <li name="myData">
+                            <img src="img/myData.png"/>
+                            <span class="myData">我的资料</span>
+                        </li>
+                        <li>
+                            <img src="img/myPhoto.png"/>
+                            <span class="myData">我的相册</span>
+                        </li>
+                        <li>
+                            <img src="img/myAbout.png"/>
+                            <span class="myData">关于我们</span>
+                        </li>
+                        <li class="exit">
+                            <span>退出登录</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="bottom">
+                <ul class="bottomMenu">
+                    <li name="groupChat">
+                        <img src="img/group_chat2.png" id="groupChatImg"/>
+                        <span id="groupChatSpan">群聊</span>
+                    </li>
+                    <li name="notificaitonMessage">
+                        <img src="img/message_notification1.png" id="notificationImg"/>
+                        <span id="notificationSpan">消息</span>
+                    </li>
+                    <li name="IData">
+                        <img src="img/i_data1.png" id="IDataImg"/>
+                        <span id="IDataSpan">我</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="right">
+            <div id="chatWindow">
+                <div id="chatWindowInfo">
+                    <div id="chatWindowTitle">
+                        <input type="image" src="img/chatListButton.png" id="chatLIistButton"/>
+                        <input type="button" value="返回" id="chatBlack"/>
+                        <div id="chatGroupInfo">
+                            <h4 class="chatGroupName">极恋之光</h4>
+                            <span>公告：</span>
+                            <span class="chatGroupNotification">你我的倾城时光，快点啊，知否知否，应是环肥燕瘦，哈哈哈哈哈哈</span>
+                        </div>
+                        <input type="button" value="关闭" id="chatClose"/>
+
+                        <div id="chatGroupListFunc">
+                            <ul class="groupListFunc">
+                                <li name="anoun">公告</li>
+                                <li name="manager">群管理</li>
+                                <li name="deleteMessage">清空消息</li>
+                                <li class="exitGroup" name="exitGroup">退出群</li>
+                            </ul>
+                            <div id="chatWindowManager">
+                                <div id="groupAnoun">
+                                    <form>
+                                        <textarea class="anoun" placeholder="请输入你要发布的公告"></textarea>
+                                        <input type="submit" value="发布" id="publicAnoun"/>
+                                    </form>
+                                </div>
+                                <div id="groupManager">
+                                    <div id="groupTile">
+                                        <img src="img/group3.png"/>
+                                        <span class="groupManagerGroupName">极光之恋</span>
+                                        <span class="groupManagerGroupId">12346798</span>
+                                    </div>
+                                    <div id="groupDataNumber">
+                                        <ul class="groupNumberInfo">
+                                            <li class="groupNumberList">
+                                                <img src="img/p1.jpg"/>
+                                                <span>大笨</span>
+                                            </li>
+                                            <li class="groupNumberList">
+                                                <img src="img/p2.jpg"/>
+                                                <span>小笨</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div id="groupMangerFunc">
+                                        <ul class="groupMangerFuncList">
+                                            <li name="groupAnoun">
+                                                群公告
+                                            </li>
+                                            <li name="groupNumber">
+                                                管理群成员
+                                            </li>
+                                            <li name="groupData">
+                                                查看群资料
+                                            </li>
+                                            <li name="groupDissolution">
+                                                解散群
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="groupAnounPanel">
+                                    <span id="gapClose">&times;</span>
+                                    <div id="anounList">
+                                        <ul class="AnounNotice">
+                                            <li>
+                                                <h4>开班会啦</h4>
+                                                <span class="anounContent">快点啦，开班回家啦</span>
+                                                <span class="edit">编辑</span>
+                                                <span class="deleteAnoun">删除</span>
+                                            </li>
+                                            <li>
+                                                <h4>通知</h4>
+                                                <span class="anounContent">
 															现在有个关于学习宪法的考试通知，
 															请大家积极参加考试，在易班上参加考试，考试题库有50题，随机抽取20题进行测试，
 															可以重复考试，次数不限，及格分数为80分，
 															满分100分(满分有小奖品送)。易班考试开放时间为2018年6月29日到2018年7月1日24:00点。即7月2号截止
 														</span>
-														<span class="edit">编辑</span>
-														<span class="deleteAnoun">删除</span>
-													</li>
-													<li>
-														<h4>毕业啦</h4>
-														<span class="anounContent">
+                                                <span class="edit">编辑</span>
+                                                <span class="deleteAnoun">删除</span>
+                                            </li>
+                                            <li>
+                                                <h4>毕业啦</h4>
+                                                <span class="anounContent">
 															快点啦，在不快点，你就结业了，哈哈哈哈哈哈哈哈哈，你敢，不信，你就试试，哈哈哈哈哈哈哈哈哈哈哈
 														</span>
-														<span class="edit">编辑</span>
-														<span class="deleteAnoun">删除</span>
-													</li>
-													<li>
-														<h4>通知</h4>
-														<span class="anounContent">
+                                                <span class="edit">编辑</span>
+                                                <span class="deleteAnoun">删除</span>
+                                            </li>
+                                            <li>
+                                                <h4>通知</h4>
+                                                <span class="anounContent">
 															现在有个关于学习宪法的考试通知，
 															请大家积极参加考试，在易班上参加考试，考试题库有50题，随机抽取20题进行测试，
 															可以重复考试，次数不限，及格分数为80分，
 															满分100分(满分有小奖品送)。易班考试开放时间为2018年6月29日到2018年7月1日24:00点。即7月2号截止
 														</span>
-														<span class="edit">编辑</span>
-														<span class="deleteAnoun">删除</span>
-													</li>
-													<li>
-														<h4>毕业啦</h4>
-														<span class="anounContent">
+                                                <span class="edit">编辑</span>
+                                                <span class="deleteAnoun">删除</span>
+                                            </li>
+                                            <li>
+                                                <h4>毕业啦</h4>
+                                                <span class="anounContent">
 															快点啦，在不快点，你就结业了，哈哈哈哈哈哈哈哈哈，你敢，不信，你就试试，哈哈哈哈哈哈哈哈哈哈哈
 														</span>
-														<span class="edit">编辑</span>
-														<span class="deleteAnoun">删除</span>
-													</li>
-												</ul>
-											</div>
-										</div>
-										<div id="groupNumberPanel">
-											<span id="gnpClose">&times;</span>
-											<div id="ControllerNumbers">
-												<ul class="ControllerNumbersList">
-													<li>
-														<img src="img/p4.jpg" />
-														<span>二哥</span>
-														<input type="button" value="删除" class="deleteNumber"/>
-													</li>
-													<li>
-														<img src="img/p4.jpg" />
-														<span>二哥</span>
-														<input type="button" value="删除" class="deleteNumber"/>
-													</li>
-													<li>
-														<img src="img/p4.jpg" />
-														<span>二哥</span>
-														<input type="button" value="删除" class="deleteNumber"/>
-													</li>
-													<li>
-														<img src="img/p4.jpg" />
-														<span>二哥</span>
-														<input type="button" value="删除" class="deleteNumber"/>
-													</li>
-													<li>
-														<img src="img/p4.jpg" />
-														<span>二哥</span>
-														<input type="button" value="删除" class="deleteNumber"/>
-													</li>
-													<li>
-														<img src="img/p4.jpg" />
-														<span>二哥</span>
-														<input type="button" value="删除" class="deleteNumber"/>
-													</li>
-												</ul>
-											</div>
-										</div>
-										<div id="groupDataPanel">
-											<span id="gdpClose">&times;</span>
-											<div id="groupDataSave">
-												<form>
-													<table>
-														<tr>
-															<td>点击更换头像</td>
-															<td><img src="img/group3.png"/></td>
-														</tr>
-														<tr>
-															<td>群昵称</td>
-															<td><input type="text" value="狂欢嘉年华" class="groupDataSaveName"/></td>
-														</tr>
-														<tr>
-															<!--
-                                                            	作者：offline
-                                                            	时间：2018-11-10
-                                                            	描述：
-                                                            	这里需要根据是否是群主而定
-                                                            -->
-															<td>进群时间</td>
-															<td>2018-2-12 4:2:23</td>
-														</tr>
-														<tr>
-															<td colspan="2"><input type="button" value="保存" id="groupDataSure"/></td>
-														</tr>
-													</table>
-												</form>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						<div id="chatGroupMessage">
-								<ul id="groupMessage">
-									<li class="left">
-										<div class="chat-sender">
-											<div class="nickeNamePortrait"><img src="img/p2.jpg" /></div>
-											<div class="nickName" >阿笨</div>
-											<div class="chatBackgroung">
-												<div class="chat-left_triangle"></div>
-												<span>苹果增</span>
-											</div>
-										</div>
-									</li>
-								</ul>
-							</div>
-						<div id="chatBox">
-								<div id="chatBoxTop">
-									<span id="chatBoxTopPlus">+</span>
-									<input type="text" id="chatBoxContent"/>
-									<input type="button" value="发送" id="chatBoxTopSend"/>
-								</div>
-								<div id="chatBoxListFuncMune">
-									<ul class="boxListFuncMenu">
-										<li>
-											<img src="img/mapLocation.png" id="chatBoxLocation"/>
-											<span>位置</span>
-										</li>
-										<li>
-											<img src="img/relative.png" />
-											<span>联系</span>
-										</li>
-									</ul>
-								</div>
-						</div>
-					</div>	
-						<div id="chatWindowMap">
-							<div id="mapLocation">
-								<img src="img/black.png" class="black" id="black"/>
-								<span class="location">位置</span>
-								<span class="locationGroupName">西游四人and马祖</span>
-							</div>
-							<div id="mapNumbers">
-								<ul class="mapNumbersInfo">
-									<li>
-										<img src="img/p4.jpg" />
-									</li>
-									<li>
-										<img src="img/p3.jpg" />
-									</li>
-									<li>
-										<img src="img/p4.jpg" />
-									</li>
-									<li>
-										<img src="img/p1.jpg" />
-									</li>
-									<li>
-										<img src="img/p4.jpg" />
-									</li>
-									<li>
-										<img src="img/p1.jpg" />
-									</li>
-									<li>
-										<img src="img/p4.jpg" />
-									</li>
-									<li>
-										<img src="img/p2.jpg" />
-									</li>
-									<li>
-										<img src="img/p1.jpg" />
-									</li>
-									<li>
-										<img src="img/p4.jpg" />
-									</li>
-									<li>
-										<img src="img/p1.jpg" />
-									</li>
-									<li>
-										<img src="img/p4.jpg" />
-									</li>
-									<li>
-										<img src="img/p2.jpg" />
-									</li>
-								</ul>
-							</div>
-							<div id="mapInfo">
-								<div id="map">
-									
-								</div>
-								<div id="mapInfoLocation">
-									<img src="img/locationDatile.png" />
-									<span>广东轻工职业技术学院第三实训楼b410</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div id="createGroup" name="createGroup">
-						<h4 class="tisCreateGroup">创建群</h4>
-						<form class="formCreateGroup">
-							<table>
-								<tr>
-									<td>群名称：</td>
-									<td><input type="text" placeholder="请输入群昵称" value="测试创建群"/></td>
-								</tr>
-								<tr>
-									<td>群爱好：</td>
-									<td><input type="text" placeholder="请输入群爱好" value="测试创建群"/></td>
-								</tr>
-								<tr>
-									<td>群描述：</td>
-									<td><input type="text" placeholder="请输入群描述" value="测试创建群"/></td>
-								</tr>
-								<tr>
-									<td colspan="2"><input type="button" value="确认创建" id="submitCreate"/></td>
-								</tr>
-							</table>
-						</form>
-					</div>
-					<div id="searchGroup" name="searchGroup">
-						<h4 class="tissearchGroup">搜索群</h4>
-						<div class="searchBox">
-							<input type="text" placeholder="请输入群号" id="searchBoxInput"/>
-						</div>
-						<div id="searchResult">
-							<h5 class="searchCount">共<strong>1</strong>条结果</h5>
-							<ul class="searchCountInfo">
-								<li>
-									<img src="img/group5.png" />
-									<span class="searchGroupName">哈哈哈哈开心游</span>
-									<input type="button" value="申请加入群聊" class="searchApplication"/>
-								</li>
-								<li>
-									<img src="img/group6.png" />
-									<span class="searchGroupName">最强王者</span>
-									<input type="button" value="申请加入群聊" class="searchApplication"/>
-								</li>
-								<li>
-									<img src="img/group7.png" />
-									<span class="searchGroupName">毕业旅游团</span>
-									<input type="button" value="申请加入群聊" class="searchApplication"/>
-								</li>
-								<li>
-									<img src="img/group8.png" />
-									<span class="searchGroupName">天下至尊</span>
-									<input type="button" value="申请加入群聊" class="searchApplication"/>
-								</li>
-							</ul>
-						</div>
-					</div>
-					<div id="dataI">
-						<h4 class="dataIInfo">我的资料</h4>
-						<form>
-							<table>
-								<tr>
-									<td>点击更换头像</td>
-									<td><img src="img/IPortrait.jpg"/></td>
-								</tr>
-								<tr>
-									<td>昵称</td>
-									<td><input type="text" class="dataInfoDatile" value="大业"/></td>
-								</tr>
-								<tr>
-									<td>个性签名</td>
-									<td><input type="text" class="dataInfoDatile" value="心术一方"/></td>
-								</tr>
-								<tr>
-									<td>手机号码</td>
-									<td><input type="text" class="dataInfoDatile" value="158456713466"/></td>
-								</tr>
-								<tr>
-									<td>邮箱</td>
-									<td><input type="text" class="dataInfoDatile" value="45647@sd.f"/></td>
-								</tr>
-								<tr>
-									<td colspan="2"><input type="submit" value="保存修改" id="dataISave"/></td>
-								</tr>
-							</table>
-						</form>
-					</div>
+                                                <span class="edit">编辑</span>
+                                                <span class="deleteAnoun">删除</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="groupNumberPanel">
+                                    <span id="gnpClose">&times;</span>
+                                    <div id="ControllerNumbers">
+                                        <ul class="ControllerNumbersList">
+                                            <li>
+                                                <img src="img/p4.jpg"/>
+                                                <span>二哥</span>
+                                                <input type="button" value="删除" class="deleteNumber"/>
+                                            </li>
+                                            <li>
+                                                <img src="img/p4.jpg"/>
+                                                <span>二哥</span>
+                                                <input type="button" value="删除" class="deleteNumber"/>
+                                            </li>
+                                            <li>
+                                                <img src="img/p4.jpg"/>
+                                                <span>二哥</span>
+                                                <input type="button" value="删除" class="deleteNumber"/>
+                                            </li>
+                                            <li>
+                                                <img src="img/p4.jpg"/>
+                                                <span>二哥</span>
+                                                <input type="button" value="删除" class="deleteNumber"/>
+                                            </li>
+                                            <li>
+                                                <img src="img/p4.jpg"/>
+                                                <span>二哥</span>
+                                                <input type="button" value="删除" class="deleteNumber"/>
+                                            </li>
+                                            <li>
+                                                <img src="img/p4.jpg"/>
+                                                <span>二哥</span>
+                                                <input type="button" value="删除" class="deleteNumber"/>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="groupDataPanel">
+                                    <span id="gdpClose">&times;</span>
+                                    <div id="groupDataSave">
+                                        <form>
+                                            <table>
+                                                <tr>
+                                                    <td>点击更换头像</td>
+                                                    <td><img src="img/group3.png"/></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>群昵称</td>
+                                                    <td><input type="text" value="狂欢嘉年华" class="groupDataSaveName"/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <!--
+                                                        作者：offline
+                                                        时间：2018-11-10
+                                                        描述：
+                                                        这里需要根据是否是群主而定
+                                                    -->
+                                                    <td>进群时间</td>
+                                                    <td>2018-2-12 4:2:23</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2"><input type="button" value="保存" id="groupDataSure"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="chatGroupMessage">
+                        <ul id="groupMessage">
+                            <li class="left">
+                                <div class="chat-sender">
+                                    <div class="nickeNamePortrait"><img src="img/p2.jpg"/></div>
+                                    <div class="nickName">阿笨</div>
+                                    <div class="chatBackgroung">
+                                        <div class="chat-left_triangle"></div>
+                                        <span>苹果增</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="chatBox">
+                        <div id="chatBoxTop">
+                            <span id="chatBoxTopPlus">+</span>
+                            <input type="text" id="chatBoxContent"/>
+                            <input type="button" value="发送" id="chatBoxTopSend"/>
+                        </div>
+                        <div id="chatBoxListFuncMune">
+                            <ul class="boxListFuncMenu">
+                                <li>
+                                    <img src="img/mapLocation.png" id="chatBoxLocation"/>
+                                    <span>位置</span>
+                                </li>
+                                <li>
+                                    <img src="img/relative.png"/>
+                                    <span>联系</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="chatWindowMap">
+                    <div id="mapLocation">
+                        <img src="img/black.png" class="black" id="black"/>
+                        <span class="location">位置</span>
+                        <span class="locationGroupName">西游四人and马祖</span>
+                    </div>
+                    <div id="mapNumbers">
+                        <ul class="mapNumbersInfo">
+                            <li>
+                                <img src="img/p4.jpg"/>
+                            </li>
+                            <li>
+                                <img src="img/p3.jpg"/>
+                            </li>
+                            <li>
+                                <img src="img/p4.jpg"/>
+                            </li>
+                            <li>
+                                <img src="img/p1.jpg"/>
+                            </li>
+                            <li>
+                                <img src="img/p4.jpg"/>
+                            </li>
+                            <li>
+                                <img src="img/p1.jpg"/>
+                            </li>
+                            <li>
+                                <img src="img/p4.jpg"/>
+                            </li>
+                            <li>
+                                <img src="img/p2.jpg"/>
+                            </li>
+                            <li>
+                                <img src="img/p1.jpg"/>
+                            </li>
+                            <li>
+                                <img src="img/p4.jpg"/>
+                            </li>
+                            <li>
+                                <img src="img/p1.jpg"/>
+                            </li>
+                            <li>
+                                <img src="img/p4.jpg"/>
+                            </li>
+                            <li>
+                                <img src="img/p2.jpg"/>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="mapInfo">
+                        <div id="map">
 
-				</div>
-			</div>
-		</div>
-	</body>
+                        </div>
+                        <div id="mapInfoLocation">
+                            <img src="img/locationDatile.png"/>
+                            <span>广东轻工职业技术学院第三实训楼b410</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="createGroup" name="createGroup">
+                <h4 class="tisCreateGroup">创建群</h4>
+                <form class="formCreateGroup">
+                    <table>
+                        <tr>
+                            <td>群名称：</td>
+                            <td><input type="text" placeholder="请输入群昵称" value="测试创建群"/></td>
+                        </tr>
+                        <tr>
+                            <td>群爱好：</td>
+                            <td><input type="text" placeholder="请输入群爱好" value="测试创建群"/></td>
+                        </tr>
+                        <tr>
+                            <td>群描述：</td>
+                            <td><input type="text" placeholder="请输入群描述" value="测试创建群"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><input type="button" value="确认创建" id="submitCreate"/></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div id="searchGroup" name="searchGroup">
+                <h4 class="tissearchGroup">搜索群</h4>
+                <div class="searchBox">
+                    <input type="text" placeholder="请输入群号" id="searchBoxInput"/>
+                </div>
+                <div id="searchResult">
+                    <h5 class="searchCount">共<strong>1</strong>条结果</h5>
+                    <ul class="searchCountInfo">
+                        <li>
+                            <img src="img/group5.png"/>
+                            <span class="searchGroupName">哈哈哈哈开心游</span>
+                            <input type="button" value="申请加入群聊" class="searchApplication"/>
+                        </li>
+                        <li>
+                            <img src="img/group6.png"/>
+                            <span class="searchGroupName">最强王者</span>
+                            <input type="button" value="申请加入群聊" class="searchApplication"/>
+                        </li>
+                        <li>
+                            <img src="img/group7.png"/>
+                            <span class="searchGroupName">毕业旅游团</span>
+                            <input type="button" value="申请加入群聊" class="searchApplication"/>
+                        </li>
+                        <li>
+                            <img src="img/group8.png"/>
+                            <span class="searchGroupName">天下至尊</span>
+                            <input type="button" value="申请加入群聊" class="searchApplication"/>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="dataI">
+                <h4 class="dataIInfo">我的资料</h4>
+                <form>
+                    <table>
+                        <tr>
+                            <td>点击更换头像</td>
+                            <td><img src="img/IPortrait.jpg"/></td>
+                        </tr>
+                        <tr>
+                            <td>昵称</td>
+                            <td><input type="text" class="dataInfoDatile" value="大业"/></td>
+                        </tr>
+                        <tr>
+                            <td>个性签名</td>
+                            <td><input type="text" class="dataInfoDatile" value="心术一方"/></td>
+                        </tr>
+                        <tr>
+                            <td>手机号码</td>
+                            <td><input type="text" class="dataInfoDatile" value="158456713466"/></td>
+                        </tr>
+                        <tr>
+                            <td>邮箱</td>
+                            <td><input type="text" class="dataInfoDatile" value="45647@sd.f"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><input type="submit" value="保存修改" id="dataISave"/></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
 </html>

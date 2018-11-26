@@ -11,6 +11,7 @@ public class SendNotification {
     private int status;
     private String groupId;
     private int noticeId;
+
     public String getSendUserName() {
         return sendUserName;
     }

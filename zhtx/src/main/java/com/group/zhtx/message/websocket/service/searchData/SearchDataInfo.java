@@ -1,7 +1,6 @@
 package com.group.zhtx.message.websocket.service.searchData;
 
 
-
 public class SearchDataInfo {
     private String groupDesc;
     private String groupName;

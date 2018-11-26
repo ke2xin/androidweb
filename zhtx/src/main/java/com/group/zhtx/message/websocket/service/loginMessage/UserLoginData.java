@@ -25,7 +25,7 @@ public class UserLoginData {
         this.groups = groups;
     }
 
-    public void addDataGroup(UserLoginDataGroup group){
+    public void addDataGroup(UserLoginDataGroup group) {
         groups.add(group);
     }
 }

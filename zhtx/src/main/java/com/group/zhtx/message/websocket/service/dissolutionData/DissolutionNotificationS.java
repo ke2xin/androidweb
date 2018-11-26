@@ -3,7 +3,6 @@ package com.group.zhtx.message.websocket.service.dissolutionData;
 import com.group.zhtx.message.IMessage;
 
 
-
 public class DissolutionNotificationS implements IMessage {
     private int role;//0表示群主，1表示群成员
     private int operateId;

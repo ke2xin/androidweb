@@ -1,7 +1,6 @@
 package com.group.zhtx.message.websocket.service.loginMessage;
 
 
-
 public class UserLoginDataSingal {
 
     private String userPortrait;

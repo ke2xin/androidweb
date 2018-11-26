@@ -7,12 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class DeleteDataS implements  IMessage {
+public class DeleteDataS implements IMessage {
     private int operateId;
     private String status;
     private String delUuid;
-    private List<UserGetGroupDataMember> numbers=new ArrayList<>();
+    private List<UserGetGroupDataMember> numbers = new ArrayList<>();
     private String information;
+
     public int getOperateId() {
         return operateId;
     }
@@ -28,7 +29,6 @@ public class DeleteDataS implements  IMessage {
     public void setStatus(String status) {
         this.status = status;
     }
-
 
 
     public String getInformation() {
@@ -47,7 +47,7 @@ public class DeleteDataS implements  IMessage {
         this.delUuid = delUuid;
     }
 
-    public void addNumber(UserGetGroupDataMember number){
+    public void addNumber(UserGetGroupDataMember number) {
         numbers.add(number);
     }
 }

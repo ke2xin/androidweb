@@ -4,7 +4,7 @@ package com.group.zhtx.message.websocket.service.sendUserLocation;
 import com.group.zhtx.message.IMessage;
 
 
-public class SendUserLocationS  implements IMessage {
+public class SendUserLocationS implements IMessage {
     private int operateId;
     private String status;
     private SendUserLocationInfo data;

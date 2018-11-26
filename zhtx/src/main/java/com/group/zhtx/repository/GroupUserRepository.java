@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Date;
 import java.util.List;
 
-public interface GroupUserRepository extends JpaRepository<GroupUser,Long> {
+public interface GroupUserRepository extends JpaRepository<GroupUser, Long> {
 
 
     @Query("select gu.receiveTime from GroupUser gu where gu.user.uuid=?1 and gu.group.uuid=?2")
@@ -18,7 +18,7 @@ public interface GroupUserRepository extends JpaRepository<GroupUser,Long> {
 
 
     @Query("select gu.role from GroupUser gu where gu.user.uuid=?1 and gu.group.uuid=?2")
-    public int getGroupUserRole(String userUuid,String groupUuid);
+    public int getGroupUserRole(String userUuid, String groupUuid);
 
 
     /*
@@ -32,24 +32,24 @@ public interface GroupUserRepository extends JpaRepository<GroupUser,Long> {
         根据用户uuid查找所拥有的群，并排序
      */
     @Query("select g.group from GroupUser g where g.user.uuid=?1 order by g.joinTime desc")
-    public List<Group>getAllGroupByUuidAndPX(String userUuid);
+    public List<Group> getAllGroupByUuidAndPX(String userUuid);
 
     /*
        根据群组查找该群的成员
      */
-    public List<GroupUser>findByGroup(Group group);
+    public List<GroupUser> findByGroup(Group group);
 
     public GroupUser findByUserAndGroup(User user, Group group);
 
     //根据群uuid查找所有群成员
     @Query("select g from GroupUser g where g.group.uuid=?1")
-    public List<GroupUser>getAllGroupUserForGroupId(String groupId);
+    public List<GroupUser> getAllGroupUserForGroupId(String groupId);
 
     //根据用户传入的uuid和group_id查找该群成员
     @Query("select g from GroupUser g where g.user.uuid=:uuid and g.group.uuid=:groupId")
     public GroupUser getGroupUserByGroupAndUuid(@Param("uuid") String uuid, @Param("groupId") String groupId);
 
     @Query("select g from GroupUser g where g.user =?1 and g.group=?2")
-    public GroupUser getGroupUserByGroupAndUser(User user,Group group);
+    public GroupUser getGroupUserByGroupAndUser(User user, Group group);
 
 }

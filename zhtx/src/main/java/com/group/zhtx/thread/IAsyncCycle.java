@@ -6,5 +6,5 @@ public interface IAsyncCycle {
 
     void onCycle() throws Exception;
 
-    void  onRemove() throws Exception;
+    void onRemove() throws Exception;
 }

@@ -5,11 +5,11 @@ import com.group.zhtx.message.IMessage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SendNotificationS implements IMessage{
+public class SendNotificationS implements IMessage {
 
     private int operateId;
     private String status;
-    private List<SendNotification> data=new ArrayList<>();
+    private List<SendNotification> data = new ArrayList<>();
 
     public int getOperateId() {
         return operateId;
@@ -31,7 +31,7 @@ public class SendNotificationS implements IMessage{
         return data;
     }
 
-    public void addNotification(SendNotification sendNotification){
+    public void addNotification(SendNotification sendNotification) {
         data.add(sendNotification);
     }
 

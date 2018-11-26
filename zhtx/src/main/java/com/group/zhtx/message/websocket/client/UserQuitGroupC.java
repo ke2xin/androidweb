@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class UserQuitGroupC implements Serializable, IMessage {
     private int operateId;
     private String groupId;
-    private String userUuid;
+    private String uuid;
 
     public int getOperateId() {
         return operateId;
@@ -25,11 +25,11 @@ public class UserQuitGroupC implements Serializable, IMessage {
         this.groupId = groupId;
     }
 
-    public String getUserUuid() {
-        return userUuid;
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setUserUuid(String userUuid) {
-        this.userUuid = userUuid;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 }

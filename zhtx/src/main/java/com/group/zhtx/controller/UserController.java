@@ -7,6 +7,7 @@ import com.group.zhtx.service.RepositoryService;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+
 @RestController
 public class UserController {
 
@@ -14,23 +15,21 @@ public class UserController {
     private RepositoryService service;
 
 
-
-
     @PostMapping(value = "/register/post")
-    public RegisterS toRegister(@RequestBody RegisterC registerC){
+    public RegisterS toRegister(@RequestBody RegisterC registerC) {
 
         RegisterS registerS = new RegisterS();
 
         //校验用户是否被注册
         boolean isValid = service.validUserRegister(registerC.getUuid());
-        if(isValid){
+        if (isValid) {
             registerS.setStatus("fail");
             registerS.setInformation("用户名已经存在");
             return registerS;
         }
         //校验电话是否被注册
-        boolean isRegisteredByPhone=service.isPhoneRegistered(registerC.getUserPhone());
-        if(isRegisteredByPhone){
+        boolean isRegisteredByPhone = service.isPhoneRegistered(registerC.getUserPhone());
+        if (isRegisteredByPhone) {
             registerS.setStatus("fail");
             registerS.setInformation("电话已被注册");
             return registerS;

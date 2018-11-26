@@ -7,7 +7,7 @@ public class ApplicationGroupDataS implements IMessage {
     private String status;
     private int resultCode;
     private String groupId;
-    private Object []data;
+    private Object[] data;
     private String information;
 
     public int getOperateId() {

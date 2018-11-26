@@ -29,7 +29,7 @@ public class GroupMessageData {
         this.messages = messages;
     }
 
-    public void addMessage(Message message){
+    public void addMessage(Message message) {
         messages.add(message);
     }
 }

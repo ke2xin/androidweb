@@ -2,7 +2,7 @@ package com.group.zhtx.message.websocket.service.saveGroupData;
 
 import com.group.zhtx.message.IMessage;
 
-public class UserSaveGroupDataS implements IMessage{
+public class UserSaveGroupDataS implements IMessage {
 
     private int operateId;
     private String status;

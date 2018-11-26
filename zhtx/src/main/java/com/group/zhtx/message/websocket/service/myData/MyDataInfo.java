@@ -1,7 +1,6 @@
 package com.group.zhtx.message.websocket.service.myData;
 
 
-
 public class MyDataInfo {
     private String userPortrait;
     private String userName;

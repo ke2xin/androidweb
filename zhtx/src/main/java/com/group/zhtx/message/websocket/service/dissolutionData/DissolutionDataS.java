@@ -10,7 +10,8 @@ public class DissolutionDataS implements IMessage {
     private String status;
     private String information;
     private String groupId;
-    private List<DissolutionInfo>groups=new ArrayList<>();
+    private List<DissolutionInfo> groups = new ArrayList<>();
+
     public int getOperateId() {
         return operateId;
     }
@@ -35,7 +36,7 @@ public class DissolutionDataS implements IMessage {
         this.information = information;
     }
 
-    public void addGroup(DissolutionInfo group){
+    public void addGroup(DissolutionInfo group) {
         groups.add(group);
     }
 

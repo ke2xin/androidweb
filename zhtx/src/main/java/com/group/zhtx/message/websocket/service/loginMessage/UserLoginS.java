@@ -2,7 +2,7 @@ package com.group.zhtx.message.websocket.service.loginMessage;
 
 import com.group.zhtx.message.IMessage;
 
-public class UserLoginS implements IMessage{
+public class UserLoginS implements IMessage {
 
     private int operateId;
 

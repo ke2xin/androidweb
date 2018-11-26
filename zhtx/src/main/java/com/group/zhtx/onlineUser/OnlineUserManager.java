@@ -19,13 +19,13 @@ public class OnlineUserManager {
         key: 用户uuid
         value:onlieUser
      */
-    public Map<String,OnlineUser> onlineUserMap;
+    public Map<String, OnlineUser> onlineUserMap;
 
     /*
         key: sessionId
         value:用户uuid
      */
-    public Map<String,String> sessionMap;
+    public Map<String, String> sessionMap;
 
     @Autowired
     private RepositoryService service;
@@ -35,40 +35,38 @@ public class OnlineUserManager {
     }
 
     @PostConstruct
-    public void initMethod(){
+    public void initMethod() {
         onlineUserMap = new HashMap<>();
         sessionMap = new HashMap<>();
     }
 
 
+    public void addOnlineUser(OnlineUser onlineUser) {
 
-
-    public void addOnlineUser(OnlineUser onlineUser){
-
-        if (onlineUser == null)return;
+        if (onlineUser == null) return;
 
         //根据在线用户UUID，添加在线用户
         String uuid = onlineUser.getData().getUuid();
-        onlineUserMap.put(uuid,onlineUser);
+        onlineUserMap.put(uuid, onlineUser);
 
         String sessionId = onlineUser.getSession().getId();
-        sessionMap.put(sessionId,uuid);
+        sessionMap.put(sessionId, uuid);
 
         //添加进线程进行循环处理
-        AsyncThreadManager.addCycle(onlineUser,1,1);
+        AsyncThreadManager.addCycle(onlineUser, 1, 1);
     }
 
 
     /*
         根据SessionId 获取onlineUser实体类
      */
-    public OnlineUser getOnlineUserBySessionId(String sessionId){
-        if (sessionId == null || sessionId.equals(""))return null;
+    public OnlineUser getOnlineUserBySessionId(String sessionId) {
+        if (sessionId == null || sessionId.equals("")) return null;
 
-        if(!sessionMap.containsKey(sessionId))return null;
+        if (!sessionMap.containsKey(sessionId)) return null;
         String uuid = sessionMap.get(sessionId);
 
-        if(!onlineUserMap.containsKey(uuid))return null;
+        if (!onlineUserMap.containsKey(uuid)) return null;
 
         return onlineUserMap.get(uuid);
 
@@ -77,16 +75,16 @@ public class OnlineUserManager {
     /*
         根据用户UUID获取onlineUser实体
      */
-    public OnlineUser getOnlineUserByUuid(String uuid){
+    public OnlineUser getOnlineUserByUuid(String uuid) {
 
-        if (uuid == null || uuid.equals(""))return null;
+        if (uuid == null || uuid.equals("")) return null;
         return onlineUserMap.get(uuid);
     }
 
-    public boolean removeOnlineUser(OnlineUser onlineUser){
-        if (onlineUser == null)return false;
+    public boolean removeOnlineUser(OnlineUser onlineUser) {
+        if (onlineUser == null) return false;
 
-        AsyncThreadManager.removeCycle(onlineUser,1,1);
+        AsyncThreadManager.removeCycle(onlineUser, 1, 1);
 
         onlineUserMap.remove(onlineUser);
 

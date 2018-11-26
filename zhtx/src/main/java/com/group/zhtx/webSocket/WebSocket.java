@@ -48,7 +48,7 @@ public class WebSocket {
         this.session = session;
     }
 
-    public void clear(){
+    public void clear() {
         this.operateId = null;
         this.IMessage = null;
         this.session = null;

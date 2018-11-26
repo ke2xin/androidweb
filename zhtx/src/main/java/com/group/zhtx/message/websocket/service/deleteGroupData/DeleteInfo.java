@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeleteInfo {
-    private List<UserGetGroupDataMember> numbers=new ArrayList<>();
+    private List<UserGetGroupDataMember> numbers = new ArrayList<>();
 
     public List<UserGetGroupDataMember> getNumbers() {
         return numbers;
@@ -15,7 +15,8 @@ public class DeleteInfo {
     public void setNumbers(List<UserGetGroupDataMember> numbers) {
         this.numbers = numbers;
     }
-    public void addNumber(UserGetGroupDataMember number){
+
+    public void addNumber(UserGetGroupDataMember number) {
         numbers.add(number);
     }
 }

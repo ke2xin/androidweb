@@ -15,16 +15,16 @@ public class Notification implements Serializable {
     @Column(name = "id")
     public int id;
 
-    @ManyToOne(fetch = FetchType.EAGER,targetEntity = User.class)
-    @JoinColumn(name = "notification_suid",referencedColumnName = "user_uuid",foreignKey = @ForeignKey(name = "FK_NOTIFICATION_S_USER"))
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = User.class)
+    @JoinColumn(name = "notification_suid", referencedColumnName = "user_uuid", foreignKey = @ForeignKey(name = "FK_NOTIFICATION_S_USER"))
     public User sendUserId;
 
-    @ManyToOne(fetch = FetchType.EAGER,targetEntity = User.class)
-    @JoinColumn(name = "notification_ruid",referencedColumnName = "user_uuid",foreignKey = @ForeignKey(name = "FK_NOTIFICATION_R_USER"))
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = User.class)
+    @JoinColumn(name = "notification_ruid", referencedColumnName = "user_uuid", foreignKey = @ForeignKey(name = "FK_NOTIFICATION_R_USER"))
     public User receiveUserId;
 
     @ManyToOne(fetch = FetchType.EAGER, targetEntity = Group.class)
-    @JoinColumn(name = "notification_groupId",referencedColumnName = "group_uuid",foreignKey = @ForeignKey(name = "FK_NOTIFICATION_GROUP"))
+    @JoinColumn(name = "notification_groupId", referencedColumnName = "group_uuid", foreignKey = @ForeignKey(name = "FK_NOTIFICATION_GROUP"))
     public Group groupId;
 
     @Column(name = "notification_content", length = 200)

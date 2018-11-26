@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserDissolutionGroupC implements Serializable,IMessage {
+public class UserDissolutionGroupC implements Serializable, IMessage {
     private int operateId;
     private String uuid;
     private String groupId;

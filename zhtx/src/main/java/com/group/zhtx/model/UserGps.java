@@ -17,13 +17,13 @@ public class UserGps implements Serializable {
     @JoinColumn(name = "locate_uid", referencedColumnName = "user_uuid", foreignKey = @ForeignKey(name = "FK_LOCATION_USER"))
     private User user;
 
-    @Column(name = "locate_longitude",length = 100)
+    @Column(name = "locate_longitude", length = 100)
     private String longgitude;
 
-    @Column(name = "locate_latitude",length = 100)
+    @Column(name = "locate_latitude", length = 100)
     private String latitude;
 
-    @Column(name = "locate_corner",length = 100)
+    @Column(name = "locate_corner", length = 100)
     private String directionAndAngle;
 
     @Temporal(TemporalType.TIMESTAMP)

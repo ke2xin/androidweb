@@ -15,28 +15,29 @@ import java.util.List;
 public class PasswordController {
     @Resource
     private RepositoryService service;
-    @PostMapping("/password/post")
-    public RegisterS updatePassword(@RequestBody PasswordC passwordC){
 
-        RegisterS registerS=new RegisterS();
+    @PostMapping("/password/post")
+    public RegisterS updatePassword(@RequestBody PasswordC passwordC) {
+
+        RegisterS registerS = new RegisterS();
 
         /*
-        检测该电话是否被注册
+            检测该电话是否被注册
          */
-        boolean isRegistered=service.isPhoneRegistered(passwordC.getTelephone());
-        if(isRegistered){
-            User users=service.getUserByPhone(passwordC.getTelephone());
-            if(users!=null){
-                service.updateNewPassword(users,passwordC);
+        boolean isRegistered = service.isPhoneRegistered(passwordC.getTelephone());
+        if (isRegistered) {
+            User users = service.getUserByPhone(passwordC.getTelephone());
+            if (users != null) {
+                service.updateNewPassword(users, passwordC);
                 registerS.setStatus("success");
                 registerS.setInformation("修改密码成功");
                 return registerS;
-            }else{
+            } else {
                 registerS.setStatus("fail");
                 registerS.setInformation("修改密码失败");
                 return registerS;
             }
-        }else {
+        } else {
             registerS.setStatus("fail");
             registerS.setInformation("该号码没有被注册");
             return registerS;

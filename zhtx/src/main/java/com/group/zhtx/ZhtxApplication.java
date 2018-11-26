@@ -7,9 +7,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 
 @SpringBootApplication
-public class ZhtxApplication   {
+public class ZhtxApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(ZhtxApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ZhtxApplication.class, args);
+    }
 }

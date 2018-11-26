@@ -42,9 +42,10 @@ public class UserCreateGroupS implements IMessage {
         return groups;
     }
 
-    public void addUserCreateGroup(UserCreateGroup userCreateGroup){
+    public void addUserCreateGroup(UserCreateGroup userCreateGroup) {
         groups.add(userCreateGroup);
     }
+
     public void setGroups(List<UserCreateGroup> groups) {
         this.groups = groups;
     }

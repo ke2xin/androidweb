@@ -9,15 +9,15 @@ public class AsyncThreadManager {
     public static int threadNum;
     public static int priorityNum;
     public static int intervalTime;
-    public static Map<Integer,AsyncThread> asyncThreadMap = new HashMap<>();
+    public static Map<Integer, AsyncThread> asyncThreadMap = new HashMap<>();
 
-    public static void init(int threadNum, int priorityNum, int intervalTime){
+    public static void init(int threadNum, int priorityNum, int intervalTime) {
         AsyncThreadManager.threadNum = threadNum;
         AsyncThreadManager.priorityNum = priorityNum;
         AsyncThreadManager.intervalTime = intervalTime;
 
-        for(int i = 0 ;i < threadNum; ++i){
-            AsyncThread thread = new AsyncThread(intervalTime,priorityNum);
+        for (int i = 0; i < threadNum; ++i) {
+            AsyncThread thread = new AsyncThread(intervalTime, priorityNum);
             asyncThreadMap.put(i, thread);
         }
 
@@ -25,32 +25,32 @@ public class AsyncThreadManager {
         startAsyncThreads();
     }
 
-    public static boolean checkThreadNumAndPriority(int threadNum, int priorityNum){
-        if (threadNum > AsyncThreadManager.threadNum || threadNum < 0){
+    public static boolean checkThreadNumAndPriority(int threadNum, int priorityNum) {
+        if (threadNum > AsyncThreadManager.threadNum || threadNum < 0) {
             return true;
         }
-        if(priorityNum > AsyncThreadManager.priorityNum || priorityNum < 0){
+        if (priorityNum > AsyncThreadManager.priorityNum || priorityNum < 0) {
             return true;
         }
         return false;
     }
 
-    public static boolean addCycle(IAsyncCycle cycle,int threadNum, int priorityNum){
+    public static boolean addCycle(IAsyncCycle cycle, int threadNum, int priorityNum) {
 
-        if(cycle == null){
+        if (cycle == null) {
             return false;
         }
 
-        if(checkThreadNumAndPriority(threadNum,priorityNum))return true;
+        if (checkThreadNumAndPriority(threadNum, priorityNum)) return true;
 
-        AsyncThread  thread = AsyncThreadManager.asyncThreadMap.get(threadNum);
+        AsyncThread thread = AsyncThreadManager.asyncThreadMap.get(threadNum);
 
-        if(thread == null){
+        if (thread == null) {
             return false;
         }
         AsyncPriorityHandleData handleData = thread.handleDataMap.get(priorityNum);
 
-        if(handleData == null){
+        if (handleData == null) {
             return false;
         }
         try {
@@ -64,22 +64,22 @@ public class AsyncThreadManager {
 
     }
 
-    public static boolean removeCycle(IAsyncCycle cycle,int threadNum, int priorityNum){
+    public static boolean removeCycle(IAsyncCycle cycle, int threadNum, int priorityNum) {
 
-        if(cycle == null){
+        if (cycle == null) {
             return false;
         }
 
-        if(checkThreadNumAndPriority(threadNum,priorityNum))return true;
+        if (checkThreadNumAndPriority(threadNum, priorityNum)) return true;
 
-        AsyncThread  thread = AsyncThreadManager.asyncThreadMap.get(threadNum);
+        AsyncThread thread = AsyncThreadManager.asyncThreadMap.get(threadNum);
 
-        if(thread == null){
+        if (thread == null) {
             return false;
         }
         AsyncPriorityHandleData handleData = thread.handleDataMap.get(priorityNum);
 
-        if(handleData == null){
+        if (handleData == null) {
             return false;
         }
         try {
@@ -92,23 +92,23 @@ public class AsyncThreadManager {
         }
     }
 
-    public static boolean addHandle(IAsyncHandle handle,int threadNum, int priorityNum){
+    public static boolean addHandle(IAsyncHandle handle, int threadNum, int priorityNum) {
 
-        if(handle == null){
+        if (handle == null) {
             return false;
         }
 
-        if(checkThreadNumAndPriority(threadNum,priorityNum))return true;
+        if (checkThreadNumAndPriority(threadNum, priorityNum)) return true;
 
-        AsyncThread  thread = AsyncThreadManager.asyncThreadMap.get(threadNum);
+        AsyncThread thread = AsyncThreadManager.asyncThreadMap.get(threadNum);
 
-        if(thread == null){
+        if (thread == null) {
             return false;
         }
 
         AsyncPriorityHandleData handleData = thread.handleDataMap.get(priorityNum);
 
-        if(handleData == null){
+        if (handleData == null) {
             return false;
         }
         try {
@@ -122,15 +122,15 @@ public class AsyncThreadManager {
         }
     }
 
-    public static int[] getRandomThreadAndPriority(){
+    public static int[] getRandomThreadAndPriority() {
         int threadDegree = (int) (Math.random() * threadNum);
         int priorityDegree = (int) (Math.random() * priorityNum);
-        int[] degree = new int[]{threadDegree,priorityDegree};
-        return  degree;
+        int[] degree = new int[]{threadDegree, priorityDegree};
+        return degree;
     }
 
-    public static boolean startAsyncThreads(){
-        for (int i = 0; i < asyncThreadMap.size();i++){
+    public static boolean startAsyncThreads() {
+        for (int i = 0; i < asyncThreadMap.size(); i++) {
             AsyncThread thread = asyncThreadMap.get(i);
             thread.start();
         }

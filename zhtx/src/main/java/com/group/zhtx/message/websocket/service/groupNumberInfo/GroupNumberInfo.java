@@ -1,7 +1,6 @@
 package com.group.zhtx.message.websocket.service.groupNumberInfo;
 
 
-
 public class GroupNumberInfo {
     private String userName;
     private String userPortrait;

@@ -8,7 +8,7 @@ import java.util.List;
 public class EnterGroupDataS implements IMessage {
     private int operateId;
     private String status;
-    private List<EnterDataInfo> data=new ArrayList<>();
+    private List<EnterDataInfo> data = new ArrayList<>();
 
     public int getOperateId() {
         return operateId;

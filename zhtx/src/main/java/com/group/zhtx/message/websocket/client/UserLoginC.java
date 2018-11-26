@@ -4,14 +4,15 @@ import com.group.zhtx.message.IMessage;
 
 import java.io.Serializable;
 
-public class UserLoginC implements Serializable,IMessage {
+public class UserLoginC implements Serializable, IMessage {
 
     private int operateId;
     private String uuid;
     private String password;
 
 
-    public UserLoginC(){}
+    public UserLoginC() {
+    }
 
     public UserLoginC(int operateId, String uuid, String password, String userPhone) {
         this.operateId = operateId;

@@ -1,7 +1,6 @@
 package com.group.zhtx.message.websocket.service.locationData;
 
 
-
 public class UserLocationGroup {
     private String userName;
     private String userPortrait;
