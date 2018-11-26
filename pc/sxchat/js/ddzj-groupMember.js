@@ -1,4 +1,4 @@
-(function (window) {
+﻿(function (window) {
     if (!window.ddzj) window.ddzj = {};
     var operateIdType = window.ddzj.OperateIdType;
     var evenDispatcher = window.ddzj.EventDispatcher;

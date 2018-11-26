@@ -1,4 +1,4 @@
-(function (window) {
+﻿(function (window) {
     if (!window.ddzj) window.ddzj = {};
     var OperateIdType = function () {
 
@@ -80,6 +80,7 @@
         this.User_Application_Enter_Group_C = 10;
     }
     window.ddzj.OperateIdType = new OperateIdType();
+
 })(window);
 
 (function (window) {
@@ -291,6 +292,7 @@
     window.ddzj.EventDispatcher = EventDispatcher;
 })(window);
 
+
 (function (window) {
     if (!window.ddzj) window.ddzj = {};
 
@@ -303,6 +305,7 @@
     }
 
     window.ddzj.webSocketConfig = new webSocketConfig();
+
 
 })(window);
 
@@ -414,6 +417,7 @@
 
     window.ddzj.WsClient = WsClient;
 })(window);
+
 
 
 (function (window) {
@@ -744,6 +748,7 @@
 
     }
     window.ddzj.GroupObj = GroupObj;
+
 })(window);
 
 
@@ -875,6 +880,7 @@
     }
     window.ddzj.Notification = Notification;
 })(window);
+
 
 
 (function (window) {
@@ -2129,6 +2135,7 @@
         //获取当前时间
         this.onGetCurrentTime = function () {
             var date = new Date();
+
             var year = date.getFullYear();
             var month = date.getMonth() + 1;
             var monthStr;

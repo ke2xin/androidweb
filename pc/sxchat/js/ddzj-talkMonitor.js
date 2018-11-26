@@ -1,4 +1,4 @@
-(function (window) {
+﻿(function (window) {
     if (!window.ddzj) window.ddzj = {};
     var operateIdTpye = window.ddzj.OperateIdType;
     var wsConfig = window.ddzj.webSocketConfig;

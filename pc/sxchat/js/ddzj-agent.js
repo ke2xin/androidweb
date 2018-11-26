@@ -1,4 +1,4 @@
-(function (window) {
+﻿(function (window) {
     if (!window.ddzj) window.ddzj = {};
     var tool = window.ddzj.tool;
     var operateIdType = window.ddzj.OperateIdType;

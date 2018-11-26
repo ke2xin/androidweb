@@ -1,4 +1,4 @@
-(function (window) {
+﻿(function (window) {
     if (!window.ddzj) window.ddzj = {};
     var OperateIdType = function () {
 
@@ -303,7 +303,6 @@
     }
 
     window.ddzj.webSocketConfig = new webSocketConfig();
-
 })(window);
 
 (function (window) {
@@ -414,7 +413,6 @@
 
     window.ddzj.WsClient = WsClient;
 })(window);
-
 
 (function (window) {
     if (!window.ddzj) window.ddzj = {};
@@ -744,6 +742,7 @@
 
     }
     window.ddzj.GroupObj = GroupObj;
+
 })(window);
 
 
@@ -875,7 +874,6 @@
     }
     window.ddzj.Notification = Notification;
 })(window);
-
 
 (function (window) {
     if (!window.ddzj) window.ddzj = {};
@@ -2129,6 +2127,7 @@
         //获取当前时间
         this.onGetCurrentTime = function () {
             var date = new Date();
+
             var year = date.getFullYear();
             var month = date.getMonth() + 1;
             var monthStr;
