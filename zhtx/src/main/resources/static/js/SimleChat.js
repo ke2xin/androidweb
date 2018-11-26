@@ -1725,7 +1725,7 @@
 				this.TalkMonitor = undefined;
 				window.localStorage.clear();
 				alert("退出登陆成功");
-				window.location = "login.html";
+				window.location = "/login";
 			}
 		}
 		
