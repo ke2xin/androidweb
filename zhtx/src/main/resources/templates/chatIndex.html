@@ -37,8 +37,8 @@
 				window.user = new User(sessionStorage.getItem("userName"),sessionStorage.getItem("userPassword"));
 				//window.user = new User(123,123);
 				var talkMonitor = new TalkMonitor();
-				var hostname = location.hostname;
-				talkMonitor.init("ws://" + hostname + "/ws");
+				
+				talkMonitor.init("ws://" + location.host + "/ws");
 				//talkMonitor.init("ws://172.17.146.80:8080/ws");
 			});
 		</script>
