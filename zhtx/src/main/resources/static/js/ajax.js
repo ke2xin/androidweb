@@ -8,7 +8,7 @@ $(function () {
        var init=function () {
            input.bind('keyup',sendKeyWord);
            input.bind('blur',function () {
-               setTimeout(hideSuggest,100);
+               setTimeout(hideSuggest,1000);//搜索框延迟一秒再消失
            })
        }
        var hideSuggest=function () {
