@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="css/index.css" />
 		<script type="text/javascript" src="js/index.js"></script>
 		<script type="text/javascript" src="js/getscript.js"></script>
+		
 		<script type="text/javascript" src="js/ddzj-operateIdType.js" ></script>
 		<script type="text/javascript" src="js/ddzj-tool.js"></script>
 		<script type="text/javascript" src="js/ddzj-event.js" ></script>
@@ -18,6 +19,7 @@
 		<script type="text/javascript" src="js/ddzj-Notification.js"></script>
 		<script type="text/javascript" src="js/ddzj-groupMember.js"></script>
 		<script type="text/javascript" src="js/ddzj-talkMonitor.js" ></script>
+<!--		<script type="text/javascript" src="js/SimleChat.js" ></script>-->
 	</head>
 
 	<body>
@@ -32,10 +34,9 @@
 				}
 				
 				//window.user = new User(sessionStorage.getItem("userName"),sessionStorage.getItem("userPassword"));
-				window.user = new User("1234","1234");
-				console.log(window.user);
+				window.user = new User(1234,1234);
 				var talkMonitor = new TalkMonitor();
-				talkMonitor.init("ws://172.17.146.126:8080/ws");
+				talkMonitor.init("ws://172.18.178.21:8080/ws");
 			});
 		</script>
 		

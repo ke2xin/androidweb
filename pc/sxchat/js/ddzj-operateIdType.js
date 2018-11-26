@@ -72,6 +72,7 @@
     	//剔除用户
     	this.DeleteGroupMember = 96;
     	
+    	this.ChangeLocationUser = 94;
     	//发送接收消息的时间截
     	this.User_Send_TimeStamp = 99;
     	

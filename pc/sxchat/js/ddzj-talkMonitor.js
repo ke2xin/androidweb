@@ -9,6 +9,7 @@
 	var SearchGroup = window.ddzj.SearchGroup;
 	var Notification = window.ddzj.Notification;
 	var GroupMember = window.ddzj.GroupMember;
+	var GroupLocationUser = window.ddzj.LocationGroupUser;
 	var TalkMonitor = function(){
 		//websocket对象
 		this.webSocketClient = null;
@@ -26,6 +27,8 @@
 		this.isConnect = false;
 		this.searchGroup = [];
 		this.groupMember = [];
+		this.groupLocationUser = [];
+		this.currentMap = null;
 		this.init = function(url){
 			this.disConnectWebsocket();
 			
@@ -799,6 +802,7 @@
 		
 		//响应查看群资料
 		this.onMessageByGetGroupData = function(event){		
+			console.log(event.data);
 			//群管理
 			$("#groupTile").children("img").attr("src",event.data.groupPortrait);
 			$(".groupManagerGroupName").text(event.data.groupName);
@@ -896,6 +900,7 @@
 		
 		//响应退出群
 		this.onMessageByonExitGroup = function(event){
+
 			var data  = event.data;
 			var groupId = data.groupId;
 			if(groupId){
@@ -940,6 +945,58 @@
 		//定位信息
 		this.onLocation = function(event){
 			var groupId = this.nowChatGroupObj.group.groupNumber;
+			this.currentMap = new BMap.Map("map");
+			this.currentMap.enableScrollWheelZoom();
+			this.currentMap.enableKeyboard();
+			this.currentMap.enableDragging();
+			this.currentMap.enableDoubleClickZoom();
+			var map = this.currentMap;
+			var point = new BMap.Point(116.331398,39.897445);
+			map.centerAndZoom(point,15);
+			
+			var talkMonitor = this;
+			var owner = this.owner;
+			var geolocation = new BMap.Geolocation();
+			talkMonitor.openView("chatWindowMap");
+			geolocation.getCurrentPosition(function(r){
+				if(this.getStatus() == BMAP_STATUS_SUCCESS){
+					var mk = new BMap.Marker(r.point);
+		            map.addOverlay(mk);
+		            map.panTo(r.point);
+		            var opts = {
+					  position : r.point,// 指定文本标注所在的地理位置
+					  offset   : new BMap.Size(-5, 0) 
+					}
+					var label = new BMap.Label(owner.userName, opts);  // 创建文本标注对象
+						label.setStyle({
+								 color : "red",
+								 fontSize : "1px",
+								 height : "12px",
+								 lineHeight : "12px",
+								 fontFamily:"微软雅黑"
+							});
+					map.addOverlay(label);
+		            
+		            
+					var newView = document.createElement("li");			
+					newView.innerHTML = '<img src="' + owner.userPortrait + '">';
+					$(".mapNumbersInfo").prepend(newView);
+					
+					ownerClick = function(){
+						map.centerAndZoom(r.point,25);
+					}
+					
+					$(newView).on("click",ownerClick);
+					
+					
+				}
+				else {
+					alert('failed'+this.getStatus());
+				}
+			});
+
+			
+			
 			if(groupId){
 				this.webSocketAgent.onGetGroupUserLocations(groupId);
 			}
@@ -948,13 +1005,15 @@
 		
 		//定位信息返回
 		this.onMessageByLocation = function(event){
-
+		console.log(event.data);
 		//	this.openView("chatWindowMap");
 			var data = event.data.data;
+			//设置群组名
+			$(".locationGroupName").text(this.nowChatGroupObj.group.groupName);
 			//清空用户头像
 			$(".mapNumbersInfo").empty();
 			if(data.length){
-				var currentMap;
+				var currentMap = this.currentMap;
 				var points;
 				
 				for(var i = 0; i < data.length; ++i){
@@ -963,44 +1022,34 @@
 					var userPortrait = currentData.userPortrait;
 					var userLocationLatitude = currentData.userLocationLatitude;
 					var userLocationLongitude = currentData.userLocationLongitude;
+
+					if(points === undefined || points === null)points = [];
+					if(userLocationLatitude == 4.9E-324 || userLocationLongitude == 4.9E-324)continue;
 					
 					//添加用户头像
-					var currentLi = document.createElement("li");
-					currentLi.innerHTML = '<img src="' + userPortrait + '">';
-					$(".mapNumbersInfo").append(currentLi);
 					
-					if(points === undefined || points === null)points = [];
-
+					var locationUser = new GroupLocationUser();
+					locationUser.init(currentData)
+					$(".mapNumbersInfo").append(locationUser.getView());
+					locationUser.addEventDispatchListener(operateIdTpye.ChangeLocationUser,this.onChangeLocationUser,this);
 					var bitMapPoint = new BMap.Point(userLocationLongitude,userLocationLatitude);
 		//			var bitMapPoint = new BMap.Point(113.037936,23.166192);
 					points.push(bitMapPoint);
 					
-					if(i == 0){
-						currentMap = new BMap.Map("map");
-						currentMap.enableScrollWheelZoom();
-						currentMap.enableKeyboard();
-						currentMap.enableDragging();
-						currentMap.enableDoubleClickZoom();
-						currentMap.centerAndZoom(new BMap.Point(userLocationLongitude, userLocationLatitude), 15);
-		//				currentMap.centerAndZoom(new BMap.Point(113.037936,23.166192), 15);
-					}
 				}
 				
 				//坐标转换完之后的回调函数
 				translateCallback = function(data){
+					
 					if(data.status === 0) {
 				        for (var i = 0; i < data.points.length; i++) {
 				            currentMap.addOverlay(new BMap.Marker(data.points[i]));
-				            currentMap.setCenter(data.points[i]);
-				            
-					//		var pt = new BMap.Point(113.037936,23.166192);
-					//		var myIcon = new BMap.Icon("http://lbsyun.baidu.com/jsdemo/img/fox.gif", new BMap.Size(200,150));
-					//		var marker2 = new BMap.Marker(data.points[i],{icon:myIcon});  // 创建标注
-					//		currentMap.addOverlay(marker2);
+				            //currentMap.setCenter(data.points[i]);
+				           
 							
 							var opts = {
 							  position : data.points[i],// 指定文本标注所在的地理位置
-							  offset   : new BMap.Size(-25, 0) 
+							  offset   : new BMap.Size(-5, 0) 
 							}
 							var label = new BMap.Label(userName, opts);  // 创建文本标注对象
 								label.setStyle({
@@ -1011,19 +1060,31 @@
 										 fontFamily:"微软雅黑"
 									});
 							currentMap.addOverlay(label);
-							currentMap.setCenter(data.points[i]);
+							//currentMap.setCenter(data.points[i]);
 				        }
 				    }
 				}
 				
 				setTimeout(function(){
 					var convertor = new BMap.Convertor();
-        			convertor.translate(points, 1, 5, translateCallback);
-        			console.log(this);
+        			convertor.translate(points, 5, 5, translateCallback);
 				},1000);
 				//打开地图窗口
-				this.openView("chatWindowMap");
 			}
+		}
+		
+		
+		this.onChangeLocationUser = function(event){
+			var locationMessage = event.target.locationMessage;
+			var point = new BMap.Point(locationMessage.userLocationLongitude,locationMessage.userLocationLatitude);
+			this.currentMap.centerAndZoom(point,30);
+			//创建一个地理位置解析器  
+
+            var geoc = new BMap.Geocoder();  
+            geoc.getLocation(point, function(rs){//解析格式：城市，区县，街道  
+                var addComp = rs.addressComponents;
+                $("#mapInfoLocation").children("span").text("地址信息:    " + addComp.province + "," + addComp.city + ", " + addComp.district);
+            });   
 		}
 		
 		//保存群资料
@@ -1119,6 +1180,7 @@
 		//用户被动接收消息
 		this.onReceiveGroupMessage = function(event){
 			var data = event.data.data;
+			console.log(data);
 			if(data.length){
 				for(var i = 0; i< data.length; ++i){
 					var currentData = data[i];
@@ -1187,6 +1249,7 @@
 		
 		//回去接收的时间验证
 		this.getReceiveTime = function(event){
+			console.log(event.data);
 			var data = event.data;
 			var groupId = data.groupId;
 			

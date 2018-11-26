@@ -3,19 +3,19 @@
 	var operateIdType = window.ddzj.OperateIdType;
 	var evenDispatcher = window.ddzj.EventDispatcher;
 	
-	var GroupMember = function(){
-		this.member = null;
+	var LocationGroupUser = function(){
+		this.locationMessage = null;
 		this.view = null;
 		evenDispatcher.apply(this);
 		
-		this.init = function(member){
-			this.member = member;
+		this.init = function(locationMessage){
+			this.locationMessage = locationMessage;
 			this.createView();
 		}
 
 		this.createView = function(){
 			var newView = document.createElement("li");			
-			newView.innerHTML = '<img src="' + this.member.groupUserPortrait + '" />' + '<span>' + this.member.groupUserName  + '</span>' + '<input type="button" value="删除" class="deleteNumber"/>';;
+			newView.innerHTML = '<img src="' + this.locationMessage.userPortrait + '">';
 			
 			this.view = $(newView);
 			this.addEvenListeners();
@@ -26,27 +26,25 @@
 			return this.view;
 			
 		}
-		
-		
+
 		this.addEvenListeners = function(){
 			
-			this.addOnDeleteClickListener(this,this.toDeleteClick);
+			this.addChangeClickListener(this,this.toChangeClick);
 		}
 
-		this.addOnDeleteClickListener = function(obj,call){
+		this.addChangeClickListener = function(obj,call){
 			
 			var callFunc = function(event){
 				call.call(obj,event);
 			}
 			
 			//添加点击事件
-			$(this.view).children("input.deleteNumber").on("click",callFunc);
+			$(this.view).on("click",callFunc);
 		}
 
-		this.toDeleteClick = function(event){
-			this.dispatchEventWith(operateIdType.DeleteGroupMember);
+		this.toChangeClick = function(event){
+			this.dispatchEventWith(operateIdType.ChangeLocationUser);
 		}
-
 	}
-	window.ddzj.GroupMember = GroupMember;
+	window.ddzj.LocationGroupUser = LocationGroupUser;
 })(window);

@@ -71,9 +71,9 @@
 		this.onUserToSendMessage = function(userId,groupId,content){
 			var obj = new Object();
 			obj.operateId = operateIdType.User_Send_GroupMessage;
-			obj.userUuid = userId;
-			obj.groupUuid = groupId;
-			obj.content = content;
+			obj.uuid = userId;
+			obj.groupId = groupId;
+			obj.groupMessage = content;
 
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);
@@ -182,7 +182,7 @@
 			var obj = new Object();
 			obj.operateId = operateIdType.User_Quit_Group_C;
 			obj.groupId = groupId;
-			obj.userUuid = userId;
+			obj.uuid = userId;
 			
 			var jsonData = tool.toJson(obj);
 			this.wsClinet.sendMessage(jsonData);
