@@ -717,6 +717,7 @@
 		
 		this.createView = function(){
 			var newView = document.createElement("li");
+			
 			newView.innerHTML = '<img src="' + this.group.groupPortrait + '" class="groupPortrait" />'+
 								'<span class="groupName">' + (this.group.groupName === undefined ? "" : this.group.groupName) + '</span>'+
 								'<span class="groupLastMessage">' + ((this.group.lastestGroupUser === undefined || this.group.lastestGroupUser === "" || this.group.lastestGroupUser === "null") ? "" : (this.group.lastestGroupUser + '&nbsp;:&nbsp;')) +
@@ -1203,6 +1204,7 @@
 		//登陆成功
 		this.onLoginSuccess = function(event){
 			var data = event.data.data;
+			console.log(data);
 			if(event.data.status == "fail"){
 				alert("登陆失败");
 				window.location = "login.html";
@@ -1289,7 +1291,11 @@
 			$(".chatGroupName").text(data.groupName);
 			$(".chatGroupNotification").text(data.groupAnoun);
 			$("#groupMessage").empty();
+			//恢复消息记录
 			this.onReviewMessage();
+			//检查用户角色
+			this.checkGroupRole();
+			//打开窗口
 			this.openView("chat");
 		}
 		
@@ -2129,8 +2135,10 @@
 		this.onDeleteGroup = function(event){
 			var userId = window.user.userName;
 			var groupId = this.nowChatGroupObj.group.groupNumber;
+			if(confirm("是否解散当前群？")){
+				this.webSocketAgent.onDeleteGroup(userId,groupId);
+			}
 			
-			this.webSocketAgent.onDeleteGroup(userId,groupId);
 		}
 		
 		//解散群消息响应
@@ -2197,7 +2205,7 @@
 								li = this.getOtherMessageView("left", m.messageUserName, m.messageContent, m.userPortrait);
 							}
 							
-							if(timeStamp === undefined){
+							if(timeStamp === undefined || timeStamp === null){
 								timeStamp = m.messageTime;
 							}else if(timeStamp < m.messageTime){
 								timeStamp = m.messageTime;
@@ -2211,16 +2219,18 @@
 					}else{
 						var groupObj = this.groupMap[currentDataGroupNumber];
 						if(groupObj){
+							//找出最后一条的数据
 							var sender = messages[messages.length-1].messageUserName;
-							var content = messages[messages.length-1].messagecontent;
+							var content = messages[messages.length-1].messageContent;
+							
 							groupObj.getView().children("span.groupLastMessage").text(sender + ' : ' + content);
 							
 							for(var j = 0; j < messages.length; ++j){
 								groupObj.chatList.push(messages[j]);
-
-								if(timeStamp === undefined){
+								
+								if(timeStamp === undefined || timeStamp === null){
 									timeStamp = messages[j].messageTime;
-								}else if(timeStamp < m.messageTime){
+								}else if(timeStamp < messages[j].messageTime){
 									timeStamp = messages[j].messageTime;
 								}
 							}
