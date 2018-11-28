@@ -1289,7 +1289,11 @@
 			$(".chatGroupName").text(data.groupName);
 			$(".chatGroupNotification").text(data.groupAnoun);
 			$("#groupMessage").empty();
+			//恢复消息记录
 			this.onReviewMessage();
+			//检查用户角色
+			this.checkGroupRole();
+			//打开窗口
 			this.openView("chat");
 		}
 		
