@@ -160,6 +160,10 @@ body {
     border-bottom: 1px solid darkgray;
 }
 
+.main .container #left .manager ul li:hover{/*鼠标划过时添加背景颜色*/
+    background-color: rgba(0,0,0,0.1);
+}
+
 .main .container #right {
     width: 50%;
     height: 650px;

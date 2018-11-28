@@ -32,6 +32,6 @@ public interface UserRepository extends JpaRepository<User, String>, JpaSpecific
     public List<User> findThreedUser();
 
     /*根据关键词查找数据库*/
-    @Query("select u from User u where u.uuid like %?1% or u.name like %?1%")
-    public List<User>findByUserIdOrUserName(String key);
+    @Query("select u from User u where (u.uuid like %?1% or u.name like %?1%) and u.status=?2")
+    public List<User>findByUserIdOrUserName(String key,short status);
 }

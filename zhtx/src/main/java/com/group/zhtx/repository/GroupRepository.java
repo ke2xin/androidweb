@@ -31,4 +31,8 @@ public interface GroupRepository extends JpaRepository<Group, String>, JpaSpecif
 
     //根据用户id和群id查找群
     public Group findByUuidAndCreater(String groupId, User user);
+
+    //根据用户传来的关键字查询群
+    @Query("select g from Group g where (g.uuid like %?1% or g.name like %?1%) and g.status=?2")
+    public List<Group>findGroupKeyWord(String key,short status);
 }
