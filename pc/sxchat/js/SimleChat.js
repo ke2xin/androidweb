@@ -29,6 +29,9 @@
     	//接收到新的群消息
     	this.User_Receive_GroupMessage = 22;
     	this.User_Send_GroupDec = 25;
+    	//被动接受位置信息
+    	this.User_Receive_LocationMessage = 101;
+    	
     	//用户登陆
 	    this.User_Login_C = 1;
     	//获取群资料
@@ -401,14 +404,12 @@
 		this.onClose = function(e){
 			this.isconnected = false;
 			//分发消息
-			console.log(e);
 			this.dispatchEventWith(webSocketConfig.CLOSE);
 		}
 		
 		
 		this.onError = function(e){
 			console.log("异常关闭");
-			console.log(e);
 		}
 		
 		
@@ -1076,6 +1077,8 @@
 			this.webSocketClient.addEventDispatchListener(operateIdTpye.User_Group_Number_Location_C,this.onMessageByLocation,this);
 			//解散群
 			this.webSocketClient.addEventDispatchListener(operateIdTpye.User_Delete_Group_Number_C,this.onMessageByDeleteGroup,this);
+			//接收到定位信息
+			this.webSocketClient.addEventDispatchListener(operateIdTpye.User_Receive_LocationMessage,this.onReceiceRoationMessage,this);
 			
 			this.webSocketClient.addEventDispatchListener(wsConfig.CONNECT,this.toConnect,this);
 			this.webSocketClient.addEventDispatchListener(wsConfig.CLOSE,this.toClose,this);
@@ -1204,7 +1207,6 @@
 		//登陆成功
 		this.onLoginSuccess = function(event){
 			var data = event.data.data;
-			console.log(data);
 			if(event.data.status == "fail"){
 				alert("登陆失败");
 				window.location = "login.html";
@@ -1397,7 +1399,6 @@
 			var data = event.data;
 			var groups = data.groups;
 			var newGroup = groups[0];
-			console.log(newGroup);
 			if(newGroup === undefined)return;
 			//添加群
 			this.addGroupToMonitor(newGroup,"prepend");
@@ -1439,7 +1440,6 @@
 		this.onMessageBySearchGroup = function(event){
 			var data = event.data;
 			var groups = data.data;
-			console.log(data);
 			if(groups){
 				$(".searchCountInfo").empty();
 				
@@ -1479,7 +1479,6 @@
 		this.onMessageByEnterGroup = function(event){
 			var data = event.data;
 			var status = data.status;
-			console.log(data);
 			if(data === undefined || data == null || data === null)return;
 			if(data.status == "fail"){
 				if(this.searchGroup[data.groupId]){
@@ -1532,7 +1531,6 @@
 		//接受通知响应
 		this.onMessageByReceiveNotification = function(event){
 			var data =event.data;
-			console.log(event.data);
 			if(data.status == "accpet" || data.status == "success"){
 				var infor = this.notificationMap[data.data.noticeId];
 				if(infor){
@@ -1545,7 +1543,6 @@
 			if(data.status == "accepted"){
 				var groupObj = new Group();
 				groupObj.init(data);
-				console.log(groupObj);
 				var view = groupObj.getView();
 				this.groupMap[data.groupNumber] = groupObj;
 				groupObj.addEventDispatchListener(operateIdTpye.Open_ChatObj,this.openChatGroup,this);
@@ -1557,7 +1554,6 @@
 		//拒绝通知响应
 		this.onMessageByRefuseNotification = function(event){
 			var data = event.data;
-			console.log(data);
 			if(data.status == "success"){
 				var infor = this.notificationMap[data.data.noticeId];
 				if(infor){
@@ -1687,7 +1683,6 @@
 		//响应保存我的资料
 		this.onMessageBySaveOwnData = function(event){
 			var status = event.data.status;
-			console.log(event.data);
 			if(status == "" || status === undefined || status === null || status == "fail"){
 				alert("修改失败");
 				
@@ -1724,7 +1719,6 @@
 		//退出登陆
 		this.onOffline = function(event){
 			if(confirm("确认退出当前账号？")){
-				console.log(!window.user);
 				if(!window.user && !window.user.userName && !window.user.password)return;
 				this.webSocketAgent.onUserOffline(window.user.userName);
 				window.user = undefined;
@@ -1756,7 +1750,6 @@
 			var groupId = group.groupNumber;
 			var groupName = group.groupName;
 			var groupDec = $(".groupAnountion").val();
-			console.log(groupDec);
 			this.webSocketAgent.onSendGroupAnnoun(window.user.userName,groupId,groupDec);
 			
 			$("#publicAnoun").attr("value","发送中...");
@@ -1765,7 +1758,6 @@
 		
 		//响应群公告
 		this.onMessageBySendGroup = function(event){
-			console.log(event.data);
 			$("#publicAnoun").attr("value","发布");
 			if(event.data.status == "success"){
 				var content = $(".groupAnountion").val();
@@ -1802,7 +1794,6 @@
 		
 		//响应查看群资料
 		this.onMessageByGetGroupData = function(event){		
-			console.log(event.data);
 			//群管理
 			$("#groupTile").children("img").attr("src",event.data.groupPortrait);
 			$(".groupManagerGroupName").text(event.data.groupName);
@@ -1870,8 +1861,6 @@
 		this.onMessageByDeleteMember = function(event){
 			var data = event.data;
 			var userId = data.delUuid;
-			console.log(event.data);
-			console.log(this.groupMember);
 			if(this.groupMember[userId]){
 				alert("删除成功");
 				var view = this.groupMember[userId].getView();
@@ -1956,11 +1945,13 @@
 			
 			var talkMonitor = this;
 			var owner = this.owner;
+			
 			var geolocation = new BMap.Geolocation();
 			talkMonitor.openView("chatWindowMap");
 			geolocation.getCurrentPosition(function(r){
 				if(this.getStatus() == BMAP_STATUS_SUCCESS){
 					var mk = new BMap.Marker(r.point);
+
 		            map.addOverlay(mk);
 		            map.panTo(r.point);
 		            var opts = {
@@ -1982,8 +1973,10 @@
 					newView.innerHTML = '<img src="' + owner.userPortrait + '">';
 					$(".mapNumbersInfo").prepend(newView);
 					
+					owner.mapView = newView;
+					owner.point = r.point;
 					ownerClick = function(){
-						map.centerAndZoom(r.point,25);
+						map.centerAndZoom(owner.point,25);
 					}
 					
 					$(newView).on("click",ownerClick);
@@ -2003,11 +1996,13 @@
 		}
 		
 		
+		
+		
 		//定位信息返回
 		this.onMessageByLocation = function(event){
-		console.log(event.data);
 		//	this.openView("chatWindowMap");
 			var data = event.data.data;
+			var currentUserNameDataMap = [];
 			//设置群组名
 			$(".locationGroupName").text(this.nowChatGroupObj.group.groupName);
 			//清空用户头像
@@ -2022,9 +2017,12 @@
 					var userPortrait = currentData.userPortrait;
 					var userLocationLatitude = currentData.userLocationLatitude;
 					var userLocationLongitude = currentData.userLocationLongitude;
-
+					var userId = currentData.userId;
 					if(points === undefined || points === null)points = [];
 					if(userLocationLatitude == 4.9E-324 || userLocationLongitude == 4.9E-324)continue;
+					
+					//添加用户名
+					currentUserNameDataMap.push(userName);
 					
 					//添加用户头像
 					
@@ -2033,7 +2031,11 @@
 					$(".mapNumbersInfo").append(locationUser.getView());
 					locationUser.addEventDispatchListener(operateIdTpye.ChangeLocationUser,this.onChangeLocationUser,this);
 					var bitMapPoint = new BMap.Point(userLocationLongitude,userLocationLatitude);
-		//			var bitMapPoint = new BMap.Point(113.037936,23.166192);
+					if(this.groupLocationUser == null || this.groupLocationUser == undefined){
+						this.groupLocationUser = [];
+					}
+					//保存 用户定位信息
+					this.groupLocationUser.push(locationUser);
 					points.push(bitMapPoint);
 					
 				}
@@ -2045,13 +2047,13 @@
 				        for (var i = 0; i < data.points.length; i++) {
 				            currentMap.addOverlay(new BMap.Marker(data.points[i]));
 				            //currentMap.setCenter(data.points[i]);
-				           
 							
 							var opts = {
 							  position : data.points[i],// 指定文本标注所在的地理位置
 							  offset   : new BMap.Size(-5, 0) 
 							}
-							var label = new BMap.Label(userName, opts);  // 创建文本标注对象
+
+							var label = new BMap.Label(currentUserNameDataMap[i], opts);  // 创建文本标注对象
 								label.setStyle({
 										 color : "red",
 										 fontSize : "1px",
@@ -2075,8 +2077,15 @@
 		
 		
 		this.onChangeLocationUser = function(event){
-			var locationMessage = event.target.locationMessage;
-			var point = new BMap.Point(locationMessage.userLocationLongitude,locationMessage.userLocationLatitude);
+			var currentLocationMessage = event.target.locationMessage;
+			var longitude = currentLocationMessage.userLocationLongitude;
+			var latitude = currentLocationMessage.userLocationLatitude;
+			if(longitude == undefined || latitude == undefined || longitude == null || latitude == null){
+				longitude = currentLocationMessage.longitude;
+				latitude = currentLocationMessage.latitude;
+			}
+			
+			var point = new BMap.Point(longitude,latitude);
 			this.currentMap.centerAndZoom(point,30);
 			//创建一个地理位置解析器  
 
@@ -2085,6 +2094,158 @@
                 var addComp = rs.addressComponents;
                 $("#mapInfoLocation").children("span").text("地址信息:    " + addComp.province + "," + addComp.city + ", " + addComp.district);
             });   
+		}
+		
+		//接受到位置信息
+		this.onReceiceRoationMessage = function(event){
+			var data = event.data.data;
+			console.log(data);
+			if(data.length){
+				for(var i = 0;i < data.length; ++i){
+					var currentData = data[i];
+					var groupId = currentData.groupId;
+					var userId = currentData.userId;
+					if(groupId && this.nowChatGroupObj.group.groupNumber == groupId){
+						var display = $("#chatWindowMap").attr("style");
+						if(display.indexOf("display: none;") != -1){
+							return;
+						}
+						
+						var isSave = false;
+						
+						for(var i = 0; i < this.groupLocationUser.length;i++){
+							var locationUser = this.groupLocationUser[i];
+							if(userId == locationUser.locationMessage.userId){
+								isSave = true;
+								break;
+							}
+						}
+						
+						if(currentData.longitude == 4.9E-324 || currentData.latitude == 4.9E-324)return;
+						
+						if(!isSave){
+							var locationUser = new GroupLocationUser();
+							locationUser.init(currentData);
+							$(".mapNumbersInfo").append(locationUser.getView());
+							locationUser.addEventDispatchListener(operateIdTpye.ChangeLocationUser,this.onChangeLocationUser,this);
+							this.groupLocationUser.push(locationUser);
+						}else{
+							var currentLocationUser = null;
+							for(var i = 0; i < this.groupLocationUser.length;i++){
+								if(userId == this.groupLocationUser[i].locationMessage.userId){
+									currentLocationUser = this.groupLocationUser[i];
+									break;
+								}
+							}
+							if(currentLocationUser == null)return;
+
+							var currentLocationMessage = currentLocationUser.locationMessage;
+							
+							var longitude = currentData.userLocationLongitude;
+							var latitude = currentData.userLocationLatitude;
+							if(longitude == undefined || latitude == undefined || longitude == null || latitude == null){
+								longitude = currentData.longitude;
+								latitude = currentData.latitude;
+							}
+							
+							currentLocationMessage.userLocationLatitude = latitude;
+							currentLocationMessage.userLocationLongitude = longitude;
+						}
+
+					}
+				}
+				
+				//清除所有标注物
+				if(this.currentMap == undefined || this.currentMap == null)return;
+				this.currentMap.clearOverlays();
+				var currentMap = this.currentMap;
+				
+				var geolocation = new BMap.Geolocation();
+				var owner = this.owner;
+				//重新获取用户定位信息
+				
+				
+				geolocation.getCurrentPosition(function(r){
+					if(this.getStatus() == BMAP_STATUS_SUCCESS){
+						var mk = new BMap.Marker(r.point);
+	
+			            currentMap.addOverlay(mk);
+			            //currentMap.panTo(r.point);
+			            var opts = {
+						  position : r.point,// 指定文本标注所在的地理位置
+						  offset   : new BMap.Size(-5, 0) 
+						}
+						var label = new BMap.Label(owner.userName, opts);  // 创建文本标注对象
+							label.setStyle({
+									 color : "red",
+									 fontSize : "1px",
+									 height : "12px",
+									 lineHeight : "12px",
+									 fontFamily:"微软雅黑"
+								});
+						currentMap.addOverlay(label);
+			            
+			            
+						owner.point = r.point;			
+						
+					}
+					else {
+						alert('failed'+this.getStatus());
+					}
+				});
+				
+				for(var i = 0; i < this.groupLocationUser.length;i++){
+
+					var currentLocationMessage = this.groupLocationUser[i].locationMessage;
+					var longitude = currentLocationMessage.userLocationLongitude;
+					var latitude = currentLocationMessage.userLocationLatitude;
+					if(longitude == undefined || latitude == undefined || longitude == null || latitude == null){
+						longitude = currentLocationMessage.longitude;
+						latitude = currentLocationMessage.latitude;
+					}
+					
+					
+					var ponit = new BMap.Point(longitude,latitude);
+					var marker = new BMap.Marker(ponit);
+					this.currentMap.addOverlay(marker);
+					var opts = {
+						  position : ponit,// 指定文本标注所在的地理位置
+						  offset   : new BMap.Size(-5, 0) 
+						}
+	
+						var label = new BMap.Label(currentLocationMessage.userName, opts);  // 创建文本标注对象
+							label.setStyle({
+									 color : "red",
+									 fontSize : "1px",
+									 height : "12px",
+									 lineHeight : "12px",
+									 fontFamily:"微软雅黑"
+								});
+						this.currentMap.addOverlay(label);	
+				}
+				
+				
+			}
+		}
+		
+		
+		this.count = function(o){
+			var t = typeof o;
+			
+			if(t == 'string'){
+				return o.length;
+			
+			}else if(t == 'object'){
+			
+			var n = 0;
+			
+			for(var i in o){
+				n++;
+			}
+			return n;
+			}
+			return false;
+		
 		}
 		
 		//保存群资料
@@ -2110,7 +2271,6 @@
 		this.onMessageBySaveGroupData = function(event)
 		{
 			var status = event.data.status;
-			console.log(event.data);
 			if(status == "success"){
 				alert("修改群资料成功");
 				var groupName = $(".groupDataSaveName").val();
@@ -2153,7 +2313,6 @@
 					if(index){
 						this.groupMap.splice(index,1);
 					}
-					console.log(this.groupMap);
 					$("#chatClose").click();
 					alert("解散群成功");
 				}
@@ -2182,7 +2341,6 @@
 		//用户被动接收消息
 		this.onReceiveGroupMessage = function(event){
 			var data = event.data.data;
-			console.log(data);
 			if(data.length){
 				for(var i = 0; i< data.length; ++i){
 					var currentData = data[i];
@@ -2316,6 +2474,7 @@
 			this.unView();
 			if(type === "chat"){
 				$("#chatWindow").attr("style","display: block;");
+				$("#chatWindowInfo").attr("style","display: block;");
 			}else if(type === "createGroup"){
 				$("#chatWindow").attr("style","display: none;");
 			}else if(type === "searchGroup"){
@@ -2361,7 +2520,6 @@
 				$(".exitGroup").css("display","none");
 				$(".groupDissolution").css("display","block");
 			}else{
-				console.log(role);
 				$(".anoun").css("display","none");
 				$(".groupNumber").css("display","none");
 				$("#groupDataSure").css("display","none");

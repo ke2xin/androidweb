@@ -34,13 +34,13 @@
 					this.password = password;
 				}
 				
-				window.user = new User(sessionStorage.getItem("userName"),sessionStorage.getItem("userPassword"));
-				//window.user = new User(123,123);
+				//window.user = new User(sessionStorage.getItem("userName"),sessionStorage.getItem("userPassword"));
+				window.user = new User(123,123);
 				var talkMonitor = new TalkMonitor();
 				var hostname = location.hostname;
 				var host = location.host;
 				//talkMonitor.init("ws://" + host + "/ws");
-				talkMonitor.init("ws://172.17.146.80:8080/ws");
+				talkMonitor.init("ws://172.18.178.21:8080/ws");
 			});
 		</script>
 		

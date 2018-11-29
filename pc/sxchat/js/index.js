@@ -129,10 +129,12 @@ function searchMap() {
         if (flag) {
             chatBoxTop.style.top = '0px';
             chatBoxListFuncMune.style.display = 'block';
+            chatBoxTop.style.borderRadius = '0px';
             flag = false;
         } else {
-            chatBoxTop.style.top = '50px';
+            chatBoxTop.style.top = '73px';
             chatBoxListFuncMune.style.display = 'none';
+            chatBoxTop.style.borderRadius = '0px 0px 25px 25px';
             flag = true;
         }
     }
