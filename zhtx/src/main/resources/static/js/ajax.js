@@ -8,7 +8,7 @@ $(function () {
        var init=function () {
            input.bind('keyup',sendKeyWord);
            input.bind('blur',function () {
-               setTimeout(hideSuggest,1000);//搜索框延迟一秒再消失
+               setTimeout(hideSuggest,100);//如果取消输入框绑定失去焦点事件，那么输入框列表不回消失
            })
        }
        var hideSuggest=function () {
@@ -16,8 +16,8 @@ $(function () {
        }
        //发送请求，根据关键字到后台
        var sendKeyWord=function (event) {
-            var valText=$.trim(input.val());
-            console.log("valText="+valText);
+           var valText=$.trim(input.val());
+           console.log("valText="+valText);
            console.log("key="+key);
             if(valText==''||valText==key){//这里有个好处吧，就是重复输入同样的关键字，不会重复发送到后台
                 return;
@@ -52,7 +52,8 @@ $(function () {
                console.log("给li添加点击事件");
                console.log(this);
                $(this).find('span').remove();
-               input.val(this.innerHTML)
+               input.val(this.innerHTML);
+               suggestWrap.hide();
            });
        }
        init();
@@ -64,13 +65,39 @@ $(function () {
    function sendKeyWordToBack(keyword) {
        console.log(keyword);
        var aData=[];
+       var o=new Object();
+       o.pageIndex=1;
+       o.operate="allSearch";//表示键盘操作类型
+       o.key=keyword;
+       if(!$("#forbidUser").is(':hidden')){
+           console.log("操作禁用用户的面板没隐藏了");
+           o.type="user";
+           o.status=1;
+       }
+       if(!$("#startUser").is(":hidden")){
+           console.log("操作开启用户的面板没隐藏了");
+           o.type="user";
+           o.status=0;
+       }
+       if(!$("#forbidGroup").is(":hidden")){
+           console.log("操作禁用群的面板没隐藏了");
+           o.type="group";
+           o.status=1;
+       }
+       if(!$("#startGroup").is(":hidden")){
+           console.log("操作开启群的面板没隐藏了");
+           o.type="group";
+           o.status=0;
+       }
        $.ajax({
-           url:"http://localhost:8080/searchByWord?key="+keyword,
-           type:"GET",
+           url:"http://localhost:8080/searchByWord",
+           type:"POST",
            dataType:"json",
            contentType:"application/json",
+           data:JSON.stringify(o),
            success:function (data) {
                console.log(data);
+               console.log("查看每次是不是都是两条数据："+data.users.data.length);
                for(var i=0;i<data.users.data.length;i++){
                    aData.push('<span class="num_right">'+data.users.data[i].userName+'</span>'+data.users.data[i].userId);
                }
@@ -82,12 +109,261 @@ $(function () {
                console.log(err);
            }
        })
-
    }
+   $("#searchButton").on('click',function () {
+       console.log($("#searchText").val());
+       searchObj.pageIndex=1;
+       searchObj.key=$("#searchText").val();
+       searchObj.operate="pageSearch";//表示点击操作类型
+       if(!$("#forbidUser").is(':hidden')){
+           forbidUserPanel();
+       }
+       if(!$("#startUser").is(":hidden")){
+           startUserPanel();
+       }
+       if(!$("#forbidGroup").is(":hidden")){
+           forbidGroupPanel();
+       }
+       if(!$("#startGroup").is(":hidden")){
+           startGroupPanel();
+       }
+   });
+   $("#managerHome").bind("click",function () {
+      console.log(this);
+      window.location.reload();//重新刷新整个页面
+   });
 })
+//操作禁用用户的面板
+function forbidUserPanel() {
+    console.log("操作禁用用户的面板没隐藏了");
+    searchObj.type="user";
+    searchObj.status=1;
+    $.ajax({
+        url:"http://localhost:8080/searchByWord",
+        type:"POST",
+        dataType:"json",
+        contentType:"application/json",
+        data:JSON.stringify(searchObj),
+        success:function (data) {
+            console.log(data);
+            $("#forbidUserUl").empty();
+            var g= $("#getPage");
+            if(data.code==1){
+                console.log("正确获取搜索用户禁用面板的数据");
+                if(data.users.data.length==0){
+                    var elm=$("<li>"+"<img src='http://localhost:8080/img/nothing.jpg'/>"+"</li>")
+                    elm.find('img').css({width:"630px",height:"450px"});
+                    elm.css("border","none");
+                    $("#forbidUserUl").css("overflow","hidden");
+                    $("#forbidUserUl").append(elm);
+                }else{
+                    for(var i=0;i<data.users.data.length;i++){
+                        var elm=$("<li>" +
+                            "<img src='"+data.users.data[i].url+"'/>"+
+                            "<span class='userName'>"+data.users.data[i].userName+"</span>"+
+                            "<span class='userId'>"+data.users.data[i].userId+"</span>"+
+                            "<input type='button' value='禁用该用户' class='forbidButton' name='"+data.users.data[i].userId+"'/>"+
+                            "</li>");
+                        $("#forbidUserUl").append(elm);
+                    }
+                    $("input.forbidButton").on('click', function () {
+                        console.log(this.getAttribute("name"));
+                        if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
+                            forbidAndStart(0,this,this.value,"user");//第一个参数表示禁用用户的操作码，第二个是点击的对象，第三个是点击对象的值，操作类型，字符串user表示用户管理
+                        }
+                    });
+                    g.empty();
+                    createPage(data.page,g,"searchByWord");//第一个参数表示封装成一个页的类，第二个参数是ul，下面的分页条数，第三个参数是，给li添加name属性
+                }
+            }else{
+                var elm=$("<li>"+"<img src='http://localhost:8080/img/nothing1.jpg'/>"+"</li>")
+                elm.find('img').css({width:"630px",height:"450px"});
+                elm.css("border","none");
+                $("#forbidUserUl").css("overflow","hidden");
+                $("#forbidUserUl").append(elm);
+                g.empty();
+            }
+        },
+        error:function (err) {
+            console.log(err);
+        }
+    })
+}
+//操作启用用户的面板
+function startUserPanel() {
+    console.log("操作开启用户的面板没隐藏了");
+    searchObj.type="user";
+    searchObj.status=0;
+    $.ajax({
+        url:"http://localhost:8080/searchByWord",
+        type:"POST",
+        dataType:"json",
+        contentType:"application/json",
+        data:JSON.stringify(searchObj),
+        success:function (data) {
+            console.log(data);
+            $("#startUserUl").empty();
+            var g= $("#getStartUser");
+            if(data.code==1){
+                console.log("正确获取搜索用户启用面板的数据");
+                if(data.users.data.length==0){
+                    var elm=$("<li>"+"<img src='http://localhost:8080/img/nothing.jpg'/>"+"</li>")
+                    elm.find('img').css({width:"630px",height:"450px"});
+                    elm.css("border","none");
+                    $("#startUserUl").css("overflow","hidden");
+                    $("#startUserUl").append(elm);
+                    //g.empty();
+                }else{
+                    for(var i=0;i<data.users.data.length;i++){
+                        var elm=$("<li>" +
+                            "<img src='"+data.users.data[i].url+"'/>"+
+                            "<span class='userName'>"+data.users.data[i].userName+"</span>"+
+                            "<span class='userId'>"+data.users.data[i].userId+"</span>"+
+                            "<input type='button' value='启用该用户' class='startButton' name='"+data.users.data[i].userId+"'/>"+
+                            "</li>");
+                        $("#startUserUl").append(elm);
+                    }
+                    $("input.startButton").on('click', function () {
+                        console.log(this.getAttribute("name"));
+                        if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
+                            forbidAndStart(1,this,this.value,"user");//第一个参数表示禁用用户的操作码，第二个是点击的对象，第三个是点击对象的值，操作类型，字符串user表示用户管理
+                        }
+                    });
+                    g.empty();
+                    createPage(data.page,g,"searchByWord");//第一个参数表示封装成一个页的类，第二个参数是ul，下面的分页条数，第三个参数是，给li添加name属性
+                }
+            }else{
+                var elm=$("<li>"+"<img src='http://localhost:8080/img/nothing1.jpg'/>"+"</li>")
+                elm.find('img').css({width:"630px",height:"450px"});
+                elm.css("border","none");
+                $("#startUserUl").css("overflow","hidden");
+                $("#startUserUl").append(elm);
+                g.empty();
+            }
+        },
+        error:function (err) {
+            console.log(err);
+        }
+    })
+}
+//操作禁用群的面板
+function forbidGroupPanel() {
+    console.log("操作禁用群的面板没隐藏了");
+    searchObj.type="group";
+    searchObj.status=1;
+    $.ajax({
+        url:"http://localhost:8080/searchByWord",
+        type:"POST",
+        dataType:"json",
+        contentType:"application/json",
+        data:JSON.stringify(searchObj),
+        success:function (data) {
+            console.log(data);
+            console.log("正确获取操作禁用群的数据的后台返回的代码："+data.code);
+            $("#forbidGroupUl").empty();//清除forbidUserUl里面的子元素
+            var g=$("#getForbidGroup");
+            if(data.code==1){
+                if(data.users.data.length==0){
+                    var elm=$("<li>" + "<img src='http://localhost:8080/img/nothing.jpg'/>" + "</li>");
+                    elm.find('img').css({width:"630px",height:"450px"});
+                    elm.css("border","none");
+                    $("#forbidGroupUl").css("overflow","hidden");
+                    $("#forbidGroupUl").append(elm);
+                }else{
+                    for(var i=0;i<data.users.data.length;i++){
+                        console.log(data.users.data[i].userName);
+                        var elm = "<li> " +
+                            "<img src='" + data.users.data[i].url + "'/>" +
+                            "<span class='userName'>" + data.users.data[i].userName + "</span>" +
+                            "<span class='userId'>" + data.users.data[i].userId + "</span>" +
+                            "<input type='button' value='禁用该群' class='forbidButton' name='" + data.users.data[i].userId + "'/> " +
+                            "</li>";
+                        $("#forbidGroupUl").append(elm);
+                    }
+                    $("input.forbidButton").on('click', function () {
+                        console.log("搜索时的名字："+this.getAttribute("name"));
+                        if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
+                            forbidAndStart(0,this,this.value,"group");
+                        }
+                    });
+                    g.empty();
+                    createPage(data.page,g,"searchByWord");
+                }
+            }else{
+                var elm=$("<li>" + "<img src='http://localhost:8080/img/nothing1.jpg'/>" + "</li>");
+                elm.find('img').css({width:"630px",height:"450px"});
+                elm.css("border","none");
+                $("#forbidGroupUl").css("overflow","hidden");
+                $("#forbidGroupUl").append(elm);
+                g.empty();
+            }
+        },
+        error:function (err) {
+            console.log(err);
+        }
+    })
+}
+//操作启用群的面板
+function startGroupPanel() {
+    console.log("操作开启群的面板没隐藏了");
+    searchObj.type="group";
+    searchObj.status=0;
+    $.ajax({
+        url:"http://localhost:8080/searchByWord",
+        type:"POST",
+        dataType:"json",
+        contentType:"application/json",
+        data:JSON.stringify(searchObj),
+        success:function (data) {
+            console.log(data);
+            console.log("正确获取操作启用群的数据的后台返回的代码："+data.code);
+            $("#startGroupUl").empty();//清除forbidUserUl里面的子元素
+            var g=$("#getStartGroup");
+            if(data.code==1){
+                if(data.users.data.length==0){
+                    var elm=$("<li style=''>" + "<img src='http://localhost:8080/img/nothing.jpg'/>"+ "</li>");
+                    elm.find('img').css({width:"630px",height:"450px"});
+                    elm.css("border","none");
+                    $("#startGroupUl").css("overflow","hidden");
+                    $("#startGroupUl").append(elm);
+                }else{
+                    for(var i=0;i<data.users.data.length;i++){
+                        var elm = "<li> " +
+                            "<img src='" + data.users.data[i].url + "'/>" +
+                            "<span class='userName'>" + data.users.data[i].userName + "</span>" +
+                            "<span class='userId'>" + data.users.data[i].userId + "</span>" +
+                            "<input type='button' value='开启该群' class='startButton' name='" + data.users.data[i].userId + "'/> " +
+                            "</li>";
+                        $("#startGroupUl").append(elm);
+                    }
+                    $("input.startButton").on('click', function () {
+                        console.log(this.getAttribute("name"));
+                        if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
+                            forbidAndStart(1,this,this.value,"group");
+                        }
+                    });
+                    g.empty();
+                    createPage(data.page,g,"searchByWord");
+                }
+            }else{
+                var elm=$("<li style=''>" + "<img src='http://localhost:8080/img/nothing1.jpg'/>"+ "</li>");
+                elm.find('img').css({width:"630px",height:"450px"});
+                elm.css("border","none");
+                $("#startGroupUl").css("overflow","hidden");
+                $("#startGroupUl").append(elm);
+                g.empty();
+            }
+        },
+        error:function (err) {
+            console.log(err);
+        }
+    })
+}
+
 //定义全局变量，保存总页数，当前页
 var talPage;
 var pageIndex;
+var searchObj=new Object();
 function createPage(obj,commonPage,name) {
     console.log("生成页码");
     //获取分页数
@@ -273,6 +549,24 @@ function pageClick(obj) {
             loadForbidGroup(1);
         }else if(name=="loadStartGroup"){
             loadStartGroup(1);
+        }else if(name=="searchByWord"){
+            console.log("this="+this);
+            searchObj.pageIndex=1;
+            console.log("定义去全局变量的type为："+searchObj.type);
+            console.log("定义去全局变量的status为："+searchObj.status);
+            if(searchObj.type=="user"&&searchObj.status==1){
+                console.log("应该加载操作禁用用户的数据");
+                forbidUserPanel();
+            }else if(searchObj.type=="user"&&searchObj.status==0){
+                console.log("应该加载操作启用用户的数据");
+                startUserPanel();
+            }else if(searchObj.type=="group"&&searchObj.status==1){
+                console.log("应该加载操作禁用群的数据");
+                forbidGroupPanel();
+            }else if(searchObj.type=="group"&&searchObj.status==0){
+                console.log("应该加载操作启用群的数据");
+                startGroupPanel();
+            }
         }
     }else if("上一页"==text){
         if(pageIndex<=1){
@@ -284,6 +578,24 @@ function pageClick(obj) {
                 loadForbidGroup(1);
             }else if(name=="loadStartGroup"){
                 loadStartGroup(1);
+            }else if(name=="searchByWord"){
+                console.log("this="+this);
+                searchObj.pageIndex=1;
+                console.log("定义去全局变量的type为："+searchObj.type);
+                console.log("定义去全局变量的status为："+searchObj.status);
+                if(searchObj.type=="user"&&searchObj.status==1){
+                    console.log("应该加载操作禁用用户的数据");
+                    forbidUserPanel();
+                }else if(searchObj.type=="user"&&searchObj.status==0){
+                    console.log("应该加载操作启用用户的数据");
+                    startUserPanel();
+                }else if(searchObj.type=="group"&&searchObj.status==1){
+                    console.log("应该加载操作禁用群的数据");
+                    forbidGroupPanel();
+                }else if(searchObj.type=="group"&&searchObj.status==0){
+                    console.log("应该加载操作启用群的数据");
+                    startGroupPanel();
+                }
             }
         }else{
             var p=pageIndex-1;
@@ -295,6 +607,24 @@ function pageClick(obj) {
                 loadForbidGroup(p);
             }else if(name=="loadStartGroup"){
                 loadStartGroup(p);
+            }else if(name=="searchByWord"){
+                console.log("this="+this);
+                searchObj.pageIndex=p;
+                console.log("定义去全局变量的type为："+searchObj.type);
+                console.log("定义去全局变量的status为："+searchObj.status);
+                if(searchObj.type=="user"&&searchObj.status==1){
+                    console.log("应该加载操作禁用用户的数据");
+                    forbidUserPanel();
+                }else if(searchObj.type=="user"&&searchObj.status==0){
+                    console.log("应该加载操作启用用户的数据");
+                    startUserPanel();
+                }else if(searchObj.type=="group"&&searchObj.status==1){
+                    console.log("应该加载操作禁用群的数据");
+                    forbidGroupPanel();
+                }else if(searchObj.type=="group"&&searchObj.status==0){
+                    console.log("应该加载操作启用群的数据");
+                    startGroupPanel();
+                }
             }
         }
     }else if("下一页"==text){
@@ -307,6 +637,24 @@ function pageClick(obj) {
                 loadForbidGroup(pageIndex);
             }else if(name=="loadStartGroup"){
                 loadStartGroup(pageIndex);
+            }else if(name=="searchByWord"){
+                console.log("this="+this);
+                searchObj.pageIndex=pageIndex;
+                console.log("定义去全局变量的type为："+searchObj.type);
+                console.log("定义去全局变量的status为："+searchObj.status);
+                if(searchObj.type=="user"&&searchObj.status==1){
+                    console.log("应该加载操作禁用用户的数据");
+                    forbidUserPanel();
+                }else if(searchObj.type=="user"&&searchObj.status==0){
+                    console.log("应该加载操作启用用户的数据");
+                    startUserPanel();
+                }else if(searchObj.type=="group"&&searchObj.status==1){
+                    console.log("应该加载操作禁用群的数据");
+                    forbidGroupPanel();
+                }else if(searchObj.type=="group"&&searchObj.status==0){
+                    console.log("应该加载操作启用群的数据");
+                    startGroupPanel();
+                }
             }
         }else{
             var p=pageIndex+1;
@@ -318,6 +666,24 @@ function pageClick(obj) {
                 loadForbidGroup(p);
             }else if(name=="loadStartGroup"){
                 loadStartGroup(p);
+            }else if(name=="searchByWord"){
+                console.log("this="+this);
+                searchObj.pageIndex=p;
+                console.log("定义去全局变量的type为："+searchObj.type);
+                console.log("定义去全局变量的status为："+searchObj.status);
+                if(searchObj.type=="user"&&searchObj.status==1){
+                    console.log("应该加载操作禁用用户的数据");
+                    forbidUserPanel();
+                }else if(searchObj.type=="user"&&searchObj.status==0){
+                    console.log("应该加载操作启用用户的数据");
+                    startUserPanel();
+                }else if(searchObj.type=="group"&&searchObj.status==1){
+                    console.log("应该加载操作禁用群的数据");
+                    forbidGroupPanel();
+                }else if(searchObj.type=="group"&&searchObj.status==0){
+                    console.log("应该加载操作启用群的数据");
+                    startGroupPanel();
+                }
             }
         }
     }else if("尾页"==text){
@@ -330,6 +696,24 @@ function pageClick(obj) {
                 loadForbidGroup(pageIndex);
             }else if(name=="loadStartGroup"){
                 loadStartGroup(pageIndex);
+            }else if(name=="searchByWord"){
+                console.log("this="+this);
+                searchObj.pageIndex=pageIndex;
+                console.log("定义去全局变量的type为："+searchObj.type);
+                console.log("定义去全局变量的status为："+searchObj.status);
+                if(searchObj.type=="user"&&searchObj.status==1){
+                    console.log("应该加载操作禁用用户的数据");
+                    forbidUserPanel();
+                }else if(searchObj.type=="user"&&searchObj.status==0){
+                    console.log("应该加载操作启用用户的数据");
+                    startUserPanel();
+                }else if(searchObj.type=="group"&&searchObj.status==1){
+                    console.log("应该加载操作禁用群的数据");
+                    forbidGroupPanel();
+                }else if(searchObj.type=="group"&&searchObj.status==0){
+                    console.log("应该加载操作启用群的数据");
+                    startGroupPanel();
+                }
             }
         }else {
             var p=talPage;
@@ -341,6 +725,24 @@ function pageClick(obj) {
                 loadForbidGroup(p);
             }else if(name=="loadStartGroup"){
                 loadStartGroup(p);
+            }else if(name=="searchByWord"){
+                console.log("this="+this);
+                searchObj.pageIndex=p;
+                console.log("定义去全局变量的type为："+searchObj.type);
+                console.log("定义去全局变量的status为："+searchObj.status);
+                if(searchObj.type=="user"&&searchObj.status==1){
+                    console.log("应该加载操作禁用用户的数据");
+                    forbidUserPanel();
+                }else if(searchObj.type=="user"&&searchObj.status==0){
+                    console.log("应该加载操作启用用户的数据");
+                    startUserPanel();
+                }else if(searchObj.type=="group"&&searchObj.status==1){
+                    console.log("应该加载操作禁用群的数据");
+                    forbidGroupPanel();
+                }else if(searchObj.type=="group"&&searchObj.status==0){
+                    console.log("应该加载操作启用群的数据");
+                    startGroupPanel();
+                }
             }
         }
     }else{
@@ -353,12 +755,30 @@ function pageClick(obj) {
             loadForbidGroup(text);
         }else if(name=="loadStartGroup"){
             loadStartGroup(text);
+        }else if(name=="searchByWord"){
+            console.log("this="+this);
+            searchObj.pageIndex=text;
+            console.log("定义去全局变量的type为："+searchObj.type);
+            console.log("定义去全局变量的status为："+searchObj.status);
+            if(searchObj.type=="user"&&searchObj.status==1){
+                console.log("应该加载操作禁用用户的数据");
+                forbidUserPanel();
+            }else if(searchObj.type=="user"&&searchObj.status==0){
+                console.log("应该加载操作启用用户的数据");
+                startUserPanel();
+            }else if(searchObj.type=="group"&&searchObj.status==1){
+                console.log("应该加载操作禁用群的数据");
+                forbidGroupPanel();
+            }else if(searchObj.type=="group"&&searchObj.status==0){
+                console.log("应该加载操作启用群的数据");
+                startGroupPanel();
+            }
         }
     }
 }
 
 //响应分页并添加数据
-function addLoadData(page) {
+function addLoadData(page) {//加载禁用用户的数据
     $.ajax({
         url: "http://localhost:8080/getData?pageIndex="+page+"&status=1",
         type: "POST",
@@ -370,24 +790,34 @@ function addLoadData(page) {
             var s = JSON.stringify(data);
             console.log(data.page);
             $("#forbidUserUl").empty();//清除forbidUserUl里面的子元素
-            for (var i = 0; i < data.users.data.length; i++) {
-                console.log(data.users.data[i].userName);
-                var elm = "<li> " +
-                    "<img src='" + data.users.data[i].url + "'/>" +
-                    "<span class='userName'>" + data.users.data[i].userName + "</span>" +
-                    "<span class='userId'>" + data.users.data[i].userId + "</span>" +
-                    "<input type='button' value='禁用该用户' class='forbidButton' name='" + data.users.data[i].userId + "'/> " +
-                    "</li>";
+            var g=$("#getPage");
+            if(data.users.data.length==0){
+                var elm=$("<li>"+"<img src='http://localhost:8080/img/nothing.jpg'/>"+"</li>")
+                elm.find('img').css({width:"630px",height:"450px"});
+                elm.css("border","none");
+                $("#forbidUserUl").css("overflow","hidden");
                 $("#forbidUserUl").append(elm);
-            }
-            $("input.forbidButton").on('click', function () {
-                console.log(this.getAttribute("name"));
-                if(window.confirm("确定"+this.value)){
-                    forbidAndStart(0,this,this.value,"user");//第一个参数表示禁用用户的操作码，第二个是点击的对象，第三个是点击对象的值，操作类型，字符串user表示用户管理
+                g.empty();
+            }else{
+                for (var i = 0; i < data.users.data.length; i++) {
+                    console.log(data.users.data[i].userName);
+                    var elm = "<li> " +
+                        "<img src='" + data.users.data[i].url + "'/>" +
+                        "<span class='userName'>" + data.users.data[i].userName + "</span>" +
+                        "<span class='userId'>" + data.users.data[i].userId + "</span>" +
+                        "<input type='button' value='禁用该用户' class='forbidButton' name='" + data.users.data[i].userId + "'/> " +
+                        "</li>";
+                    $("#forbidUserUl").append(elm);
                 }
-            });
-            $("#getPage").empty();
-            createPage(data.page,$("#getPage"),"addLoadData");
+                $("input.forbidButton").on('click', function () {
+                    console.log(this.getAttribute("name"));
+                    if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
+                        forbidAndStart(0,this,this.value,"user");//第一个参数表示禁用用户的操作码，第二个是点击的对象，第三个是点击对象的值，操作类型，字符串user表示用户管理
+                    }
+                });
+                g.empty();
+                createPage(data.page,$("#getPage"),"addLoadData");//第一个参数表示封装成一个页的类，第二个参数是ul，下面的分页条数，第三个参数是，给li添加name属性
+            }
         },
         error: function (err) {
             console.log("获取用户所有的数据的错误是的函数：");
@@ -395,8 +825,10 @@ function addLoadData(page) {
         }
     })
 }
-function loadStartUser(page) {
+function loadStartUser(page) {//加载开启用用户的数据
     console.log("开启用户");
+    console.log(this);
+    var d="陈柯赞";
     $.ajax({
         url: "http://localhost:8080/getData?pageIndex="+page+"&status=0",
         type: "POST",
@@ -408,24 +840,35 @@ function loadStartUser(page) {
             var s = JSON.stringify(data);
             console.log(data.page);
             $("#startUserUl").empty();//清除forbidUserUl里面的子元素
-            for (var i = 0; i < data.users.data.length; i++) {
-                console.log(data.users.data[i].userName);
-                var elm = "<li> " +
-                    "<img src='" + data.users.data[i].url + "'/>" +
-                    "<span class='userName'>" + data.users.data[i].userName + "</span>" +
-                    "<span class='userId'>" + data.users.data[i].userId + "</span>" +
-                    "<input type='button' value='开启该用户' class='startButton' name='" + data.users.data[i].userId + "'/> " +
-                    "</li>";
+            var g=$("#getStartUser");
+            if(data.users.data.length==0){
+                console.log("暂时没有用户要开启的");
+                var elm=$("<li>"+"<img src='http://localhost:8080/img/nothing.jpg'/>"+"</li>");
+                elm.find('img').css({width:"630px",height:"450px"});
+                elm.css("border","none");
+                $("#startUserUl").css("overflow","hidden");
                 $("#startUserUl").append(elm);
-            }
-            $("input.startButton").on('click', function () {
-                console.log(this.getAttribute("name"));
-                if(window.confirm("确定"+this.value)){
-                    forbidAndStart(1,this,this.value,"user");
+                g.empty();
+            }else{
+                for (var i = 0; i < data.users.data.length; i++) {
+                    console.log(data.users.data[i].userName);
+                    var elm = "<li> " +
+                        "<img src='" + data.users.data[i].url + "'/>" +
+                        "<span class='userName'>" + data.users.data[i].userName + "</span>" +
+                        "<span class='userId'>" + data.users.data[i].userId + "</span>" +
+                        "<input type='button' value='开启该用户' class='startButton' name='" + data.users.data[i].userId + "'/> " +
+                        "</li>";
+                    $("#startUserUl").append(elm);
                 }
-            });
-            $("#getStartUser").empty();
-            createPage(data.page,$("#getStartUser"),"loadStartUser");
+                $("input.startButton").on('click', function () {
+                    console.log(this.getAttribute("name"));
+                    if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
+                        forbidAndStart(1,this,this.value,"user");
+                    }
+                });
+                g.empty();
+                createPage(data.page,g,"loadStartUser");
+            }
         },
         error: function (err) {
             console.log("获取用户所有的数据的错误是的函数：");
@@ -433,7 +876,7 @@ function loadStartUser(page) {
         }
     })
 }
-function loadForbidGroup(page) {
+function loadForbidGroup(page) {//加载禁用群的函数
     console.log("禁用群");
     $.ajax({
         url: "http://localhost:8080/getGroupData?pageIndex="+page+"&status=1",
@@ -447,14 +890,14 @@ function loadForbidGroup(page) {
             console.log(data.page);
             console.log(data.groups);
             $("#forbidGroupUl").empty();//清除forbidUserUl里面的子元素
+            var g=$("#getForbidGroup");
             if(data.groups.data.length==0){
-                var elm=$("<li>" +
-                    "<img src='http://localhost:8080/img/nothing.jpg'/>" +
-                    "</li>");
+                var elm=$("<li>" + "<img src='http://localhost:8080/img/nothing.jpg'/>" + "</li>");
                 elm.find('img').css({width:"630px",height:"450px"});
                 elm.css("border","none");
                 $("#forbidGroupUl").css("overflow","hidden");
                 $("#forbidGroupUl").append(elm);
+                g.empty();
             }else{
                 for (var i = 0; i < data.groups.data.length; i++) {
                     console.log(data.groups.data[i].groupName);
@@ -468,12 +911,12 @@ function loadForbidGroup(page) {
                 }
                 $("input.forbidButton").on('click', function () {
                     console.log(this.getAttribute("name"));
-                    if(window.confirm("确定"+this.value)){
+                    if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
                         forbidAndStart(0,this,this.value,"group");
                     }
                 });
-                $("#getForbidGroup").empty();
-                createPage(data.page,$("#getForbidGroup"),"loadForbidGroup");
+                g.empty();
+                createPage(data.page,g,"loadForbidGroup");
             }
         },
         error: function (err) {
@@ -482,7 +925,7 @@ function loadForbidGroup(page) {
         }
     })
 }
-function loadStartGroup(page) {
+function loadStartGroup(page) {//加载开启群的函数
     console.log("开启群");
     $.ajax({
         url: "http://localhost:8080/getGroupData?pageIndex="+page+"&status=0",
@@ -496,14 +939,14 @@ function loadStartGroup(page) {
             console.log(data.page);
             console.log(data.groups);
             $("#startGroupUl").empty();//清除forbidUserUl里面的子元素
+            var g=$("#getStartGroup");
             if(data.groups.data.length==0){
-                var elm=$("<li style=''>" +
-                    "<img src='http://localhost:8080/img/nothing.jpg'/>"+
-                    "</li>");
+                var elm=$("<li style=''>" + "<img src='http://localhost:8080/img/nothing.jpg'/>"+ "</li>");
                 elm.find('img').css({width:"630px",height:"450px"});
                 elm.css("border","none");
                 $("#startGroupUl").css("overflow","hidden");
                 $("#startGroupUl").append(elm);
+                g.empty();
             }else{
                 for (var i = 0; i < data.groups.data.length; i++) {
                     console.log(data.groups.data[i].groupName);
@@ -517,12 +960,12 @@ function loadStartGroup(page) {
                 }
                 $("input.startButton").on('click', function () {
                     console.log(this.getAttribute("name"));
-                    if(window.confirm("确定"+this.value)){
+                    if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
                         forbidAndStart(1,this,this.value,"group");
                     }
                 });
-                $("#getStartGroup").empty();
-                createPage(data.page,$("#getStartGroup"),"loadStartGroup");
+                g.empty();
+                createPage(data.page,g,"loadStartGroup");
             }
         },
         error: function (err) {
@@ -545,18 +988,91 @@ function forbidAndStart(result,obj,str,type) {//禁用与开启函数，第一�
         success:function (data) {
             console.log(data);
             console.log(data.status);
-            if(data.code==1){
+            if(data.code==1){//如果后台修改成功的话，就传递code=1
                 console.log("成功"+str);
-                $(obj).parent().remove();
+                $(obj).parent().remove();//把要删除的对象从视图中，删除之后要判断，视图是否已经为0了，如果为0，重新当前页的数据
+                if(!$("#forbidUser").is(':hidden')){
+                    if($("#forbidUserUl").find("li").length>0){
+                        var name=$("#getPage li:eq(2)").attr("name");
+                        if(name=="addLoadData"){
+                            addLoadData(pageIndex);
+                        }else if(name=="searchByWord"){
+                            searchObj.pageIndex=pageIndex;//重新刷新查询分页
+                            forbidUserPanel();
+                        }
+                    }else {
+                        var elm=$("<li>"+"<img src='http://localhost:8080/img/nothing.jpg'/>"+"</li>")
+                        elm.find('img').css({width:"630px",height:"450px"});
+                        elm.css("border","none");
+                        $("#forbidUserUl").css("overflow","hidden");
+                        $("#forbidUserUl").append(elm);
+                        $("#getPage").empty();
+                    }
+                }
+                if(!$("#startUser").is(":hidden")){
+                    if($("#startUserUl").find("li").length>0){
+                        var name=$("#getStartUser li:eq(2)").attr("name");
+                        if(name=="loadStartUser"){
+                            loadStartUser(pageIndex);
+                        }else if(name=="searchByWord"){
+                            searchObj.pageIndex=pageIndex;//重新刷新查询分页
+                            startUserPanel();
+                        }
+                    }else{
+                        var elm=$("<li>"+"<img src='http://localhost:8080/img/nothing.jpg'/>"+"</li>");
+                        elm.find('img').css({width:"630px",height:"450px"});
+                        elm.css("border","none");
+                        $("#startUserUl").css("overflow","hidden");
+                        $("#startUserUl").append(elm);
+                        $("#getStartUser").empty();
+                    }
+                }
+                if(!$("#forbidGroup").is(":hidden")){
+                    if($("#forbidGroupUl").find("li").length>0){
+                        var name=$("#getForbidGroup li:eq(2)").attr("name");
+                        if(name=="loadForbidGroup"){
+                            loadForbidGroup(pageIndex);
+                        }else if(name=="searchByWord"){
+                            searchObj.pageIndex=pageIndex;//重新刷新查询分页
+                            forbidGroupPanel();
+                        }
+                    }else{
+                        var elm=$("<li>" + "<img src='http://localhost:8080/img/nothing.jpg'/>" + "</li>");
+                        elm.find('img').css({width:"630px",height:"450px"});
+                        elm.css("border","none");
+                        $("#forbidGroupUl").css("overflow","hidden");
+                        $("#forbidGroupUl").append(elm);
+                        $("#getForbidGroup").empty();
+                    }
+                }
+                if(!$("#startGroup").is(":hidden")){
+                    if($("#startGroupUl").find("li").length>0){
+                        var name=$("#getStartGroup li:eq(2)").attr("name");
+                        if(name=="loadStartGroup"){
+                            loadStartGroup(pageIndex);
+                        }else if(name=="searchByWord"){
+                            searchObj.pageIndex=pageIndex;//重新刷新查询分页
+                            startGroupPanel();
+                        }
+                    }else{
+                        var elm=$("<li style=''>" + "<img src='http://localhost:8080/img/nothing.jpg'/>"+ "</li>");
+                        elm.find('img').css({width:"630px",height:"450px"});
+                        elm.css("border","none");
+                        $("#startGroupUl").css("overflow","hidden");
+                        $("#startGroupUl").append(elm);
+                        $("#getStartGroup").empty();
+                    }
+                }
+                alert(str+"“"+o.uuid+"”成功");
             }else{
                 console.log("失败"+str);
-                alert(str+"失败");
+                alert(str+"“"+o.uuid+"”失败");
             }
         },
         error:function (err) {
             console.log(str+"出错");
             console.log(err);
-            alert(str+"失败");
+            alert(str+"“"+o.uuid+"”失败");
         }
     })
 }

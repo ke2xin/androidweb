@@ -87,9 +87,9 @@ function addListener() {
                 startUser.style.display = 'block';
                 forbidGroup.style.display = 'none';
                 startGroup.style.display = 'none';
-                if(!startFlag){/*初次加载*/
+                if(!startFlag){/*每次显示面板时都从第一页开始加载*/
                     loadStartUser(1);
-                    startFlag=true;
+                    //startFlag=true;
                 }
             }
         }
@@ -107,18 +107,18 @@ function addListener() {
                 startUser.style.display = 'none';
                 forbidGroup.style.display = 'block';
                 startGroup.style.display = 'none';
-                if(!forbidGroupFlag){/*初次加载*/
+                if(!forbidGroupFlag){/*每次显示面板时都从第一页开始加载*/
                     loadForbidGroup(1);
-                    forbidGroupFlag=true;
+                    //forbidGroupFlag=true;
                 }
             } else if (name == "startGroup") {
                 forbidUser.style.display = 'none';
                 startUser.style.display = 'none';
                 forbidGroup.style.display = 'none';
                 startGroup.style.display = 'block';
-                if(!startGroupFlag){
+                if(!startGroupFlag){/*每次显示面板时都从第一页开始加载*/
                     loadStartGroup(1);
-                    startGroupFlag=true;
+                    //startGroupFlag=true;
                 }
             }
         }
@@ -139,9 +139,7 @@ function verifyLogin() {
     console.log("这是检查登录的：");
     var theUser = sessionStorage.getItem("theUser");
     console.log("这是检查登录的：" + theUser);
-    var myName="<%=session.getAttribute('f')%>";
-    console.log(myName);
-    if (theUser == null) {
+    if (theUser == null||theUser=="null") {
         window.location.href = "http://localhost:8080/managerLogin";
     }
     managerNick.innerText=theUser;

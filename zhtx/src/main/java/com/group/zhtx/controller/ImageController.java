@@ -1,5 +1,6 @@
 package com.group.zhtx.controller;
 
+import com.group.zhtx.bean.ManageType;
 import com.group.zhtx.bean.UserPage;
 import com.group.zhtx.bean.UserResult;
 import com.group.zhtx.message.websocket.client.AdminC;
@@ -66,10 +67,6 @@ public class ImageController {
         }
     }
 
-    @RequestMapping("/paging")
-    public String paging() {
-        return "kkk";
-    }
 
     @RequestMapping(value = "/getData")
     public Map loadData(int pageIndex,int status) throws Exception {//获取开启或禁用用户的信息
@@ -144,7 +141,7 @@ public class ImageController {
     @RequestMapping("/update")
     public Map forbidAndStart(@RequestBody UserResult result){
         System.out.println("前端传来的结果："+result.getResult());
-        System.out.println("前端传来的用户id："+result.getUuid());
+        System.out.println("前端传来的id："+result.getUuid());
         System.out.println("前端传来的类型："+result.getType());
         Map<String, Object> map = new LinkedHashMap<String, Object>();
         if(result.getType().equals("user")){
@@ -227,31 +224,129 @@ public class ImageController {
         }
     }
     @RequestMapping("/searchByWord")
-    public Map searchByKeyWord(String key){
+    public Map searchByKeyWord(@RequestBody ManageType manageType){
+        System.out.println("前端传来的操作类型："+manageType.getType());
+        System.out.println("前端传来的操作类型的状态："+manageType.getStatus());
+        System.out.println("前端传来的操作页码："+manageType.getPageIndex());
+        System.out.println("前端传来的操作："+manageType.getOperate());
         Map<String,Object>map=new LinkedHashMap<>();
-        List<User> userList=service.findByKeyWord(key);
-        System.out.println(userList.size());
         ResponseUserS responseUserS=new ResponseUserS();
-        if(userList.size()==0){
-            map.put("users",responseUserS);
-            map.put("code",0);
-            return map;
-        }
-        for(int i=0;i<userList.size();i++){
-            User user=userList.get(i);
-            ResponseUser responseUser=new ResponseUser();
-            responseUser.setStatus(user.getStatus());
-            responseUser.setUserName(user.getName());
-            responseUser.setUserId(user.getUuid());
-            if(user.getPortrait()==null||user.getPortrait().equals("")){
-                responseUser.setUrl(WebSocketOperateUtil.Portrait_Image);
-            }else{
-                responseUser.setUrl(WebSocketOperateUtil.Portrait_Url+user.getPortrait()+WebSocketOperateUtil.Portrait_Suffix);
+        if("user".equals(manageType.getType())){
+            List<User> userList=new ArrayList<>();
+            if("pageSearch".equals(manageType.getOperate())){
+                Sort sort=new Sort(Sort.Direction.DESC,"uuid");
+                Specification<User>specification=new Specification<User>() {
+                    @Override
+                    public Predicate toPredicate(Root<User> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                        List<Predicate>predicateList=new ArrayList<>();
+                        System.out.println("这是多条件查询："+root.get("status"));
+                        predicateList.add(criteriaBuilder.equal(root.get("status").as(String.class),manageType.getStatus()));
+                        Predicate []pw=new Predicate[predicateList.size()];
+                        System.out.println("predicateList的长度："+predicateList.size());
+                        Predicate predicateWhere=criteriaBuilder.and(predicateList.toArray(pw));
+                        //限制条件
+                        List<Predicate> predicatePermission=new ArrayList<>();
+                        predicatePermission.add(criteriaBuilder.like(root.get("name").as(String.class),"%"+manageType.getKey()+"%"));
+                        predicatePermission.add(criteriaBuilder.like(root.get("uuid").as(String.class),"%"+manageType.getKey()+"%"));
+                        Predicate []pp=new Predicate[predicatePermission.size()];
+                        Predicate predicatePermissionArr=criteriaBuilder.or(predicatePermission.toArray(pp));
+                        return criteriaQuery.where(predicateWhere,predicatePermissionArr).getGroupRestriction();
+                    }
+                };
+                Pageable pageable=PageRequest.of(manageType.getPageIndex()-1,2,sort);
+                Page<User>userPage=userRepository.findAll(specification,pageable);
+                System.out.println("getTotalPages="+userPage.getTotalPages());
+                System.out.println("getTotalElements="+userPage.getTotalElements());
+                System.out.println("多条件查询后的="+userPage.getTotalPages());
+                //List<User> userList=service.findUserByKeyWord(manageType.getKey(),manageType.getStatus());
+                userList=userPage.getContent();
+                UserPage page=new UserPage();
+                page.setCount(2);
+                page.setCurrentPage(manageType.getPageIndex());
+                page.setTotalPage(userPage.getTotalPages());
+                page.setTotalCount(userPage.getTotalElements());
+                map.put("page",page);
+            }else if("allSearch".equals(manageType.getOperate())){
+                userList=service.findUserByKeyWord(manageType.getKey(),manageType.getStatus());
             }
-            responseUserS.addResponseUser(responseUser);
+            System.out.println("状态为"+manageType.getStatus()+"用户数量："+userList.size()+"操作是："+manageType.getOperate());
+            if(userList.size()==0){
+                map.put("users",responseUserS);
+                map.put("code",0);
+                return map;
+            }
+            for(int i=0;i<userList.size();i++){
+                User user=userList.get(i);
+                ResponseUser responseUser=new ResponseUser();
+                responseUser.setStatus(user.getStatus());
+                responseUser.setUserName(user.getName());
+                responseUser.setUserId(user.getUuid());
+                if(user.getPortrait()==null||user.getPortrait().equals("")){
+                    responseUser.setUrl(WebSocketOperateUtil.Portrait_Image);
+                }else{
+                    responseUser.setUrl(WebSocketOperateUtil.Portrait_Url+user.getPortrait()+WebSocketOperateUtil.Portrait_Suffix);
+                }
+                responseUserS.addResponseUser(responseUser);
+            }
+            map.put("users",responseUserS);
+            map.put("code",1);
+        }else if("group".equals(manageType.getType())){
+            List<Group>groupList=new ArrayList<>();
+            if("pageSearch".equals(manageType.getOperate())){
+                Sort sort=new Sort(Sort.Direction.DESC,"uuid");
+                Specification<Group>specification=new Specification<Group>() {
+                    @Override
+                    public Predicate toPredicate(Root<Group> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                        List<Predicate>predicateList=new ArrayList<>();
+                        predicateList.add(criteriaBuilder.equal(root.get("status").as(String.class),manageType.getStatus()));
+                        Predicate []pw=new Predicate[predicateList.size()];
+                        Predicate predicateWhere=criteriaBuilder.and(predicateList.toArray(pw));
+                        //添加另外一个限制条件
+                        List<Predicate>predicatePermission=new ArrayList<>();
+                        predicatePermission.add(criteriaBuilder.like(root.get("name").as(String.class),"%"+manageType.getKey()+"%"));
+                        predicatePermission.add(criteriaBuilder.like(root.get("uuid").as(String.class),"%"+manageType.getKey()+"%"));
+                        Predicate []pp=new Predicate[predicatePermission.size()];
+                        Predicate predicatePermissionArr=criteriaBuilder.or(predicatePermission.toArray(pp));
+                        return criteriaQuery.where(predicateWhere,predicatePermissionArr).getGroupRestriction();
+                    }
+                };
+                Pageable pageable=PageRequest.of(manageType.getPageIndex()-1,3,sort);
+                Page<Group>groupPage=groupRepository.findAll(specification,pageable);
+                System.out.println("群总页数："+groupPage.getTotalPages());
+                System.out.println("群总记录数："+groupPage.getTotalElements());
+                //List<Group>groupList=service.findGroupByKeyWord(manageType.getKey(),manageType.getStatus());
+               groupList=groupPage.getContent();
+                UserPage page=new UserPage();
+                page.setCount(2);
+                page.setCurrentPage(manageType.getPageIndex());
+                page.setTotalPage(groupPage.getTotalPages());
+                page.setTotalCount(groupPage.getTotalElements());
+                map.put("page",page);
+            }else if("allSearch".equals(manageType.getOperate())){
+                groupList=service.findGroupByKeyWord(manageType.getKey(),manageType.getStatus());
+            }
+            System.out.println("状态为"+manageType.getStatus()+"群数量："+groupList.size());
+            if(groupList.size()==0){
+                map.put("users",responseUserS);
+                map.put("code",0);
+                return map;
+            }
+            for(int i=0;i<groupList.size();i++){
+                Group group=groupList.get(i);
+                ResponseUser responseUser=new ResponseUser();
+                responseUser.setStatus(group.getStatus());
+                responseUser.setUserId(group.getUuid());
+                responseUser.setUserName(group.getName());
+                if(group.getPortarit()==null||group.getPortarit().equals("")){
+                    responseUser.setUrl(WebSocketOperateUtil.Portrait_Image_Group);
+                }else{
+                    responseUser.setUrl(WebSocketOperateUtil.Portrait_Url+group.getPortarit()+WebSocketOperateUtil.Portrait_Suffix);
+                }
+                responseUserS.addResponseUser(responseUser);
+            }
+            map.put("users",responseUserS);
+            map.put("code",1);
         }
-        map.put("users",responseUserS);
-        map.put("code",1);
         return map;
     }
 }
