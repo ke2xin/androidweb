@@ -3,6 +3,7 @@ package com.group.zhtx.message.websocket.service.locationData;
 
 public class UserLocationGroup {
     private String userName;
+    private String userId;
     private String userPortrait;
     private String userLocationLongitude;
     private String userLocationLatitude;
@@ -55,5 +56,13 @@ public class UserLocationGroup {
 
     public void setUserLocationTime(String userLocationTime) {
         this.userLocationTime = userLocationTime;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

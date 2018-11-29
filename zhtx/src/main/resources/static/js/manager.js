@@ -37,14 +37,7 @@ function addListener() {
     userManager.onclick = function () {
         if (!userFlag) {
             userManagerList.style.display = 'block';
-            if(fb!=null){
-                var name=fb.getAttribute("name");
-                console.log("属性的名字："+name)
-                if(name!="forbidGroup"&&name!="startGroup"){
-                    console.log("背景将会没有了");
-                    fb.style.background = 'none';
-                }
-            }else{
+            if(fb==null){
                 fb = userManagerListLis[0];
                 fb.style.background = 'rgba(0,0,0,0.1)';
             }
@@ -57,12 +50,12 @@ function addListener() {
     groupManager.onclick = function () {
         if (!managerFlag) {
             groupManagerList.style.display = 'block';
-            if (fb != null) {
-                var name=fb.getAttribute("name");
-                if(name!="forbidUser"){
-                    fb.style.background = 'none';
-                }
-            }
+            // if (fb != null) {
+            //     var name=fb.getAttribute("name");
+            //     if(name!="forbidUser"){
+            //         fb.style.background = 'none';
+            //     }
+            // }
             managerFlag = true;
         } else {
             groupManagerList.style.display = 'none';
@@ -72,7 +65,7 @@ function addListener() {
     for (var i = 0; i < userManagerListLis.length; i++) {
         userManagerListLis[i].onclick = function () {
             if (fb != null) {
-                fb.style.background = 'none';
+                fb.style.background = 'rgba(0,0,0,0)';
             }
             fb = this;
             this.style.background = 'rgba(0,0,0,0.1)';
@@ -97,7 +90,7 @@ function addListener() {
     for (var i = 0; i < groupManagerListLis.length; i++) {
         groupManagerListLis[i].onclick = function () {
             if (fb != null) {
-                fb.style.background = 'none';
+                fb.style.background = 'rgba(0,0,0,0)';
             }
             fb = this;
             this.style.background = 'rgba(0,0,0,0.1)';
@@ -125,12 +118,15 @@ function addListener() {
     }
     managerExit.onclick=function () {
         console.log(this);
-        box.style.display='block';
-        var exit=document.getElementById("exit");
-        exit.onclick=function (ev) {
-            console.log(ev);
-            sessionStorage.setItem("theUser", null);
-            location.reload();
+        if(window.confirm("确认退出登录吗？")){
+            $(".box").slideToggle(2000,function () {
+                $(".box").slideUp("slow",function () {
+                    sessionStorage.setItem("theUser", null);
+                    location.reload();
+                });
+            });
+        }else{
+            console.log("取消退出登录");
         }
     }
 }

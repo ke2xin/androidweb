@@ -159,10 +159,20 @@ body {
     text-align: center;
     border-bottom: 1px solid darkgray;
 }
-
-.main .container #left .manager ul li:hover{/*鼠标划过时添加背景颜色*/
-    background-color: rgba(0,0,0,0.1);
+.main .container #left .manager ul li a{
+    width: 300px;
+    height: 50px;
+    display: block;
 }
+.main .container #left .manager ul li a:hover{
+    background-color: rgba(	220,220,220,0.3);
+}
+/*.main .container #left .manager ul li:hover{!*鼠标划过时添加背景颜色*!*/
+    /*background-color: rgba(	220,220,220,0.3);*/
+/*}*/
+/*.main .container #left .manager ul li:active{!*鼠标点击过时添加背景颜色*!*/
+    /*background-color: rgba(	220,220,220,0.8);*/
+/*}*/
 
 .main .container #right {
     width: 50%;
@@ -326,15 +336,28 @@ body {
 /*退出登录弹出框样式*/
 .box{
     position: fixed;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.2);
+    width: 370px;
+    height: 80px;
+    background: rgba(255,255,255,1);
     display: none;
+    margin: auto;
+    left: 50%;
+    top: 0px;
+    border-radius: 20px;
+}
+.box h3{
+    width: 370px;
+    height: 80px;
+    line-height: 80px;
+    color: cadetblue;
+    text-align: center;
 }
 .box1{
     width: 500px;
     height: 650px;
-    position: fixed;left: 60%; top: 26%;
+    position: fixed;
+    left: 60%;
+    top: 26%;
     margin-left: -250px;
     background: #66ffff;
     /*border: 1px solid #000000;*/

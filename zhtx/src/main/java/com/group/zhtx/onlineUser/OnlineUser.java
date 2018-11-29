@@ -297,6 +297,11 @@ public class OnlineUser implements IAsyncCycle {
         sendGroupLocationData.setLongitude(gps.getLonggitude());
         sendGroupLocationData.setUserName(gps.getUser().getName());
         sendGroupLocationData.setUserId(gps.getUser().getUuid());
+        if(gps.getUser().getPortrait()==null||gps.getUser().getPortrait().equals("")){
+            sendGroupLocationData.setUserPortrait(WebSocketOperateUtil.Portrait_Image);
+        }else{
+            sendGroupLocationData.setUserPortrait(WebSocketOperateUtil.Portrait_Url+gps.getUser().getPortrait()+WebSocketOperateUtil.Portrait_Suffix);
+        }
         groupLocationS.addSendData(sendGroupLocationData);
     }
 

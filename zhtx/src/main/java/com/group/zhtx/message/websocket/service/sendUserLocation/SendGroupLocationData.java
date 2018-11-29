@@ -8,6 +8,7 @@ public class SendGroupLocationData {
     private int groupId;
     private String userName;
     private String userId;
+    private String userPortrait;
     private String longitude;
     private String latitude;
 
@@ -49,5 +50,13 @@ public class SendGroupLocationData {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getUserPortrait() {
+        return userPortrait;
+    }
+
+    public void setUserPortrait(String userPortrait) {
+        this.userPortrait = userPortrait;
     }
 }

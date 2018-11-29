@@ -328,7 +328,20 @@ public class RepositoryService implements IRepositoryService, IWebSocketListener
             webSocket.clear();
             return;
         }
-
+        if(isBlocked("user",uuid)){//登录时检测是否被封号
+            try {
+                userLoginS.setOperateId(registerC.getOperateCode());
+                userLoginS.setStatus("fail");
+                userLoginS.setInformation("该用户已被管理员封了");
+                webSocket = new WebSocket(registerC.getOperateCode(), userLoginS, null);
+                session.getBasicRemote().sendObject(webSocket);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //销毁消息包
+            webSocket.clear();
+            return;
+        }
         if (!password.equals(user.getPassword())) {
             try {
                 userLoginS.setOperateId(registerC.getOperateCode());
@@ -419,6 +432,10 @@ public class RepositoryService implements IRepositoryService, IWebSocketListener
             Group group = groups.get(i);
             String groupUuid = group.getUuid();
 
+            //检测群是否被封
+            if(isBlocked("group",groupUuid))continue;
+
+
             //查找用户当前群组的最新消息
             List<Message> messages = messageRepository.getLastestMessageByGroupUuid(groupUuid);
 
@@ -477,6 +494,27 @@ public class RepositoryService implements IRepositoryService, IWebSocketListener
         }
     }
 
+    /*
+        检测是否被管理员封号
+     */
+    public boolean isBlocked(String type,String id){
+        if("user".equals(type)){
+            User user=userRepository.findByUuid(id);
+            if(user==null)return true;
+            short status=user.getStatus();
+            if(status==0){
+                return true;
+            }
+        }else if("group".equals(type)){
+            Group group=groupRepository.findByUuid(id);
+            if(group==null)return true;
+            short status=group.getStatus();
+            if(status==0){
+                return true;
+            }
+        }
+        return false;
+    }
     /*
         用户创建群
      */
@@ -541,6 +579,10 @@ public class RepositoryService implements IRepositoryService, IWebSocketListener
         System.out.println("你拥有的群度：" + groupLists.size());
         for (int i = 0; i < groupLists.size(); i++) {
             Group group1 = groupLists.get(i);
+
+            //检测群是否被封了
+            if(isBlocked("group",group1.getUuid()))continue;
+
             System.out.println("创建群时间：" + group1.getCreateTime());
             if (groupNumber.equals(group1.getUuid())) {//用户刚刚创建的群
                 UserCreateGroup createGroup = new UserCreateGroup();
@@ -800,6 +842,9 @@ public class RepositoryService implements IRepositoryService, IWebSocketListener
             List<Group> groups = groupRepository.getGroupByUuid(userQuitGroupC.getUuid());
             for (int i = 0; i < groups.size(); i++) {
                 Group group = groups.get(i);
+                //检测群是否被封了
+                if(isBlocked("group",group.getUuid()))continue;
+
                 UserCreateGroup groupData = new UserCreateGroup();
                 groupData.setGroupName(group.getName());
                 groupData.setGroupId(group.getUuid());
@@ -1111,6 +1156,7 @@ public class RepositoryService implements IRepositoryService, IWebSocketListener
                     System.out.println(userGps.getLatitude());
                     UserLocationGroup userLocationGroupS = new UserLocationGroup();
                     userLocationGroupS.setUserName(user.getName());
+                    userLocationGroupS.setUserId(user.getUuid());
                     System.out.println("用户名：" + user.getName() + "\t用户给头像路径：" + user.getPortrait());
                     if (user.getPortrait() == null || user.getPortrait().equals("")) {
                         userLocationGroupS.setUserPortrait(WebSocketOperateUtil.Portrait_Image);
@@ -1757,6 +1803,11 @@ public class RepositoryService implements IRepositoryService, IWebSocketListener
             for (int i = 0; i < groups.size(); i++) {
                 SearchDataInfo searchDataInfo = new SearchDataInfo();
                 Group group = groups.get(i);
+
+                //检测群是否被封了
+                if(isBlocked("group",group.getUuid()))continue;
+
+
                 searchDataInfo.setGroupUuid(group.getUuid());
                 searchDataInfo.setGroupDesc(group.getHobby());
                 if (group.getPortarit() == null || group.getPortarit().equals("")) {
@@ -2053,6 +2104,9 @@ public class RepositoryService implements IRepositoryService, IWebSocketListener
         }
         for (Group group : groups) {
             User user = userRepository.findByUuid(userExitC.getUuid());
+            //检测群是否被封了
+            if(isBlocked("group",group.getUuid()))continue;
+
             if (user != null) {
                 GroupUser groupUser = groupUserRepository.findByUserAndGroup(user, group);
                 groupUser.setReceiveTime(new Date());
@@ -2144,6 +2198,11 @@ public class RepositoryService implements IRepositoryService, IWebSocketListener
         List<Group> groups = groupRepository.getGroupByUuid(userDissolutionGroupC.getUuid());
         for (int i = 0; i < groups.size(); i++) {
             Group group1 = groups.get(i);
+
+            //检测群是否被封了
+            if(isBlocked("group",group1.getUuid()))continue;
+
+
             DissolutionInfo info = new DissolutionInfo();
             info.setGroupName(group1.getName());
             info.setGroupNumber(group1.getUuid());
@@ -2227,18 +2286,23 @@ public class RepositoryService implements IRepositoryService, IWebSocketListener
             data.setLongitude(userLocationC.getLongitude() + "");
             userGpsRepository.save(userGpsInfo);
         } else {//其他的就是修改用户的位置信息
-            userGps.setUser(user);
-            userGps.setLatitude(userLocationC.getLatitude() + "");
-            userGps.setLocationDate(new Date());
-            userGps.setLonggitude(userLocationC.getLongitude() + "");
-            data.setUuid(user.getUuid());
-            data.setLatitude(userLocationC.getLatitude() + "");
-            data.setLongitude(userLocationC.getLongitude() + "");
-            userGpsInfo.setUser(user);
-            userGpsInfo.setLatitude(userLocationC.getLatitude() + "");
-            userGpsInfo.setLocationDate(new Date());
-            userGpsInfo.setLonggitude(userLocationC.getLongitude() + "");
-            userGpsRepository.saveAndFlush(userGps);
+            //如果用户的位置信息有变动的话，就修改，没有的话就跳过
+            if(!userGps.getLatitude().equals(userLocationC.getLatitude())&&!userGps.getLonggitude().equals(userLocationC.getLongitude())){
+                userGps.setUser(user);
+                userGps.setLatitude(userLocationC.getLatitude() + "");
+                userGps.setLocationDate(new Date());
+                userGps.setLonggitude(userLocationC.getLongitude() + "");
+                data.setUuid(user.getUuid());
+                data.setLatitude(userLocationC.getLatitude() + "");
+                data.setLongitude(userLocationC.getLongitude() + "");
+                userGpsInfo.setUser(user);
+                userGpsInfo.setLatitude(userLocationC.getLatitude() + "");
+                userGpsInfo.setLocationDate(new Date());
+                userGpsInfo.setLonggitude(userLocationC.getLongitude() + "");
+                userGpsRepository.saveAndFlush(userGps);
+            }else {
+                return;
+            }
         }
 
 
@@ -2247,6 +2311,11 @@ public class RepositoryService implements IRepositoryService, IWebSocketListener
         Map<String, UserGps> m = new HashMap<>();
         for (int i = 0; i < groups.size(); i++) {
             Group group = groups.get(i);
+
+            //检测用户的群是否被封了
+            if(isBlocked("group",group.getUuid()))continue;
+
+
             //查找群里面的所有群成员
             List<GroupUser> groupUsers = groupUserRepository.findByGroup(group);
             System.out.println("群id：" + group.getUuid());
@@ -2260,7 +2329,7 @@ public class RepositoryService implements IRepositoryService, IWebSocketListener
                 }
                 System.out.println("用户的群号：" + groupUser.getGroup().getUuid());
                 System.out.println("当前用户：" + currentUuid + "\t转发者：" + userLocationC.getUuid() + "\t" + !currentUuid.equals(userLocationC.getUuid()));
-                if (!m.containsKey(group.getUuid()) && !currentUuid.equals(userLocationC.getUuid())) {
+                if ( !currentUuid.equals(userLocationC.getUuid())) {//!m.containsKey(group.getUuid()) &&
                     System.out.println("转发的用户与群号：" + groupUser.getGroup().getUuid() + "\t用户" + currentOnlineUser.getData().getUuid());
                     m.put(group.getUuid(), userGpsInfo);
                     currentOnlineUser.addWaitToSendUserLocation(m);

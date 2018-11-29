@@ -43,7 +43,6 @@ public class AdminController {
             map.put("result", "用户名错误,不存在该用户");
             map.put("status", "fail");
         }
-        session.setAttribute("f","陈柯赞");
         return map;
     }
 }

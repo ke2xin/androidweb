@@ -4,16 +4,16 @@ import com.group.zhtx.bean.ManageType;
 import com.group.zhtx.bean.UserPage;
 import com.group.zhtx.bean.UserResult;
 import com.group.zhtx.message.websocket.client.AdminC;
-import com.group.zhtx.message.websocket.service.response.ResponseGroup;
-import com.group.zhtx.message.websocket.service.response.ResponseGroupS;
-import com.group.zhtx.message.websocket.service.response.ResponseUser;
-import com.group.zhtx.message.websocket.service.response.ResponseUserS;
+import com.group.zhtx.message.websocket.service.response.*;
 import com.group.zhtx.model.Group;
 import com.group.zhtx.model.User;
+import com.group.zhtx.onlineUser.OnlineUser;
+import com.group.zhtx.onlineUser.OnlineUserManager;
 import com.group.zhtx.repository.GroupRepository;
 import com.group.zhtx.repository.UserRepository;
 import com.group.zhtx.service.AdministratorService;
 import com.group.zhtx.util.common.WebSocketOperateUtil;
+import com.group.zhtx.webSocket.WebSocket;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,8 +31,11 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.websocket.EncodeException;
+import javax.websocket.Session;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -46,6 +49,8 @@ public class ImageController {
     private UserRepository userRepository;
     @Resource
     private GroupRepository groupRepository;
+    @Resource
+    private OnlineUserManager onlineUserManager;
 
     @RequestMapping("/userPortrait/{name}")
     public void getImage(@PathVariable String name, HttpServletResponse response, HttpSession session) throws Exception {
@@ -155,6 +160,27 @@ public class ImageController {
             map.put("code",1);
             map.put("status","success");
             userRepository.saveAndFlush(user);
+            OnlineUser onlineUser=onlineUserManager.getOnlineUserByUuid(result.getUuid());
+            if(onlineUser!=null){
+                Session session=onlineUser.getSession();
+                ResponseNotificationS responseNotificationS=new ResponseNotificationS();
+                responseNotificationS.setId(result.getUuid());
+                responseNotificationS.setOperateId(123);
+                responseNotificationS.setType("user");
+                if(result.getResult()==0){
+                    responseNotificationS.setStatus("blocked");
+                }else if(result.getResult()==1){
+                    responseNotificationS.setStatus("released");
+                }
+                WebSocket webSocket=new WebSocket(123,responseNotificationS,null);
+                try {
+                    session.getBasicRemote().sendObject(webSocket);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (EncodeException e) {
+                    e.printStackTrace();
+                }
+            }
         }else if(result.getType().equals("group")){
             Group group=groupRepository.findByUuid(result.getUuid());
             if(group==null){
