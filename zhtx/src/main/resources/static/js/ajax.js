@@ -8,7 +8,7 @@ $(function () {
        var init=function () {
            input.bind('keyup',sendKeyWord);
            input.bind('blur',function () {
-               setTimeout(hideSuggest,100);//如果取消输入框绑定失去焦点事件，那么输入框列表不回消失
+               setTimeout(hideSuggest,100);//如果取消输入框绑定失去焦点事件，那么输入框列表不会消失
            })
        }
        var hideSuggest=function () {
@@ -162,14 +162,14 @@ function forbidUserPanel() {
                             "<img src='"+data.users.data[i].url+"'/>"+
                             "<span class='userName'>"+data.users.data[i].userName+"</span>"+
                             "<span class='userId'>"+data.users.data[i].userId+"</span>"+
-                            "<input type='button' value='禁用该用户' class='forbidButton' name='"+data.users.data[i].userId+"'/>"+
+                            "<p><a href='#' class='a_demo_one' name='"+data.users.data[i].userId+"'>禁用该用户</a></p>"+
                             "</li>");
                         $("#forbidUserUl").append(elm);
                     }
-                    $("input.forbidButton").on('click', function () {
+                    $("a.a_demo_one").on('click', function () {
                         console.log(this.getAttribute("name"));
-                        if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
-                            forbidAndStart(0,this,this.value,"user");//第一个参数表示禁用用户的操作码，第二个是点击的对象，第三个是点击对象的值，操作类型，字符串user表示用户管理
+                        if(window.confirm("确定"+this.innerHTML+"“"+this.getAttribute("name")+"”")){
+                            forbidAndStart(0,this,this.innerHTML,"user");//第一个参数表示禁用用户的操作码，第二个是点击的对象，第三个是点击对象的值，操作类型，字符串user表示用户管理
                         }
                     });
                     g.empty();
@@ -219,14 +219,14 @@ function startUserPanel() {
                             "<img src='"+data.users.data[i].url+"'/>"+
                             "<span class='userName'>"+data.users.data[i].userName+"</span>"+
                             "<span class='userId'>"+data.users.data[i].userId+"</span>"+
-                            "<input type='button' value='启用该用户' class='startButton' name='"+data.users.data[i].userId+"'/>"+
+                            "<p><a href='#' class='a_demo_one' name='"+data.users.data[i].userId+"'>启用该用户</a></p>"+
                             "</li>");
                         $("#startUserUl").append(elm);
                     }
-                    $("input.startButton").on('click', function () {
+                    $("a.a_demo_one").on('click', function () {
                         console.log(this.getAttribute("name"));
-                        if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
-                            forbidAndStart(1,this,this.value,"user");//第一个参数表示禁用用户的操作码，第二个是点击的对象，第三个是点击对象的值，操作类型，字符串user表示用户管理
+                        if(window.confirm("确定"+this.innerHTML+"“"+this.getAttribute("name")+"”")){
+                            forbidAndStart(1,this,this.innerHTML,"user");//第一个参数表示禁用用户的操作码，第二个是点击的对象，第三个是点击对象的值，操作类型，字符串user表示用户管理
                         }
                     });
                     g.empty();
@@ -276,14 +276,14 @@ function forbidGroupPanel() {
                             "<img src='" + data.users.data[i].url + "'/>" +
                             "<span class='userName'>" + data.users.data[i].userName + "</span>" +
                             "<span class='userId'>" + data.users.data[i].userId + "</span>" +
-                            "<input type='button' value='禁用该群' class='forbidButton' name='" + data.users.data[i].userId + "'/> " +
+                            "<p><a href='#' class='a_demo_one' name='"+data.users.data[i].userId+"'>禁用该群</a></p>"+
                             "</li>";
                         $("#forbidGroupUl").append(elm);
                     }
-                    $("input.forbidButton").on('click', function () {
+                    $("a.a_demo_one").on('click', function () {
                         console.log("搜索时的名字："+this.getAttribute("name"));
-                        if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
-                            forbidAndStart(0,this,this.value,"group");
+                        if(window.confirm("确定"+this.innerHTML+"“"+this.getAttribute("name")+"”")){
+                            forbidAndStart(0,this,this.innerHTML,"group");
                         }
                     });
                     g.empty();
@@ -332,14 +332,14 @@ function startGroupPanel() {
                             "<img src='" + data.users.data[i].url + "'/>" +
                             "<span class='userName'>" + data.users.data[i].userName + "</span>" +
                             "<span class='userId'>" + data.users.data[i].userId + "</span>" +
-                            "<input type='button' value='开启该群' class='startButton' name='" + data.users.data[i].userId + "'/> " +
+                            "<p><a href='#' class='a_demo_one' name='"+data.users.data[i].userId+"'>开启该群</a></p>"+
                             "</li>";
                         $("#startGroupUl").append(elm);
                     }
-                    $("input.startButton").on('click', function () {
+                    $("a.a_demo_one").on('click', function () {
                         console.log(this.getAttribute("name"));
-                        if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
-                            forbidAndStart(1,this,this.value,"group");
+                        if(window.confirm("确定"+this.innerHTML+"“"+this.getAttribute("name")+"”")){
+                            forbidAndStart(1,this,this.innerHTML,"group");
                         }
                     });
                     g.empty();
@@ -805,14 +805,20 @@ function addLoadData(page) {//加载禁用用户的数据
                         "<img src='" + data.users.data[i].url + "'/>" +
                         "<span class='userName'>" + data.users.data[i].userName + "</span>" +
                         "<span class='userId'>" + data.users.data[i].userId + "</span>" +
-                        "<input type='button' value='禁用该用户' class='forbidButton' name='" + data.users.data[i].userId + "'/> " +
+                        "<p><a href='#' class='a_demo_one' name='"+data.users.data[i].userId+"'>禁用该用户</a></p>"+
                         "</li>";
                     $("#forbidUserUl").append(elm);
                 }
-                $("input.forbidButton").on('click', function () {
-                    console.log(this.getAttribute("name"));
-                    if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
-                        forbidAndStart(0,this,this.value,"user");//第一个参数表示禁用用户的操作码，第二个是点击的对象，第三个是点击对象的值，操作类型，字符串user表示用户管理
+                // $("#forbidUserUl").find('p').find('a').on('click',function () {
+                //     console.log("点击禁用用户的按钮："+this.getAttribute("name"));
+                //     if(window.confirm("确定"+this.innerHTML+"“"+this.getAttribute("name")+"”")){
+                //         forbidAndStart(0,this,this.innerHTML,"user");//第一个参数表示禁用用户的操作码，第二个是点击的对象，第三个是点击对象的值，操作类型，字符串user表示用户管理
+                //     }
+                // });
+                $("#forbidUserUl a.a_demo_one").on('click', function () {
+                    console.log("点击禁用用户的按钮："+this.getAttribute("name"));
+                    if(window.confirm("确定"+this.innerHTML+"“"+this.getAttribute("name")+"”")){
+                        forbidAndStart(0,this,this.innerHTML,"user");//第一个参数表示禁用用户的操作码，第二个是点击的对象，第三个是点击对象的值，操作类型，字符串user表示用户管理
                     }
                 });
                 g.empty();
@@ -828,7 +834,6 @@ function addLoadData(page) {//加载禁用用户的数据
 function loadStartUser(page) {//加载开启用用户的数据
     console.log("开启用户");
     console.log(this);
-    var d="陈柯赞";
     $.ajax({
         url: "http://localhost:8080/getData?pageIndex="+page+"&status=0",
         type: "POST",
@@ -856,14 +861,14 @@ function loadStartUser(page) {//加载开启用用户的数据
                         "<img src='" + data.users.data[i].url + "'/>" +
                         "<span class='userName'>" + data.users.data[i].userName + "</span>" +
                         "<span class='userId'>" + data.users.data[i].userId + "</span>" +
-                        "<input type='button' value='开启该用户' class='startButton' name='" + data.users.data[i].userId + "'/> " +
+                        "<p><a href='#' class='a_demo_one' name='"+data.users.data[i].userId+"'>开启该用户</a></p>"+
                         "</li>";
                     $("#startUserUl").append(elm);
                 }
-                $("input.startButton").on('click', function () {
-                    console.log(this.getAttribute("name"));
-                    if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
-                        forbidAndStart(1,this,this.value,"user");
+                $("a.a_demo_one").on('click', function () {
+                    console.log("点击了开启用户的按钮："+this.getAttribute("name"));
+                    if(window.confirm("确定"+this.innerHTML+"“"+this.getAttribute("name")+"”")){
+                        forbidAndStart(1,this,this.innerHTML,"user");
                     }
                 });
                 g.empty();
@@ -905,14 +910,14 @@ function loadForbidGroup(page) {//加载禁用群的函数
                         "<img src='" + data.groups.data[i].url + "'/>" +
                         "<span class='userName'>" + data.groups.data[i].groupName + "</span>" +
                         "<span class='userId'>" + data.groups.data[i].groupId + "</span>" +
-                        "<input type='button' value='禁用该群' class='forbidButton' name='" + data.groups.data[i].groupId + "'/> " +
+                        "<p><a href='#' class='a_demo_one' name='"+data.groups.data[i].groupId+"'>禁用该群</a></p>"
                         "</li>";
                     $("#forbidGroupUl").append(elm);
                 }
-                $("input.forbidButton").on('click', function () {
+                $("a.a_demo_one").on('click', function () {
                     console.log(this.getAttribute("name"));
-                    if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
-                        forbidAndStart(0,this,this.value,"group");
+                    if(window.confirm("确定"+this.innerHTML+"“"+this.getAttribute("name")+"”")){
+                        forbidAndStart(0,this,this.innerHTML,"group");
                     }
                 });
                 g.empty();
@@ -954,14 +959,14 @@ function loadStartGroup(page) {//加载开启群的函数
                         "<img src='" + data.groups.data[i].url + "'/>" +
                         "<span class='userName'>" + data.groups.data[i].groupName + "</span>" +
                         "<span class='userId'>" + data.groups.data[i].groupId + "</span>" +
-                        "<input type='button' value='开启该群' class='startButton' name='" + data.groups.data[i].groupId + "'/> " +
+                        "<p><a href='#' class='a_demo_one' name='"+data.groups.data[i].groupId+"'>开启该群</a></p>"+
                         "</li>";
                     $("#startGroupUl").append(elm);
                 }
-                $("input.startButton").on('click', function () {
+                $("a.a_demo_one").on('click', function () {
                     console.log(this.getAttribute("name"));
-                    if(window.confirm("确定"+this.value+"“"+this.getAttribute("name")+"”")){
-                        forbidAndStart(1,this,this.value,"group");
+                    if(window.confirm("确定"+this.innerHTML+"“"+this.getAttribute("name")+"”")){
+                        forbidAndStart(1,this,this.innerHTML,"group");
                     }
                 });
                 g.empty();

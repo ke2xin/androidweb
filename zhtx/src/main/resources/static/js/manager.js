@@ -10,6 +10,7 @@ var startGroup;
 var managerNick;
 var managerExit;
 var box;
+var forbidFlag=false;
 var startFlag=false;
 var forbidGroupFlag=false;
 var startGroupFlag=false;
@@ -75,6 +76,9 @@ function addListener() {
                 startUser.style.display = 'none';
                 forbidGroup.style.display = 'none';
                 startGroup.style.display = 'none';
+                if(!forbidFlag){/*每次显示面板时都从第一页开始加载*/
+                    addLoadData(1);
+                }
             } else if (name == "startUser") {
                 forbidUser.style.display = 'none';
                 startUser.style.display = 'block';

@@ -2,13 +2,13 @@ package com.group.zhtx.util.common;
 
 public class WebSocketOperateUtil {
     //图片的地址
-    public final static String Portrait_Url = "http://172.17.147.189:8080/userPortrait/";
+    public final static String Portrait_Url = "http://172.17.144.79:8080/userPortrait/";
     //图片的后缀
     public final static String Portrait_Suffix = ".png";
     //默认用户的头像
-    public final static String Portrait_Image = "http://172.17.147.189:8080/userPortrait/123456654321.png";
+    public final static String Portrait_Image = "http://172.17.144.79:8080/userPortrait/123456654321.png";
     //默认群头像
-    public final static String Portrait_Image_Group ="http://172.17.147.189:8080/userPortrait/123321.png";
+    public final static String Portrait_Image_Group ="http://172.17.144.79:8080/userPortrait/123321.png";
     //用户登录
     public final static int User_Login_C = 1;
     //用户首页

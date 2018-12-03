@@ -22,7 +22,7 @@ public class Group implements Serializable {
     @Column(name = "group_anoun", length = 400)
     private String anoun;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = User.class)
+    @ManyToOne(fetch = FetchType.EAGER, targetEntity = User.class)
     @JoinColumn(name = "group_creatorId", referencedColumnName = "user_uuid", foreignKey = @ForeignKey(name = "FK_GROP_CREATOR"))
     private User creater;
 

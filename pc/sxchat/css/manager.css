@@ -268,7 +268,7 @@ body {
     top: -80px;
 }
 
-.main .container #right #forbidUser ul li .forbidButton {
+.main .container #right #forbidUser ul li .forbidButton,.main .container #right #forbidUser ul li p {
     width: 100px;
     height: 30px;
     position: relative;

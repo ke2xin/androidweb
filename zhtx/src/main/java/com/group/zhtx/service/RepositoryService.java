@@ -1468,6 +1468,8 @@ public class RepositoryService implements IRepositoryService, IWebSocketListener
         Session session = webSocket.getSession();
         int operateId = webSocket.getOperateId();
         Group group = groupRepository.findByUuid(userAcceptEnterGroup.getGroupUuid());//判断是否存在这样的一个群
+        System.out.println("Group:"+group);
+        System.out.println("group.getCreater():"+group.getCreater());
         GroupUser groupRole = groupUserRepository.findByUserAndGroup(group.getCreater(), group);
         System.out.println("群角色，如果为0，就是群主：" + groupRole.getRole());
         if (groupRole.getRole() == 0 && group != null && userAcceptEnterGroup.getNoticeId() != 0) {//判断一下是否是群主,并且存在这样的一个群

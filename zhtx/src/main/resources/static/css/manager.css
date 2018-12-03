@@ -167,12 +167,7 @@ body {
 .main .container #left .manager ul li a:hover{
     background-color: rgba(	220,220,220,0.3);
 }
-/*.main .container #left .manager ul li:hover{!*鼠标划过时添加背景颜色*!*/
-    /*background-color: rgba(	220,220,220,0.3);*/
-/*}*/
-/*.main .container #left .manager ul li:active{!*鼠标点击过时添加背景颜色*!*/
-    /*background-color: rgba(	220,220,220,0.8);*/
-/*}*/
+
 
 .main .container #right {
     width: 50%;
@@ -221,19 +216,26 @@ body {
 }
 
 .main .container #right #search #searchBox input#searchText {
-    width: 478px;
+    width: 578px;
     height: 40px;
     position: relative;
     left: 0px;
     top: -11px;
+    border: none;
+    border-bottom-right-radius: 20px;
+    border-top-right-radius: 20px;
+    outline: none;
 }
 
 .main .container #right #search #searchBox input#searchButton {
-    width: 80px;
+    width: 100px;
     height: 40px;
     position: relative;
-    left: 30px;
-    top: -11px;
+    left: 540px;
+    top: -50px;
+    border: none;
+    border-radius: 20px;
+
 }
 
 /*搜索框样式*/
@@ -317,7 +319,7 @@ body {
     top: -80px;
 }
 
-.main .container #right #forbidUser ul#forbidUserUl li .forbidButton {
+.main .container #right #forbidUser ul#forbidUserUl li p {
     width: 100px;
     height: 30px;
     position: relative;
@@ -352,30 +354,7 @@ body {
     color: cadetblue;
     text-align: center;
 }
-.box1{
-    width: 500px;
-    height: 650px;
-    position: fixed;
-    left: 60%;
-    top: 26%;
-    margin-left: -250px;
-    background: #66ffff;
-    /*border: 1px solid #000000;*/
-}
-.box1 .box2 {
-    width: 500px;
-    height: 600px;
-    margin: auto;
-    text-align: center;
-    line-height: 600px;
-}
-.box1 .box2 input#exit{
-    width: 300px;
-    height: 50px;
-    border-radius: 25px;
-    background: orange;
-    border: none;
-}
+
 
 .main .container #right #startUser {
     width: 650px;
@@ -422,7 +401,7 @@ body {
     top: -80px;
 }
 
-.main .container #right #startUser ul#startUserUl li .startButton {
+.main .container #right #startUser ul#startUserUl li p {
     width: 100px;
     height: 30px;
     position: relative;
@@ -482,7 +461,7 @@ body {
     top: -80px;
 }
 
-.main .container #right #forbidGroup ul#forbidGroupUl li .forbidButton {
+.main .container #right #forbidGroup ul#forbidGroupUl li p {
     width: 100px;
     height: 30px;
     position: relative;
@@ -542,7 +521,7 @@ body {
     top: -80px;
 }
 
-.main .container #right #startGroup ul#startGroupUl li .startButton {
+.main .container #right #startGroup ul#startGroupUl li p {
     width: 100px;
     height: 30px;
     position: relative;
